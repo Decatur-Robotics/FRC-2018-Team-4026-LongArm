@@ -11,6 +11,8 @@ public class Drivetrain implements Subsystem{
 	boolean isInitialized = false;
 	WPI_TalonSRX rightDriveMotor;
 	WPI_TalonSRX leftDriveMotor;
+	WPI_TalonSRX leftIntakeMotor;
+	WPI_TalonSRX rightIntakeMotor;
 	AnalogGyro gyro;
 	
 	public int init(){
@@ -18,6 +20,8 @@ public class Drivetrain implements Subsystem{
 		
 		leftDriveMotor = new WPI_TalonSRX (PortMap.LEFTDRIVE);
 		rightDriveMotor = new WPI_TalonSRX (PortMap.RIGHTDRIVE);
+		leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
+		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);
 		gyro = new AnalogGyro(PortMap.GYRO);
 		gyro.calibrate();
 

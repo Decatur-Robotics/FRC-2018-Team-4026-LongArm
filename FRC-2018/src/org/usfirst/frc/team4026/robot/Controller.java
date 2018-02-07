@@ -4,12 +4,12 @@ import edu.wpi.first.wpilibj.Joystick;
 
 public class Controller implements Subsystem{
 	
-	Joystick driveGamepad;
+	Joystick gamepad;
 	boolean isInitialized = false;
 
 	public int init(){
 		if(!isInitialized){
-			driveGamepad = new Joystick(PortMap.PRIMARYCONTROLLER);
+			gamepad = new Joystick(PortMap.PRIMARYCONTROLLER);
 			isInitialized = true;
 		}
 	//Return 1 if tries to reinit
@@ -17,15 +17,15 @@ public class Controller implements Subsystem{
 	}
 
 	public double getLeft(){
-		return driveGamepad.getY();
+		return gamepad.getY();
 		
 		
 	}
 	public double getRight(){
-		return driveGamepad.getThrottle();
+		return gamepad.getThrottle();
 	}
 	public boolean getRawButton(int button) {
-		return driveGamepad.getRawButton(button);
+		return gamepad.getRawButton(button);
 	}
 	@Override
 	public int shutdown() {

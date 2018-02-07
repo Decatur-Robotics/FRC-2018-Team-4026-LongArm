@@ -25,7 +25,9 @@ public class Robot extends IterativeRobot {
 	private String mAutoSelected;
 	private SendableChooser<String> mChooser = new SendableChooser<>();
 	Drivetrain drivetrain = new Drivetrain();
-	Controller joystick = new Controller();
+	Arm arm = new Arm();
+	Controller driveJoystick = new Controller();
+	Controller manipulatorJoystick = new Controller();
 	Pneumatics pneumatics = new Pneumatics();
 	Autonomous auto = new Autonomous();
 
@@ -39,7 +41,9 @@ public class Robot extends IterativeRobot {
 		mChooser.addObject(K_AUTO_CUSTOM, K_AUTO_CUSTOM);
 		SmartDashboard.putData("Auto choices", mChooser);
 		drivetrain.init();
-		joystick.init();
+		arm.init();
+		driveJoystick.init();
+		manipulatorJoystick.init();
 		pneumatics.init();
 		
 	}
@@ -84,8 +88,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() { 
 
-			drivetrain.tankDrive(joystick);
-			pneumatics.shift(1,3,joystick);
+			drivetrain.tankDrive(driveJoystick);
+			pneumatics.shift(1,3,driveJoystick);
+			arm.lift(manipulatorJoystick);
 
 	}
 
