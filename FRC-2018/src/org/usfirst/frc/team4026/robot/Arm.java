@@ -13,8 +13,8 @@ public class Arm implements Subsystem{
 		if(!isInitialized){
 		
 		armLiftMotor = new WPI_TalonSRX (PortMap.ARMLIFT);
-		leftGrabberMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
-		rightGrabberMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
+		leftGrabberMotor = new WPI_TalonSRX (PortMap.LEFTGRABBER);
+		rightGrabberMotor = new WPI_TalonSRX (PortMap.RIGHTGRABBER);
 		
 		isInitialized = true;
 		return 0;
@@ -22,9 +22,15 @@ public class Arm implements Subsystem{
 		//Return 1 if tries to reinit
 		return 1;
 	}
-	public void lift(Controller gamepad) {
-		double liftSpeed = gamepad.getLeft();
-		double intakeSpeed = gamepad.getRight();
+	public void lift(Controllers gamepad) {
+		double liftSpeed = -gamepad.getSecondaryLeft();
+		double intakeSpeed = gamepad.getSecondaryRight();
+		if (liftSpeed>0) {
+			liftSpeed *= .3;
+		}
+		if(liftSpeed<0) {
+			liftSpeed *= .1;
+		}
 		armLiftMotor.set(liftSpeed);
 		leftGrabberMotor.set(intakeSpeed);
 		rightGrabberMotor.set(intakeSpeed);

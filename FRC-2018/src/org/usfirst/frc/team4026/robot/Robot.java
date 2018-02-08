@@ -20,14 +20,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  */
 public class Robot extends IterativeRobot {
 	
-	private static final String K_AUTO_DEFAULT = "Default";
-	private static final String K_AUTO_CUSTOM = "My Auto";
-	private String mAutoSelected;
-	private SendableChooser<String> mChooser = new SendableChooser<>();
+	SendableChooser<String> autoChooser = new SendableChooser<>();
+	private static final String AUTODEFAULT = "Default";
+	private static final String AUTOCUSTOM = "My Auto";
+	private String autoSelected;
+	
 	Drivetrain drivetrain = new Drivetrain();
 	Arm arm = new Arm();
-	Controller driveJoystick = new Controller();
-	Controller manipulatorJoystick = new Controller();
+	Controllers controllers = new Controllers();
 	Pneumatics pneumatics = new Pneumatics();
 	Autonomous auto = new Autonomous();
 
@@ -37,13 +37,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		mChooser.addDefault("Default Auto", K_AUTO_DEFAULT);
-		mChooser.addObject(K_AUTO_CUSTOM, K_AUTO_CUSTOM);
-		SmartDashboard.putData("Auto choices", mChooser);
+		autoChooser.addDefault("Default Auto", AUTODEFAULT);
+		autoChooser.addObject("Custom Auto", AUTOCUSTOM);
+		SmartDashboard.putData("Auto choices", autoChooser);
 		drivetrain.init();
 		arm.init();
-		driveJoystick.init();
-		manipulatorJoystick.init();
+		controllers.init();
 		pneumatics.init();
 		
 	}
@@ -61,8 +60,8 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousInit() {
-		mAutoSelected = mChooser.getSelected();
-		System.out.println("Auto selected: " + mAutoSelected);
+		autoSelected = autoChooser.getSelected();
+		System.out.println("Auto selected: " + autoSelected);
 	}
 
 	/**
@@ -70,13 +69,13 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
-		switch (mAutoSelected) {
-			case K_AUTO_CUSTOM:
-				auto.autoCustom();// Put custom auto code here
+		switch (autoSelected) {
+			case AUTOCUSTOM:
+				auto.autoCustom();
 				break;
-			case K_AUTO_DEFAULT:
+			case AUTODEFAULT:
 			default:
-				auto.autoDefault();// Put default auto code here
+				auto.autoDefault();
 				break;
 		}
 	}
@@ -88,10 +87,10 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() { 
 
-			drivetrain.tankDrive(driveJoystick);
-			pneumatics.shift(1,3,driveJoystick);
-			arm.lift(manipulatorJoystick);
-
+		drivetrain.tankDrive(controllers);
+		pneumatics.shift(1,3,controllers);
+		arm.lift(controllers);
+		updateDashboard();
 	}
 
 	/**
@@ -102,4 +101,7 @@ public class Robot extends IterativeRobot {
 		//not needed yet
 	}
 	
+	public void updateDashboard() {
+		SmartDashboard.putNumber("Gyro Angle", drivetrain.gyro.getAngle());
+	}
 }

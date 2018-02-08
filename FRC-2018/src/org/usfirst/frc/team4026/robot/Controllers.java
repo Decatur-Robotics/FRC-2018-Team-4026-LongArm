@@ -2,35 +2,45 @@ package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Controller implements Subsystem{
+public class Controllers implements Subsystem{
 	
-	Joystick gamepad;
+	Joystick driveJoystick;
+	Joystick manipulatorJoystick;
 	boolean isInitialized = false;
 
 	public int init(){
 		if(!isInitialized){
-			gamepad = new Joystick(PortMap.PRIMARYCONTROLLER);
+			driveJoystick = new Joystick(PortMap.PRIMARYCONTROLLER);
+			manipulatorJoystick = new Joystick(PortMap.SECONDARYCONTROLLER);
 			isInitialized = true;
 		}
 	//Return 1 if tries to reinit
 	return 1;
 	}
 
-	public double getLeft(){
-		return gamepad.getY();
-		
-		
+	public double getPrimaryLeft(){
+		return driveJoystick.getY();
 	}
-	public double getRight(){
-		return gamepad.getThrottle();
+	public double getPrimaryRight(){
+		return driveJoystick.getThrottle();
 	}
-	public boolean getRawButton(int button) {
-		return gamepad.getRawButton(button);
+	public boolean getPrimaryRawButton(int button) {
+		return driveJoystick.getRawButton(button);
 	}
-	@Override
+	public double getSecondaryLeft(){
+		return manipulatorJoystick.getY();
+	}
+	public double getSecondaryRight(){
+		return manipulatorJoystick.getThrottle();
+	}
+	public boolean getSecondaryRawButton(int button) {
+		return manipulatorJoystick.getRawButton(button);
+	}
 	public int shutdown() {
 		
 		return 1;
 	}
+
+
 
 }

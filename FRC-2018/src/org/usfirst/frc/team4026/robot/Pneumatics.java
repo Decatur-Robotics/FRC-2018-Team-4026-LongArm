@@ -11,7 +11,7 @@ public class Pneumatics implements Subsystem{
 	
 	boolean isInitialized = false;
 
-	@Override
+	
 	public int init() {
 		if(!isInitialized){
 		shifter = new DoubleSolenoid(PortMap.SHIFTLOWGEAR,PortMap.SHIFTHIGHGEAR);
@@ -25,13 +25,13 @@ public class Pneumatics implements Subsystem{
 		return 1;
 	}
 	
-	void shift(int highGearButton, int lowGearButton,Controller driveGamepad)
+	void shift(int highGearButton, int lowGearButton,Controllers driveGamepad)
 	{
-		if (driveGamepad.getRawButton(highGearButton))
+		if (driveGamepad.getPrimaryRawButton(highGearButton))
 		{
 			shifter.set(DoubleSolenoid.Value.kForward);
 		}
-		else if (driveGamepad.getRawButton(lowGearButton))
+		else if (driveGamepad.getPrimaryRawButton(lowGearButton))
 		{
 			shifter.set(DoubleSolenoid.Value.kReverse);
 		}

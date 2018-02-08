@@ -3,14 +3,15 @@ package org.usfirst.frc.team4026.robot;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain implements Subsystem{
 	static final double MAX_BATTERY = 12.3;
 	boolean isGyroresetTelop = false;
 	
 	boolean isInitialized = false;
-	WPI_TalonSRX rightDriveMotor;
-	WPI_TalonSRX leftDriveMotor;
+	Talon rightDriveMotor;
+	Talon leftDriveMotor;
 	WPI_TalonSRX leftIntakeMotor;
 	WPI_TalonSRX rightIntakeMotor;
 	AnalogGyro gyro;
@@ -18,8 +19,8 @@ public class Drivetrain implements Subsystem{
 	public int init(){
 		if(!isInitialized){
 		
-		leftDriveMotor = new WPI_TalonSRX (PortMap.LEFTDRIVE);
-		rightDriveMotor = new WPI_TalonSRX (PortMap.RIGHTDRIVE);
+		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
+		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
 		leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
 		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);
 		gyro = new AnalogGyro(PortMap.GYRO);
@@ -32,19 +33,19 @@ public class Drivetrain implements Subsystem{
 		//Return 1 if tries to reinit
 		return 1;
 	}
-	void tankDrive(Controller driveGamepad)
+	void tankDrive(Controllers driveGamepad)
 	{
-		double left  = driveGamepad.getLeft();
-		double right = driveGamepad.getRight();
+		double left  = driveGamepad.getPrimaryLeft();
+		double right = driveGamepad.getPrimaryRight();
 
 		//Cut speed in half
-		if(driveGamepad.getRawButton(7))
+		if(driveGamepad.getPrimaryRawButton(7))
 		{
 			right /= 2.0;
 			left /= 2.0;
 		}
 		double avgStick = (right + left) / 2.0;
-		if(!driveGamepad.getRawButton(8) && !shouldIHelpDriverDriveStraight())
+		if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
 		{
 		setDriveMotors(left, right);
 		isGyroresetTelop = false;
@@ -72,7 +73,7 @@ public class Drivetrain implements Subsystem{
 		return MAX_BATTERY / RobotController.getBatteryVoltage();
 	}
 
-	public void keepDriveStraight(Controller driveGamepad, double leftDriveVel, double rightDriveVel, double targetAngle) 
+	public void keepDriveStraight(Controllers driveGamepad, double leftDriveVel, double rightDriveVel, double targetAngle) 
 	{	
 		double error = 0, correctionFactor;
 		error = targetAngle - gyro.getAngle();
