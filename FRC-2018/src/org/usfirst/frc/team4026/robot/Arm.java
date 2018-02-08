@@ -5,6 +5,7 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 public class Arm implements Subsystem{
 
 	boolean isInitialized = false;
+	double liftSpeed;
 	WPI_TalonSRX armLiftMotor;
 	WPI_TalonSRX leftGrabberMotor;
 	WPI_TalonSRX rightGrabberMotor;
@@ -15,7 +16,7 @@ public class Arm implements Subsystem{
 		armLiftMotor = new WPI_TalonSRX (PortMap.ARMLIFT);
 		leftGrabberMotor = new WPI_TalonSRX (PortMap.LEFTGRABBER);
 		rightGrabberMotor = new WPI_TalonSRX (PortMap.RIGHTGRABBER);
-		
+		liftSpeed = 0;
 		isInitialized = true;
 		return 0;
 		}
@@ -23,7 +24,7 @@ public class Arm implements Subsystem{
 		return 1;
 	}
 	public void lift(Controllers gamepad) {
-		double liftSpeed = -gamepad.getSecondaryLeft();
+		liftSpeed = -gamepad.getSecondaryLeft();
 		double intakeSpeed = gamepad.getSecondaryRight();
 		if (liftSpeed>0) {
 			liftSpeed *= .3;

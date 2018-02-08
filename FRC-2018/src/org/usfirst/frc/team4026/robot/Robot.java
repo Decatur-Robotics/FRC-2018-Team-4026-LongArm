@@ -8,6 +8,7 @@
 package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -102,6 +103,9 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Gyro Angle", drivetrain.gyro.getAngle());
+		double counter = 0;
+		SmartDashboard.putNumber("Counter", counter++);
+		SmartDashboard.putNumber("Lift Speed", arm.liftSpeed);
+		Timer.delay(.10);
 	}
 }
