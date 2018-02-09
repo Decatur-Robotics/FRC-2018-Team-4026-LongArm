@@ -12,7 +12,5 @@
 	<classpathentry kind="var" path="cscore" sourcepath="cscore.sources"/>
 	<classpathentry kind="var" path="wpiutil" sourcepath="wpiutil.sources"/>
 	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
-	<classpathentry kind="lib" path="/Users/walden/Workspace/FRC-2018-Team-4026-LongArm/FRC-2018/navxLibs/lib/navx_frc.jar"/>
-	<classpathentry kind="lib" path="/Users/walden/Workspace/FRC-2018-Team-4026-LongArm/FRC-2018/CTRElib/lib/CTRE_Phoenix.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
