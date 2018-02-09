@@ -21,8 +21,8 @@ public class Drivetrain implements Subsystem{
 		
 		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
-		leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
-		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);
+		/*leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
+		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);*/
 		gyro = new AnalogGyro(PortMap.GYRO);
 		gyro.calibrate();
 
@@ -35,8 +35,8 @@ public class Drivetrain implements Subsystem{
 	}
 	void tankDrive(Controllers driveGamepad)
 	{
-		double left  = driveGamepad.getPrimaryLeft();
-		double right = driveGamepad.getPrimaryRight();
+		double left  = -driveGamepad.getPrimaryLeft();
+		double right = -driveGamepad.getPrimaryRight();
 
 		//Cut speed in half
 		if(driveGamepad.getPrimaryRawButton(7))

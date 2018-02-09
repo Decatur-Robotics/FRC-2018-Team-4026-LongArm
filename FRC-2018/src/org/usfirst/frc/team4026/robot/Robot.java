@@ -26,6 +26,8 @@ public class Robot extends IterativeRobot {
 	private static final String AUTOCUSTOM = "My Auto";
 	private String autoSelected;
 	
+	double counter = 0;
+	
 	Drivetrain drivetrain = new Drivetrain();
 	Arm arm = new Arm();
 	Controllers controllers = new Controllers();
@@ -87,10 +89,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void teleopPeriodic() { 
-
-		drivetrain.tankDrive(controllers);
-		pneumatics.shift(1,3,controllers);
-		arm.lift(controllers);
+		while(isOperatorControl() && isEnabled()) {
+			drivetrain.tankDrive(controllers);
+			pneumatics.shift(1,3,controllers);
+			arm.lift(controllers);
+			updateDashboard();
+		}
+		drivetrain.shutdown();
+		pneumatics.shutdown();
+		arm.shutdown();
 		updateDashboard();
 	}
 
@@ -103,9 +110,11 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateDashboard() {
-		double counter = 0;
 		SmartDashboard.putNumber("Counter", counter++);
 		SmartDashboard.putNumber("Lift Speed", arm.liftSpeed);
+		SmartDashboard.putNumber("Motor Output Voltage", arm.armLiftMotor.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Output Current", arm.armLiftMotor.getOutputCurrent());
+		SmartDashboard.putString("Brake Mode", arm.brakeMode.toString());
 		Timer.delay(.10);
 	}
 }
