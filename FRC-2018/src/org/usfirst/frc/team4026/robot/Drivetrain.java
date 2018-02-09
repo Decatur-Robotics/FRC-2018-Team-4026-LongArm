@@ -5,9 +5,11 @@ import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain implements Subsystem{
 	static final double MAX_BATTERY = 12.3;
@@ -15,12 +17,25 @@ public class Drivetrain implements Subsystem{
 	boolean isGyroresetTelop = false;
 	
 	boolean isInitialized = false;
+	//Controllers
 	Talon rightDriveMotor;
 	Talon leftDriveMotor;
+	//Why are these here?
 	WPI_TalonSRX leftIntakeMotor;
 	WPI_TalonSRX rightIntakeMotor;
+	//
+	//Sensors
 	AnalogGyro gyro;
 	AHRS navx;
+	Encoder RightEncoder;
+	Encoder LeftEncoder;
+	Tipper tippingAlgorithm;
+	//Power vars
+	double right = 0;
+	double left = 0;
+	
+	
+	
 	public int init(){
 		if(!isInitialized){
 			try{
@@ -30,12 +45,20 @@ public class Drivetrain implements Subsystem{
 	        } catch (RuntimeException ex ) {
 	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 	        }
+		RightEncoder = new Encoder (PortMap.RIGHT_ENCODER_1,PortMap.RIGHT_ENCODER_2,false);
+		LeftEncoder = new Encoder (PortMap.LEFT_ENCODER_1, PortMap.LEFT_ENCODER_2, true);
+		//RightEncoder.setDistancePerPulse();
+		//LeftEncoder.setDistancePerPulse();
+		tippingAlgorithm = new Tipper(navx,this);
+		
 		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
+		
 		/*leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
 		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);*/
 		gyro = new AnalogGyro(PortMap.GYRO);
 		gyro.calibrate();
+		
 		while (navx.isCalibrating()){
 			//wait
 		}
@@ -51,9 +74,11 @@ public class Drivetrain implements Subsystem{
 	
 	void tankDrive(Controllers driveGamepad)
 	{
-		double left  = -driveGamepad.getPrimaryLeft();
-		double right = -driveGamepad.getPrimaryRight();
-
+		left  = -driveGamepad.getPrimaryLeft();
+		right = -driveGamepad.getPrimaryRight();
+		
+		//
+		
 		//Cut speed in half
 		if(driveGamepad.getPrimaryRawButton(7))
 		{
@@ -61,8 +86,9 @@ public class Drivetrain implements Subsystem{
 			left /= 2.0;
 		}
 		double avgStick = (right + left) / 2.0;
+		
 		//If the robot is tipping, tipping control will set motor values and return true.
-		if (!tippingControl())
+		if (tippingAlgorithm.tippingControl())
 		{
 			if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
 			{
@@ -78,6 +104,10 @@ public class Drivetrain implements Subsystem{
 				}
 				keepDriveStraight(driveGamepad, avgStick, avgStick, 0);
 			}
+		}
+		else
+		{
+			//DONT FREAKING TIP
 		}
 	}
 	
@@ -130,19 +160,16 @@ public class Drivetrain implements Subsystem{
 		rightDriveMotor.set(0);
 	}
 	
-	private boolean tippingControl(){
-		if (navx.getPitch() > TIPPING_POINT_DEGS)
-		{
-			setDriveMotors(-.3, -.3);
-			return true;
-		}else{
-			return false;
-		}
-	}
+
 	@Override
 	public int shutdown() {
 		stopDrive();
 		return 1;
+	}
+	
+	void updateDashboard(){
+		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
+		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
 	}
 	
 	
