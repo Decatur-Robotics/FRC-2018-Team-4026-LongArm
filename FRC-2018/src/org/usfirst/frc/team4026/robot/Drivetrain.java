@@ -1,12 +1,17 @@
 package org.usfirst.frc.team4026.robot;
 
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
+import com.kauailabs.navx.frc.AHRS;
+
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
 
 public class Drivetrain implements Subsystem{
 	static final double MAX_BATTERY = 12.3;
+	static final double TIPPING_POINT_DEGS = 20;
 	boolean isGyroresetTelop = false;
 	
 	boolean isInitialized = false;
@@ -15,17 +20,25 @@ public class Drivetrain implements Subsystem{
 	WPI_TalonSRX leftIntakeMotor;
 	WPI_TalonSRX rightIntakeMotor;
 	AnalogGyro gyro;
-	
+	AHRS navx;
 	public int init(){
 		if(!isInitialized){
-		
+			try{
+			 navx = new AHRS(SerialPort.Port.kUSB1);
+	            //navx = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, (byte)50);
+	            navx.enableLogging(true);
+	        } catch (RuntimeException ex ) {
+	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
+	        }
 		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
 		leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
 		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);
 		gyro = new AnalogGyro(PortMap.GYRO);
 		gyro.calibrate();
-
+		while (navx.isCalibrating()){
+			//wait
+		}
 		
 		isInitialized = true;
 		return 0;
@@ -33,6 +46,9 @@ public class Drivetrain implements Subsystem{
 		//Return 1 if tries to reinit
 		return 1;
 	}
+	
+	
+	
 	void tankDrive(Controllers driveGamepad)
 	{
 		double left  = driveGamepad.getPrimaryLeft();
@@ -45,21 +61,30 @@ public class Drivetrain implements Subsystem{
 			left /= 2.0;
 		}
 		double avgStick = (right + left) / 2.0;
-		if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
+		//If the robot is tipping, tipping control will set motor values and return true.
+		if (!tippingControl())
 		{
-		setDriveMotors(left, right);
-		isGyroresetTelop = false;
-		}
-		else 
-		{
-			if(isGyroresetTelop == false)
+			if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
 			{
-				gyro.reset();
-				isGyroresetTelop = true;
+			setDriveMotors(left, right);
+			isGyroresetTelop = false;
 			}
-			keepDriveStraight(driveGamepad, avgStick, avgStick, 0);
+			else 
+			{
+				if(isGyroresetTelop == false)
+				{
+					gyro.reset();
+					isGyroresetTelop = true;
+				}
+				keepDriveStraight(driveGamepad, avgStick, avgStick, 0);
+			}
 		}
 	}
+	
+	
+	
+	
+	
 	void setDriveMotors(double leftPower2, double rightPower2)
 	{
 			leftDriveMotor.set(-leftPower2);
@@ -104,10 +129,22 @@ public class Drivetrain implements Subsystem{
 		leftDriveMotor.set(0);
 		rightDriveMotor.set(0);
 	}
+	
+	private boolean tippingControl(){
+		if (navx.getPitch() > TIPPING_POINT_DEGS)
+		{
+			setDriveMotors(-.3, -.3);
+			return true;
+		}else{
+			return false;
+		}
+	}
 	@Override
 	public int shutdown() {
 		stopDrive();
 		return 1;
 	}
+	
+	
 	
 }
