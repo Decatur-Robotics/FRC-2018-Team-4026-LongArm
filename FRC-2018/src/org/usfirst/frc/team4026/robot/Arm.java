@@ -37,11 +37,12 @@ public class Arm implements Subsystem{
 			liftSpeed *= .3;
 		}
 		armLiftMotor.set(liftSpeed);
+		
 		/*leftGrabberMotor.set(intakeSpeed);
 		rightGrabberMotor.set(intakeSpeed);*/
 	}
 	
-	private void stopDrive(){
+	private void stopArm(){
 		brakeMode = NeutralMode.Coast;
 		armLiftMotor.setNeutralMode(brakeMode);
 		armLiftMotor.set(0);
@@ -50,7 +51,7 @@ public class Arm implements Subsystem{
 	}
 
 	public int shutdown() {
-		stopDrive();
+		stopArm();
 		return 1;
 	}
 
