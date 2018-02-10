@@ -39,9 +39,10 @@ public class Drivetrain implements Subsystem{
 	public int init(){
 		if(!isInitialized){
 			try{
-			 navx = new AHRS(SerialPort.Port.kUSB1);
+			 navx = new AHRS(SerialPort.Port.kMXP);
 	            //navx = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, (byte)50);
 	            navx.enableLogging(true);
+	            
 	        } catch (RuntimeException ex ) {
 	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
 	        }
@@ -88,12 +89,12 @@ public class Drivetrain implements Subsystem{
 		double avgStick = (right + left) / 2.0;
 		
 		//If the robot is tipping, tipping control will set motor values and return true.
-		if (tippingAlgorithm.tippingControl())
+		if (true)
 		{
 			if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
 			{
-			setDriveMotors(left, right);
-			isGyroresetTelop = false;
+				setDriveMotors(left, right);
+				isGyroresetTelop = false;
 			}
 			else 
 			{
@@ -170,6 +171,7 @@ public class Drivetrain implements Subsystem{
 	void updateDashboard(){
 		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
+		SmartDashboard.putNumber("Tip angle " , navx.getYaw());
 	}
 	
 	

@@ -46,7 +46,7 @@ public class Tipper extends TeleopAutoFunction {
 				//Log this bad boi
 				System.out.println("Bot is tipping with pitch of " + Navx.getPitch());
 				//Throw that bot into reverse baby
-				Drive.setDriveMotors(ROBOT_REACTION_SPEED, ROBOT_REACTION_SPEED);
+				//Drive.setDriveMotors(ROBOT_REACTION_SPEED, ROBOT_REACTION_SPEED);
 			}
 			else
 			{
@@ -62,7 +62,7 @@ public class Tipper extends TeleopAutoFunction {
 	//Returns TRUE if the bot is angled back past TIPPING_POINT_DEGS
 	private boolean robotIsTipping()
 	{
-		if (Navx.getPitch() > TIPPING_POINT_DEGS)
+		if (Navx.getYaw() > TIPPING_POINT_DEGS)
 		{
 			return true;
 		}else{

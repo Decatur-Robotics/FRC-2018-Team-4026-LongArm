@@ -110,11 +110,10 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Counter", counter++);
 		SmartDashboard.putNumber("Lift Speed", arm.liftSpeed);
 		SmartDashboard.putNumber("Motor Output Voltage", arm.armLiftMotor.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Output Current", arm.armLiftMotor.getOutputCurrent());
 		SmartDashboard.putString("Brake Mode", arm.brakeMode.toString());
-		Timer.delay(.10);
+		SmartDashboard.putString("Gear State", pneumatics.gearState());
 	}
 }

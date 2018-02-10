@@ -9,15 +9,15 @@ public class Arm implements Subsystem{
 	double liftSpeed;
 	NeutralMode brakeMode;
 	WPI_TalonSRX armLiftMotor;
-	/*WPI_TalonSRX leftGrabberMotor;
-	WPI_TalonSRX rightGrabberMotor;*/
+	WPI_TalonSRX leftGrabberMotor;
+	WPI_TalonSRX rightGrabberMotor;
 	
 	public int init() {
 		if(!isInitialized){
 		
 		armLiftMotor = new WPI_TalonSRX (PortMap.ARMLIFT);
-		/*leftGrabberMotor = new WPI_TalonSRX (PortMap.LEFTGRABBER);
-		rightGrabberMotor = new WPI_TalonSRX (PortMap.RIGHTGRABBER);*/
+		leftGrabberMotor = new WPI_TalonSRX (PortMap.LEFTGRABBER);
+		rightGrabberMotor = new WPI_TalonSRX (PortMap.RIGHTGRABBER);
 		liftSpeed = 0;
 		isInitialized = true;
 		return 0;
@@ -29,17 +29,29 @@ public class Arm implements Subsystem{
 		brakeMode = NeutralMode.Brake;
 		armLiftMotor.setNeutralMode(brakeMode);
 		liftSpeed = -gamepad.getSecondaryLeft();
-		double intakeSpeed = gamepad.getSecondaryRight();
-		if (liftSpeed>0) {
+		boolean holdLift;
+		double grabberSpeed = gamepad.getSecondaryRight();
+		
+		if(gamepad.getSecondaryRawButton(6))
+		{
+			holdLift = true;
+			liftSpeed = .05;
+		}
+		else {
+			holdLift = false;
+		}
+		
+		if (liftSpeed>0 && !holdLift) {
 			liftSpeed *= .5;
 		}
-		if(liftSpeed<0) {
+		
+		if(liftSpeed<0 && !holdLift) {
 			liftSpeed *= .3;
 		}
 		armLiftMotor.set(liftSpeed);
 		
-		/*leftGrabberMotor.set(intakeSpeed);
-		rightGrabberMotor.set(intakeSpeed);*/
+		leftGrabberMotor.set(grabberSpeed);
+		rightGrabberMotor.set(-grabberSpeed);
 	}
 	
 	private void stopArm(){
