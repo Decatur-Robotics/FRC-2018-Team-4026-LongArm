@@ -1,6 +1,5 @@
 package org.usfirst.frc.team4026.robot;
 
-import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -23,10 +22,9 @@ public class Drivetrain implements Subsystem{
 	//
 	//Sensors
 	AnalogGyro gyro;
-	AHRS navx;
 	Encoder RightEncoder;
 	Encoder LeftEncoder;
-	Tipper tippingAlgorithm;
+	//Tipper tippingAlgorithm;
 	//Power vars
 	double right = 0;
 	double left = 0;
@@ -35,19 +33,12 @@ public class Drivetrain implements Subsystem{
 	
 	public int init(){
 		if(!isInitialized){
-			try{
-			 navx = new AHRS(SerialPort.Port.kMXP);
-	            //navx = new AHRS(SerialPort.Port.kMXP, SerialDataType.kProcessedData, (byte)50);
-	            navx.enableLogging(true);
-	            
-	        } catch (RuntimeException ex ) {
-	            DriverStation.reportError("Error instantiating navX MXP:  " + ex.getMessage(), true);
-	        }
+			
 		RightEncoder = new Encoder (PortMap.RIGHT_ENCODER_1,PortMap.RIGHT_ENCODER_2,false);
 		LeftEncoder = new Encoder (PortMap.LEFT_ENCODER_1, PortMap.LEFT_ENCODER_2, true);
 		//RightEncoder.setDistancePerPulse();
 		//LeftEncoder.setDistancePerPulse();
-		tippingAlgorithm = new Tipper(navx,this);
+	//	tippingAlgorithm = new Tipper(navx,this);
 		
 		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
@@ -55,9 +46,7 @@ public class Drivetrain implements Subsystem{
 		gyro = new AnalogGyro(PortMap.GYRO);
 		gyro.calibrate();
 		
-		while (navx.isCalibrating()){
-			//wait
-		}
+		
 		
 		isInitialized = true;
 		return 0;
@@ -166,7 +155,7 @@ public class Drivetrain implements Subsystem{
 	void updateDashboard(){
 		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
-		SmartDashboard.putNumber("Tip angle " , navx.getYaw());
+		//SmartDashboard.putNumber("Tip angle " , navx.getYaw());
 	}
 	
 	

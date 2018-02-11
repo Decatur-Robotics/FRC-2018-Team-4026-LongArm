@@ -62,7 +62,7 @@ public class Arm implements Subsystem{
 		rightGrabberMotor.set(-grabberSpeed);
 	}
 	public void intake(Controllers gamepad, Pneumatics pneumatics, double intakeSpeed)
-	{	
+	{	shouldIIntake(gamepad);
 		pneumatics.actuateIntake(3, 4, gamepad);
 		if (!intake) 
 		{

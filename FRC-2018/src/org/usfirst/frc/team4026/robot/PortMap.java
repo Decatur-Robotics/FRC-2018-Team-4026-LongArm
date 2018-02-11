@@ -21,8 +21,8 @@ public interface PortMap {
 		public static final int SHIFTHIGHGEAR = 3;
 		public static final int GRABBERRPISTONIN = 1;
 		public static final int GRABBERPISTONOUT = 2;
-		//public static final int INTAKEPISTONIN = 0;
-		//public static final int INTAKEPISTONOUT = 0;
+		public static final int INTAKEPISTONIN = 6;
+		public static final int INTAKEPISTONOUT = 7;
 		//Analog Sensors
 		public static final int GYRO = 0;
 		//Digital in

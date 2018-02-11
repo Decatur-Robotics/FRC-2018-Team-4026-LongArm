@@ -16,13 +16,13 @@ public class Pneumatics implements Subsystem{
 	public int init() {
 		if(!isInitialized){
 		shifter = new DoubleSolenoid(PortMap.SHIFTLOWGEAR,PortMap.SHIFTHIGHGEAR);
-		grabberPistons = new DoubleSolenoid(PortMap.GRABBERPISTONIN,PortMap.GRABBERPISTONOUT);
-		//intakePistons = new DoubleSolenoid(PortMap.INTAKEPISTONIN,PortMap.INTAKEPISTONOUT);
+		grabberPistons = new DoubleSolenoid(PortMap.GRABBERRPISTONIN,PortMap.GRABBERPISTONOUT);
+		intakePistons = new DoubleSolenoid(PortMap.INTAKEPISTONIN,PortMap.INTAKEPISTONOUT);
 		compressor = new Compressor();
 		compressor.setClosedLoopControl(true);
 		shifter.set(Value.kForward);
-		grabberPistons.set(Value.kForward);
-		//intakePistons.set(Value.kForward);
+		grabberPistons.set(Value.kReverse);
+		intakePistons.set(Value.kReverse);
 		isInitialized = true;
 		return 0;
 		}
