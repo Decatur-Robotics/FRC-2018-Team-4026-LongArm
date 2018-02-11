@@ -7,8 +7,8 @@
 
 package org.usfirst.frc.team4026.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -22,8 +22,16 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Robot extends IterativeRobot {
 	
 	SendableChooser<String> autoChooser = new SendableChooser<>();
-	private static final String AUTODEFAULT = "Default";
-	private static final String AUTOCUSTOM = "My Auto";
+	private static final String CROSSLINEAUTO = "Cross Line Auto";
+	
+	private static final String POSITION1SCALE = "DriverStation 1 Scale";
+	private static final String POSITION1SWITCH = "DriverStation 1 Switch";
+	
+	private static final String POSITION2SWITCH = "DriverStation 2 Switch";
+	
+	private static final String POSITION3SCALE = "DriverStation 3 Scale";
+	private static final String POSITION3SWITCH = "DriverStation 3 Switch";
+	
 	private String autoSelected;
 	
 	double counter = 0;
@@ -40,8 +48,12 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
-		autoChooser.addDefault("Default Auto", AUTODEFAULT);
-		autoChooser.addObject("Custom Auto", AUTOCUSTOM);
+		autoChooser.addDefault(CROSSLINEAUTO, CROSSLINEAUTO);
+		autoChooser.addObject(POSITION1SCALE, POSITION1SCALE);
+		autoChooser.addObject(POSITION1SWITCH, POSITION1SWITCH);
+		autoChooser.addObject(POSITION2SWITCH, POSITION2SWITCH);
+		autoChooser.addObject(POSITION3SCALE, POSITION3SCALE);
+		autoChooser.addObject(POSITION3SWITCH, POSITION3SWITCH);
 		SmartDashboard.putData("Auto choices", autoChooser);
 		drivetrain.init();
 		arm.init();
@@ -65,21 +77,37 @@ public class Robot extends IterativeRobot {
 	public void autonomousInit() {
 		autoSelected = autoChooser.getSelected();
 		System.out.println("Auto selected: " + autoSelected);
+		auto.getGameData();
 	}
 
 	/**
 	 * This function is called periodically during autonomous.
 	 */
 	@Override
-	public void autonomousPeriodic() {
-		switch (autoSelected) {
-			case AUTOCUSTOM:
-				auto.autoCustom();
+	public void autonomousPeriodic() 
+	{
+		while(isAutonomous() && isEnabled())
+		{
+			switch (autoSelected) {
+			case CROSSLINEAUTO:
+				auto.crossLineAuto(drivetrain);
 				break;
-			case AUTODEFAULT:
-			default:
-				auto.autoDefault();
+			case POSITION1SCALE:
+				auto.position1Scale(drivetrain);
 				break;
+			case POSITION1SWITCH:
+				auto.position1Switch(drivetrain);
+				break;
+			case POSITION2SWITCH:
+				auto.position2Switch(drivetrain);
+				break;
+			case POSITION3SCALE:
+				auto.position3Scale(drivetrain);
+				break;
+			case POSITION3SWITCH:
+				auto.position3Switch(drivetrain);
+				break;
+			}
 		}
 	}
 

@@ -103,7 +103,7 @@ public class Drivetrain implements Subsystem{
 					gyro.reset();
 					isGyroresetTelop = true;
 				}
-				keepDriveStraight(driveGamepad, avgStick, avgStick, 0);
+				keepDriveStraight(avgStick, avgStick, 0);
 			}
 		}
 		else
@@ -129,7 +129,7 @@ public class Drivetrain implements Subsystem{
 		return MAX_BATTERY / RobotController.getBatteryVoltage();
 	}
 
-	public void keepDriveStraight(Controllers driveGamepad, double leftDriveVel, double rightDriveVel, double targetAngle) 
+	public void keepDriveStraight(double leftDriveVel, double rightDriveVel, double targetAngle) 
 	{	
 		double error = 0, correctionFactor;
 		error = targetAngle - gyro.getAngle();
@@ -156,7 +156,7 @@ public class Drivetrain implements Subsystem{
 			rightDriveMotor.set(rightDriveVel * batteryCompensationPct());
 		}
 	}
-	private void stopDrive(){
+	void stopDrive(){
 		leftDriveMotor.set(0);
 		rightDriveMotor.set(0);
 	}
