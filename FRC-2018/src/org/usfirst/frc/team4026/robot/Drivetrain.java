@@ -1,6 +1,5 @@
 package org.usfirst.frc.team4026.robot;
 
-import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import com.kauailabs.navx.frc.AHRS;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
@@ -20,9 +19,7 @@ public class Drivetrain implements Subsystem{
 	//Controllers
 	Talon rightDriveMotor;
 	Talon leftDriveMotor;
-	//Why are these here?
-	WPI_TalonSRX leftIntakeMotor;
-	WPI_TalonSRX rightIntakeMotor;
+	
 	//
 	//Sensors
 	AnalogGyro gyro;
@@ -55,8 +52,6 @@ public class Drivetrain implements Subsystem{
 		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
 		
-		/*leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
-		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);*/
 		gyro = new AnalogGyro(PortMap.GYRO);
 		gyro.calibrate();
 		

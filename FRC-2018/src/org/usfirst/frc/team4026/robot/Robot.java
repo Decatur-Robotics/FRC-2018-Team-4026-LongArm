@@ -120,7 +120,8 @@ public class Robot extends IterativeRobot {
 		while(isOperatorControl() && isEnabled()) {
 			drivetrain.tankDrive(controllers);
 			pneumatics.shift(1,3,controllers);
-			arm.lift(controllers);
+			arm.lift(controllers, pneumatics);
+			arm.intake(controllers, pneumatics, 1);
 			updateDashboard();
 		}
 		drivetrain.shutdown();

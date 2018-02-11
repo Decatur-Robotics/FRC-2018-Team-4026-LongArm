@@ -1,6 +1,6 @@
 package org.usfirst.frc.team4026.robot;
 
-public class PortMap {
+public interface PortMap {
 		//CAN
 		public static final int ARMLIFT = 4;
 		public static final int LEFTINTAKE = 0;
@@ -19,7 +19,10 @@ public class PortMap {
 		//Pneumatics
 		public static final int SHIFTLOWGEAR = 0;
 		public static final int SHIFTHIGHGEAR = 3;
-		
+		public static final int GRABBERRPISTONIN = 1;
+		public static final int GRABBERPISTONOUT = 2;
+		//public static final int INTAKEPISTONIN = 0;
+		//public static final int INTAKEPISTONOUT = 0;
 		//Analog Sensors
 		public static final int GYRO = 0;
 		//Digital in
@@ -32,6 +35,7 @@ public class PortMap {
 			public static final int ARM_LOWER_LIMIT = 4;
 			public static final int ARM_UPPER_LIMIT = 5;
 			public static final int CUBE_SENSOR_LIMIT = 6;
+			
 			
 		
 		
