@@ -77,6 +77,7 @@ public class Arm implements Subsystem {
 	// and grabber in conjunction. Allows left and right to be controlled with
 	// one analog stick
 	void arcadeIntake(double x, double y, double deadzone) {
+		y = -y;
 		double right = x + y;
 		double left = x - y;
 		right = trim(right);
@@ -85,7 +86,7 @@ public class Arm implements Subsystem {
 		leftIntakeMotor.set(left);
 		rightIntakeMotor.set(right);
 		leftGrabberMotor.set(left);
-		rightGrabberMotor.set(right);
+		rightGrabberMotor.set(-right);
 	}
 
 	private static double trim(double v) {

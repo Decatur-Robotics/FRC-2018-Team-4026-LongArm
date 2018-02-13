@@ -18,7 +18,5 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="navxLibs/lib/navx_frc.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
-	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
