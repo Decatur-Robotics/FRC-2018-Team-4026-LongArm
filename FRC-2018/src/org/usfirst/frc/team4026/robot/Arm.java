@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
@@ -113,6 +114,14 @@ public class Arm implements Subsystem {
 	public int shutdown() {
 		stopArm();
 		return 1;
+	}
+	
+	public void updateDashboard()
+	{
+		SmartDashboard.putNumber("Lift Speed", liftSpeed);
+		SmartDashboard.putNumber("Motor Output Voltage", armLiftMotor.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Output Current", armLiftMotor.getOutputCurrent());
+		SmartDashboard.putString("Brake Mode", brakeMode.toString());
 	}
 
 }

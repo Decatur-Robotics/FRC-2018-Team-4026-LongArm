@@ -53,5 +53,9 @@ public class Controllers implements Subsystem {
 
 		return 1;
 	}
-
+	
+	public void updateDashboard()
+	{
+		
+	}
 }

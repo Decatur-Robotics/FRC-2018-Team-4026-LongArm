@@ -152,7 +152,7 @@ public class Drivetrain implements Subsystem{
 		return 1;
 	}
 	
-	void updateDashboard(){
+	public void updateDashboard(){
 		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
 		//SmartDashboard.putNumber("Tip angle " , navx.getYaw());

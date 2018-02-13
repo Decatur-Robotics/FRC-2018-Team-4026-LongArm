@@ -7,7 +7,6 @@
 
 package org.usfirst.frc.team4026.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -121,7 +120,6 @@ public class Robot extends IterativeRobot {
 			drivetrain.tankDrive(controllers);
 			pneumatics.shift(1,3,controllers);
 			arm.lift(controllers, pneumatics);
-			//arm.intake(controllers, pneumatics, 1);
 			updateDashboard();
 		}
 		drivetrain.shutdown();
@@ -139,10 +137,8 @@ public class Robot extends IterativeRobot {
 	}
 	
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Lift Speed", arm.liftSpeed);
-		SmartDashboard.putNumber("Motor Output Voltage", arm.armLiftMotor.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Output Current", arm.armLiftMotor.getOutputCurrent());
-		SmartDashboard.putString("Brake Mode", arm.brakeMode.toString());
-		SmartDashboard.putString("Gear State", pneumatics.gearState());
+		drivetrain.updateDashboard();
+		arm.updateDashboard();
+		pneumatics.updateDashboard();
 	}
 }

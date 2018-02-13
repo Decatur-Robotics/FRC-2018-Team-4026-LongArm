@@ -25,7 +25,9 @@ public interface PortMap {
 		public static final int INTAKEPISTONOUT = 7;
 		//Analog Sensors
 		public static final int GYRO = 0;
+		public static final int PRESSURESENSOR = 1;
 		//Digital in
+		
 		//Encoders
 		public static final int RIGHT_ENCODER_1 = 0;
 		public static final int RIGHT_ENCODER_2 = 1;		

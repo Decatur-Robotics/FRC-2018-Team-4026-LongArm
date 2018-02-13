@@ -3,12 +3,14 @@ package org.usfirst.frc.team4026.robot;
 import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Pneumatics implements Subsystem {
 
 	DoubleSolenoid shifter;
 	public DoubleSolenoid grabberPistons;
 	public DoubleSolenoid intakePistons;
+	//RevRoboticsAirPressureSensor airPressureSensor = new RevRoboticsAirPressureSensor(PortMap.PRESSURESENSOR);
 	Compressor compressor;
 	boolean isInitialized = false;
 
@@ -69,6 +71,12 @@ public class Pneumatics implements Subsystem {
 	public int shutdown() {
 		shifter.set(Value.kForward);
 		return 1;
+	}
+	
+	public void updateDashboard()
+	{	
+		//SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
+		SmartDashboard.putString("Gear State", gearState());
 	}
 
 }
