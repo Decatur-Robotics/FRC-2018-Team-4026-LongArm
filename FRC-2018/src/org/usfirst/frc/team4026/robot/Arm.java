@@ -56,7 +56,7 @@ public class Arm implements Subsystem {
 
 		if (gamepad.getSecondaryRawButton(6)) {
 			holdLift = true;
-			liftSpeed = .05;
+			liftSpeed = .06;
 		} else {
 			holdLift = false;
 		}

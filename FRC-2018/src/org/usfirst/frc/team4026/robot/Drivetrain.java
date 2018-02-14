@@ -2,34 +2,33 @@ package org.usfirst.frc.team4026.robot;
 
 
 import edu.wpi.first.wpilibj.AnalogGyro;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
-import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Drivetrain implements Subsystem{
+	
+	//Constants
 	static final double MAX_BATTERY = 12.3;
 	static final double TIPPING_POINT_DEGS = 20;
-	boolean isGyroresetTelop = false;
 	
-	boolean isInitialized = false;
-	//Controllers
+	//Motor Controllers
 	Talon rightDriveMotor;
 	Talon leftDriveMotor;
 	
-	//
 	//Sensors
 	AnalogGyro gyro;
 	Encoder RightEncoder;
 	Encoder LeftEncoder;
-	//Tipper tippingAlgorithm;
+	
 	//Power vars
 	double right = 0;
 	double left = 0;
 	
-	
+	//Other Class Variables
+	boolean isGyroresetTelop = false;
+	boolean isInitialized = false;
 	
 	public int init(){
 		if(!isInitialized){
@@ -38,7 +37,6 @@ public class Drivetrain implements Subsystem{
 		LeftEncoder = new Encoder (PortMap.LEFT_ENCODER_1, PortMap.LEFT_ENCODER_2, true);
 		//RightEncoder.setDistancePerPulse();
 		//LeftEncoder.setDistancePerPulse();
-	//	tippingAlgorithm = new Tipper(navx,this);
 		
 		leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 		rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
@@ -62,7 +60,8 @@ public class Drivetrain implements Subsystem{
 		left  = -driveGamepad.getPrimaryLeft();
 		right = -driveGamepad.getPrimaryRight();
 		
-		//
+		/*left = smoothJoyStick(left);
+		right = smoothJoyStick(right);*/
 		
 		//Cut speed in half
 		if(driveGamepad.getPrimaryRawButton(7))
@@ -72,42 +71,34 @@ public class Drivetrain implements Subsystem{
 		}
 		double avgStick = (right + left) / 2.0;
 		
-		//If the robot is tipping, tipping control will set motor values and return true.
-		if (true)
+		if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
 		{
-			if(!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight())
-			{
-				setDriveMotors(left, right);
-				isGyroresetTelop = false;
-			}
-			else 
-			{
-				if(isGyroresetTelop == false)
-				{
-					gyro.reset();
-					isGyroresetTelop = true;
-				}
-				keepDriveStraight(avgStick, avgStick, 0);
-			}
+		
+			setDriveMotors(left, right);
+			isGyroresetTelop = false;
 		}
-		else
+		else 
 		{
-			//DONT FREAKING TIP
+			if(isGyroresetTelop == false)
+			{
+				gyro.reset();
+				isGyroresetTelop = true;
+			}
+			keepDriveStraight(avgStick, avgStick, 0);
 		}
+		
 	}
-	
-	
-	
-	
 	
 	void setDriveMotors(double leftPower2, double rightPower2)
 	{
 			leftDriveMotor.set(-leftPower2);
 			rightDriveMotor.set(rightPower2);
 	}
+	
 	public boolean shouldIHelpDriverDriveStraight() {
 		return false;
 	}
+	
 	double batteryCompensationPct()
 	{
 		return MAX_BATTERY / RobotController.getBatteryVoltage();
@@ -140,6 +131,15 @@ public class Drivetrain implements Subsystem{
 			rightDriveMotor.set(rightDriveVel * batteryCompensationPct());
 		}
 	}
+	
+	/*
+	 * Smooth joystick input for driving
+	 */
+	double smoothJoyStick(double joyInput)
+	{
+		return Math.pow(joyInput,2);
+	}
+	
 	void stopDrive(){
 		leftDriveMotor.set(0);
 		rightDriveMotor.set(0);
@@ -155,7 +155,8 @@ public class Drivetrain implements Subsystem{
 	public void updateDashboard(){
 		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
-		//SmartDashboard.putNumber("Tip angle " , navx.getYaw());
+		SmartDashboard.putNumber("Gyro Angle" , gyro.getAngle());
+		SmartDashboard.putNumber("Gyro Rotation" , gyro.getRate());
 	}
 	
 	
