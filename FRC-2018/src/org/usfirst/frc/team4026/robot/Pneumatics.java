@@ -10,7 +10,7 @@ public class Pneumatics implements Subsystem {
 	DoubleSolenoid shifter;
 	public DoubleSolenoid grabberPistons;
 	public DoubleSolenoid intakePistons;
-	//RevRoboticsAirPressureSensor airPressureSensor = new RevRoboticsAirPressureSensor(PortMap.PRESSURESENSOR);
+	RevRoboticsAirPressureSensor airPressureSensor;
 	Compressor compressor;
 	boolean isInitialized = false;
 
@@ -20,6 +20,7 @@ public class Pneumatics implements Subsystem {
 			shifter = new DoubleSolenoid(PortMap.SHIFTLOWGEAR, PortMap.SHIFTHIGHGEAR);
 			grabberPistons = new DoubleSolenoid(PortMap.GRABBERRPISTONIN, PortMap.GRABBERPISTONOUT);
 			intakePistons = new DoubleSolenoid(PortMap.INTAKEPISTONIN, PortMap.INTAKEPISTONOUT);
+			airPressureSensor = new RevRoboticsAirPressureSensor(PortMap.PRESSURESENSOR);
 			compressor = new Compressor();
 			compressor.setClosedLoopControl(true);
 			shifter.set(Value.kForward);
@@ -103,7 +104,7 @@ public class Pneumatics implements Subsystem {
 	
 	public void updateDashboard()
 	{	
-		//SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
+		SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
 		SmartDashboard.putString("Gear State", gearState());
 		SmartDashboard.putString("Intake Piston State", intakeState());
 		SmartDashboard.putString("Grabber Piston State", grabberState());

@@ -122,9 +122,8 @@ public class Robot extends IterativeRobot {
 			arm.lift(controllers, pneumatics);
 			updateDashboard();
 		}
-		drivetrain.shutdown();
-		pneumatics.shutdown();
-		arm.shutdown();
+		
+		shutdown();
 		updateDashboard();
 	}
 
@@ -136,6 +135,12 @@ public class Robot extends IterativeRobot {
 		//not needed yet
 	}
 	
+	public void shutdown()
+	{
+		drivetrain.shutdown();
+		pneumatics.shutdown();
+		arm.shutdown();
+	}
 	public void updateDashboard() {
 		drivetrain.updateDashboard();
 		arm.updateDashboard();

@@ -1,7 +1,7 @@
 package org.usfirst.frc.team4026.robot;
 
 
-//Contains commonly use methods for teleop functions
+//Contains commonly used methods for teleop functions
 public class TeleopAutoFunction {
 	private long timeoutStartTime = 0;
 	public int state;
@@ -22,7 +22,7 @@ public class TeleopAutoFunction {
 	}
 	protected void autoIntake(Controllers gamepad) {
 		int state = 0;
-		while(gamepad.getSecondaryRawButton(7)) {
+		while(gamepad.getSecondaryRawButton(8)) {
 			switch(state) {
 			case 0:
 				// TODO: write code to start intake
@@ -41,7 +41,7 @@ public class TeleopAutoFunction {
 	}
 	protected void autoOutput(Controllers gamepad) {
 		int state = 0;
-		while(gamepad.getSecondaryRawButton(8)) {
+		while(gamepad.getSecondaryRawButton(7)) {
 			switch(state) {
 			case 0:
 				// TODO: write code to align robot to scale

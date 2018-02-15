@@ -70,8 +70,6 @@ public class Arm implements Subsystem {
 		}
 
 		armLiftMotor.set(liftSpeed);
-		pneumatics.actuateGrabber(1, 2, gamepad);
-
 	}
 
 	// Ask Walden - this will need to be tweaked this afternoon. Controls intake
@@ -81,6 +79,10 @@ public class Arm implements Subsystem {
 		y = -y;
 		double right = x + y;
 		double left = x - y;
+		if (left < deadzone && right < deadzone) {
+			left = 0;
+			right = 0;
+		}
 		right = trim(right);
 		left = trim(left);
 
@@ -119,8 +121,8 @@ public class Arm implements Subsystem {
 	public void updateDashboard()
 	{
 		SmartDashboard.putNumber("Lift Speed", liftSpeed);
-		SmartDashboard.putNumber("Motor Output Voltage", armLiftMotor.getMotorOutputVoltage());
-		SmartDashboard.putNumber("Output Current", armLiftMotor.getOutputCurrent());
+		SmartDashboard.putNumber("Arm Motor Output Voltage", armLiftMotor.getMotorOutputVoltage());
+		SmartDashboard.putNumber("Arm Output Current", armLiftMotor.getOutputCurrent());
 		SmartDashboard.putString("Brake Mode", brakeMode.toString());
 	}
 

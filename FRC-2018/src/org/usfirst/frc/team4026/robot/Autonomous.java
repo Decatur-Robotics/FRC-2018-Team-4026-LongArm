@@ -16,95 +16,49 @@ public class Autonomous {
 	String scale;
 	String opponentSwitch;
 
-	public void crossLineAuto(Drivetrain drivetrain) {
+	public void crossLineAuto(Drivetrain drivetrain) 
+	{
 		decodeGameData();
 		updateDashboard();
 		autoDriveRobot(drivetrain, 0.3, 0.3, 0, 36, USE_DRIVE_TIMER);
 		
 	}
 
-	public void position1Scale(Drivetrain drivetrain) {
-		decodeGameData();
-		updateDashboard();
-		
-	}
-
-	public void position1Switch(Drivetrain drivetrain) {
-		decodeGameData();
-		updateDashboard();
-		
-	}
-
-	public void position2Switch(Drivetrain drivetrain) {
-		decodeGameData();
-		updateDashboard();
-		
-	}
-
-	public void position3Scale(Drivetrain drivetrain) {
-		decodeGameData();
-		updateDashboard();
-		
-	}
-
-	public void position3Switch(Drivetrain drivetrain) {
-		decodeGameData();
-		updateDashboard();
-		
-	}
-	public String getGameData()
+	public void position1Scale(Drivetrain drivetrain) 
 	{
-		gameData = DriverStation.getInstance().getGameSpecificMessage();
-		return gameData;
+		decodeGameData();
+		updateDashboard();
+		
 	}
-	public void decodeGameData()
-	{
-		if(gameData.length() > 0)
-        {
-			//Check team switch
-			if(gameData.charAt(0) == 'L')
-			{
-				teamSwitch = "Left";
-			} 
-			else 
-			{
-				teamSwitch = "Right";
-			}
-			
-			//Check Scale
-			if(gameData.charAt(1) == 'L')
-			{
-				scale = "Left";
-			} 
-			else 
-			{
-				scale = "Right";
-			}
-			
-			//Check opponent switch
-			if(gameData.charAt(2) == 'L')
-			{
-				opponentSwitch = "Left";
-			} 
-			else 
-			{
-				opponentSwitch = "Right";
-			}
-        }
-		else
-		{
-			teamSwitch = "Not Recieved Data Yet";
-			scale = "Not Recieved Data Yet";
-			opponentSwitch = "Not Recieved Data Yet";
-		}
-	}
-	public void updateDashboard()
-	{
-		SmartDashboard.putString("Team Switch", teamSwitch);
-		SmartDashboard.putString("Scale", scale);
-		SmartDashboard.putString("Opponent Switch", opponentSwitch);
 
+	public void position1Switch(Drivetrain drivetrain) 
+	{
+		decodeGameData();
+		updateDashboard();
+		
 	}
+
+	public void position2Switch(Drivetrain drivetrain) 
+	{
+		decodeGameData();
+		updateDashboard();
+		
+	}
+
+	public void position3Scale(Drivetrain drivetrain) 
+	{
+		decodeGameData();
+		updateDashboard();
+		
+	}
+
+	public void position3Switch(Drivetrain drivetrain) 
+	{
+		decodeGameData();
+		updateDashboard();
+		
+	}
+	
 	void resetDrive(Drivetrain drivetrain, boolean isTimerBased)
 	{
 		if(isTimerBased)
@@ -120,6 +74,7 @@ public class Autonomous {
 			drivetrain.gyro.reset();
 		}
 	}
+	
 	boolean autoDriveRobot(Drivetrain drivetrain, double velocityLeft, double velocityRight, double timeSec, double targetDistanceInch, boolean isTimerBased)
 	{
 		double err = 0.0;
@@ -179,4 +134,58 @@ public class Autonomous {
 		return (encTicks / DRIVE_TICKSPERREV) * 3.14 * 5.0;
 	}
 	
+	public String getGameData()
+	{
+		gameData = DriverStation.getInstance().getGameSpecificMessage();
+		return gameData;
+	}
+	
+	public void decodeGameData()
+	{
+		if(gameData.length() > 0)
+        {
+			//Check team switch
+			if(gameData.charAt(0) == 'L')
+			{
+				teamSwitch = "Left";
+			} 
+			else 
+			{
+				teamSwitch = "Right";
+			}
+			
+			//Check Scale
+			if(gameData.charAt(1) == 'L')
+			{
+				scale = "Left";
+			} 
+			else 
+			{
+				scale = "Right";
+			}
+			
+			//Check opponent switch
+			if(gameData.charAt(2) == 'L')
+			{
+				opponentSwitch = "Left";
+			} 
+			else 
+			{
+				opponentSwitch = "Right";
+			}
+        }
+		else
+		{
+			teamSwitch = "Not Recieved Data Yet";
+			scale = "Not Recieved Data Yet";
+			opponentSwitch = "Not Recieved Data Yet";
+		}
+	}
+	public void updateDashboard()
+	{
+		SmartDashboard.putString("Team Switch", teamSwitch);
+		SmartDashboard.putString("Scale", scale);
+		SmartDashboard.putString("Opponent Switch", opponentSwitch);
+		
+	}
 }
