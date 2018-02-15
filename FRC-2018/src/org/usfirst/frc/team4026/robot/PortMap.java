@@ -28,7 +28,7 @@ public interface PortMap {
 		public static final int GYRO = 0;
 		public static final int PRESSURESENSOR = 1;
 		
-		//Digital in
+		//Digital Sensors
 		
 		//Encoders
 		public static final int RIGHT_ENCODER_1 = 0;

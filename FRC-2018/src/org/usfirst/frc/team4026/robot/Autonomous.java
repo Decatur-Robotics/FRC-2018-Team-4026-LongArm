@@ -28,35 +28,65 @@ public class Autonomous {
 	{
 		decodeGameData();
 		updateDashboard();
-		
+		if (scale.equals("Left"))
+		{
+			
+		}
+		else {
+			
+		}
 	}
 
 	public void position1Switch(Drivetrain drivetrain) 
 	{
 		decodeGameData();
 		updateDashboard();
-		
+		if (teamSwitch.equals("Left"))
+		{
+			
+		}
+		else {
+			
+		}
 	}
 
 	public void position2Switch(Drivetrain drivetrain) 
 	{
 		decodeGameData();
 		updateDashboard();
-		
+		if (teamSwitch.equals("Left"))
+		{
+			
+		}
+		else {
+			
+		}
 	}
 
 	public void position3Scale(Drivetrain drivetrain) 
 	{
 		decodeGameData();
 		updateDashboard();
-		
+		if (scale.equals("Left"))
+		{
+			
+		}
+		else {
+			
+		}
 	}
 
 	public void position3Switch(Drivetrain drivetrain) 
 	{
 		decodeGameData();
 		updateDashboard();
-		
+		if (teamSwitch.equals("Left"))
+		{
+			
+		}
+		else {
+			
+		}
 	}
 	
 	void resetDrive(Drivetrain drivetrain, boolean isTimerBased)
