@@ -26,7 +26,7 @@ public interface PortMap {
 		
 		//Analog Sensors
 		public static final int GYRO = 0;
-		public static final int PRESSURESENSOR = 1;
+		public static final int PRESSURESENSOR = 3;
 		
 		//Digital Sensors
 		

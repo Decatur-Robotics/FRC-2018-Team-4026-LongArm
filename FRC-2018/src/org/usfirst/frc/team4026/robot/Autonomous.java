@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Autonomous {
 	
 	static final boolean USE_DRIVE_TIMER = false;
-	static final double DRIVE_TICKSPERREV = 64;	
+	static final double DRIVE_TICKSPERREV = 392;	
 	
 	Timer autoDriveTimer = new Timer();
 	
@@ -148,6 +148,7 @@ public class Autonomous {
 					else if(velocityRight > 0.0 && velocityRight < 0.2)
 						velocityRight = 0.2;
 				}
+				drivetrain.gyro.reset();
 				drivetrain.keepDriveStraight(velocityLeft, velocityRight, 0);
 			}
 			else

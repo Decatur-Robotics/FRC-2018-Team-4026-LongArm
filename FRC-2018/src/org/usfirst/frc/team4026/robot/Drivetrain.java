@@ -107,7 +107,7 @@ public class Drivetrain implements Subsystem{
 	public void keepDriveStraight(double leftDriveVel, double rightDriveVel, double targetAngle) 
 	{	
 		double error = 0, correctionFactor;
-		error = targetAngle - gyro.getAngle();
+		error = targetAngle + gyro.getAngle();
 		correctionFactor = (error/75.0);
 
 		if(leftDriveVel > 0.9)
@@ -127,8 +127,8 @@ public class Drivetrain implements Subsystem{
 		}
 		else
 		{
-			leftDriveMotor.set(-leftDriveVel * batteryCompensationPct());
-			rightDriveMotor.set(rightDriveVel * batteryCompensationPct());
+			leftDriveMotor.set(leftDriveVel * batteryCompensationPct());
+			rightDriveMotor.set(-rightDriveVel * batteryCompensationPct());
 		}
 	}
 	
@@ -138,6 +138,11 @@ public class Drivetrain implements Subsystem{
 	double smoothJoyStick(double joyInput)
 	{
 		return Math.pow(joyInput,2);
+	}
+	
+	public void reset() {
+		LeftEncoder.reset();
+		RightEncoder.reset();
 	}
 	
 	void stopDrive(){

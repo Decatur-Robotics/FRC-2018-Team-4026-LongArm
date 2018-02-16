@@ -79,7 +79,7 @@ public class Arm implements Subsystem {
 		y = -y;
 		double right = x + y;
 		double left = x - y;
-		if (left < deadzone && right < deadzone) {
+		if (Math.abs(left) < deadzone && Math.abs(right) < deadzone) {
 			left = 0;
 			right = 0;
 		}
