@@ -3,6 +3,7 @@ package org.usfirst.frc.team4026.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.AnalogGyro;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,8 @@ public class Arm implements Subsystem {
 	WPI_TalonSRX leftIntakeMotor;
 	WPI_TalonSRX rightIntakeMotor;
 	DigitalInput armLowerLimit;
+	DigitalInput armUpperLimit;
+	AnalogGyro armGyro;
 
 	@Override
 	public int init() {
@@ -32,8 +35,12 @@ public class Arm implements Subsystem {
 			leftIntakeMotor = new WPI_TalonSRX(PortMap.LEFTINTAKE);
 			rightIntakeMotor = new WPI_TalonSRX(PortMap.RIGHTINTAKE);
 			armLowerLimit = new DigitalInput(PortMap.ARM_LOWER_LIMIT);
+			// armLowerLimit = new DigitalInput(PortMap.ARM_UPPER_LIMIT);
 			liftSpeed = 0;
 			isInitialized = true;
+			armGyro = new AnalogGyro(0);
+			armGyro.calibrate();
+			armGyro.reset();
 
 			return 0;
 		}
@@ -56,7 +63,7 @@ public class Arm implements Subsystem {
 
 		pneumatics.actuateGrabber(5, 7, gamepad);
 
-		arcadeIntake(gamepad.getSecondaryRightX(), gamepad.getSecondaryRightY(), .05);
+		arcadeIntake(gamepad.getSecondaryRightX(), gamepad.getSecondaryRightY(), .05, pneumatics);
 
 		if (gamepad.getSecondaryRawButton(6)) {
 			holdLift = true;
@@ -72,6 +79,9 @@ public class Arm implements Subsystem {
 		if (liftSpeed < 0 && !holdLift) {
 			liftSpeed *= .3;
 		}
+		if (liftSpeed < 0 && !armLowerLimit.get()) {
+			liftSpeed = 0;
+		}
 
 		armLiftMotor.set(liftSpeed);
 	}
@@ -79,21 +89,22 @@ public class Arm implements Subsystem {
 	// Ask Walden - this will need to be tweaked this afternoon. Controls intake
 	// and grabber in conjunction. Allows left and right to be controlled with
 	// one analog stick
-	void arcadeIntake(double x, double y, double deadzone) {
+	void arcadeIntake(double x, double y, double deadzone, Pneumatics pneumatics) {
 		y = -y;
 		double right = x + y;
 		double left = x - y;
 		if (Math.abs(left) < deadzone && Math.abs(right) < deadzone) {
 			left = 0;
 			right = 0;
+		} else {
+			pneumatics.openGrabber();
 		}
 		right = trim(right);
 		left = trim(left);
 
 		leftIntakeMotor.set(left);
 		rightIntakeMotor.set(right);
-		leftGrabberMotor.set(left);
-		rightGrabberMotor.set(-right);
+
 	}
 
 	private static double trim(double v) {
@@ -105,25 +116,19 @@ public class Arm implements Subsystem {
 		}
 		return v;
 	}
-	
+
 	private void intakeLift(Controllers gamepad) {
-		if (gamepad.getSecondaryRawButton(1))
-		{
+		if (gamepad.getSecondaryRawButton(1)) {
 			leftGrabberMotor.set(1.0);
 			rightGrabberMotor.set(-1.0);
-		}
-		else if (gamepad.getSecondaryRawButton(2))
-		{
-		 	leftGrabberMotor.set(-1);
+		} else if (gamepad.getSecondaryRawButton(2)) {
+			leftGrabberMotor.set(-1);
 			rightGrabberMotor.set(1);
-		}
-		else 
-		{
+		} else {
 			leftGrabberMotor.set(0);
 			rightGrabberMotor.set(0);
 		}
-		
-		
+
 	}
 
 	private void stopArm() {
@@ -141,14 +146,15 @@ public class Arm implements Subsystem {
 		stopArm();
 		return 1;
 	}
-	
-	public void updateDashboard()
-	{
+
+	@Override
+	public void updateDashboard() {
 		SmartDashboard.putNumber("Lift Speed", liftSpeed);
 		SmartDashboard.putNumber("Arm Motor Output Voltage", armLiftMotor.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Arm Output Current", armLiftMotor.getOutputCurrent());
 		SmartDashboard.putBoolean("Arm Lower Limit Switch", armLowerLimit.get());
 		SmartDashboard.putString("Brake Mode", brakeMode.toString());
+		SmartDashboard.putNumber("Arm Gyro", armGyro.getAngle());
 	}
 
 }

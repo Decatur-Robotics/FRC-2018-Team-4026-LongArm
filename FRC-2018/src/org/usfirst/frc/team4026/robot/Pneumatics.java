@@ -23,7 +23,7 @@ public class Pneumatics implements Subsystem {
 			airPressureSensor = new RevRoboticsAirPressureSensor(PortMap.PRESSURESENSOR);
 			compressor = new Compressor();
 			compressor.setClosedLoopControl(true);
-			shifter.set(Value.kForward);
+			shifter.set(Value.kReverse);
 			grabberPistons.set(Value.kReverse);
 			intakePistons.set(Value.kReverse);
 			isInitialized = true;
@@ -33,32 +33,42 @@ public class Pneumatics implements Subsystem {
 		return 1;
 	}
 
-	void shift(int lowGearButton, int highGearButton, Controllers driveGamepad) 
-	{
-		if (driveGamepad.getPrimaryRawButton(highGearButton)) 
-		{
+	void shift(int lowGearButton, int highGearButton, Controllers driveGamepad) {
+		if (driveGamepad.getPrimaryRawButton(highGearButton)) {
 			shifter.set(DoubleSolenoid.Value.kForward);
 
-		} else if (driveGamepad.getPrimaryRawButton(lowGearButton)) 
-		{
+		} else if (driveGamepad.getPrimaryRawButton(lowGearButton)) {
 			shifter.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
 
-	void actuateGrabber(int inButton, int outButton, Controllers gamepad) 
-	{
-		if (gamepad.getSecondaryRawButton(inButton)) 
-		{
+	public void setHighGear() {
+		shifter.set(DoubleSolenoid.Value.kForward);
+
+	}
+
+	public void setLowGear() {
+		shifter.set(DoubleSolenoid.Value.kReverse);
+	}
+
+	void actuateGrabber(int inButton, int outButton, Controllers gamepad) {
+		if (gamepad.getSecondaryRawButton(inButton)) {
 			grabberPistons.set(DoubleSolenoid.Value.kForward);
 
-		} else if (gamepad.getSecondaryRawButton(outButton)) 
-		{
+		} else if (gamepad.getSecondaryRawButton(outButton)) {
 			grabberPistons.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
 
-	void actuateIntake(int inButton, int outButton, Controllers gamepad) 
-	{
+	public void openGrabber() {
+		grabberPistons.set(DoubleSolenoid.Value.kReverse);
+	}
+
+	public void closeGrabber() {
+		grabberPistons.set(DoubleSolenoid.Value.kForward);
+	}
+
+	void actuateIntake(int inButton, int outButton, Controllers gamepad) {
 		if (gamepad.getSecondaryRawButton(inButton)) {
 			intakePistons.set(DoubleSolenoid.Value.kForward);
 
@@ -67,26 +77,23 @@ public class Pneumatics implements Subsystem {
 		}
 	}
 
-	String gearState() 
-	{
+	String gearState() {
 		if (shifter.get() == DoubleSolenoid.Value.kForward) {
 			return "High Gear";
 		} else {
 			return "Low Gear";
 		}
 	}
-	
-	String intakeState() 
-	{
+
+	String intakeState() {
 		if (intakePistons.get() == DoubleSolenoid.Value.kForward) {
 			return "In";
 		} else {
 			return "Out";
 		}
 	}
-	
-	String grabberState() 
-	{
+
+	String grabberState() {
 		if (grabberPistons.get() == DoubleSolenoid.Value.kForward) {
 			return "In";
 		} else {
@@ -101,9 +108,9 @@ public class Pneumatics implements Subsystem {
 		intakePistons.set(Value.kReverse);
 		return 1;
 	}
-	
-	public void updateDashboard()
-	{	
+
+	@Override
+	public void updateDashboard() {
 		SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
 		SmartDashboard.putString("Gear State", gearState());
 		SmartDashboard.putString("Intake Piston State", intakeState());

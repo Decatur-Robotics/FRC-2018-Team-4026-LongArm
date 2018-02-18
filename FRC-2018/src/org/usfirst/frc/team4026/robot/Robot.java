@@ -19,22 +19,22 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
  * project.
  */
 public class Robot extends IterativeRobot {
-	
+
 	SendableChooser<String> autoChooser = new SendableChooser<>();
 	private static final String CROSSLINEAUTO = "Cross Line Auto";
-	
+
 	private static final String POSITION1SCALE = "DriverStation 1 Scale";
 	private static final String POSITION1SWITCH = "DriverStation 1 Switch";
-	
+
 	private static final String POSITION2SWITCH = "DriverStation 2 Switch";
-	
+
 	private static final String POSITION3SCALE = "DriverStation 3 Scale";
 	private static final String POSITION3SWITCH = "DriverStation 3 Switch";
-	
+
 	private String autoSelected;
-	
+
 	double counter = 0;
-	
+
 	Drivetrain drivetrain = new Drivetrain();
 	Arm arm = new Arm();
 	Controllers controllers = new Controllers();
@@ -58,7 +58,7 @@ public class Robot extends IterativeRobot {
 		arm.init();
 		controllers.init();
 		pneumatics.init();
-		
+
 	}
 
 	/**
@@ -68,8 +68,9 @@ public class Robot extends IterativeRobot {
 	 * LabVIEW Dashboard, remove all of the chooser code and uncomment the
 	 * getString line to get the auto name from the text box below the Gyro
 	 *
-	 * <p>You can add additional auto modes by adding additional comparisons to
-	 * the switch structure below with additional strings. If using the
+	 * <p>
+	 * You can add additional auto modes by adding additional comparisons to the
+	 * switch structure below with additional strings. If using the
 	 * SendableChooser make sure to add them to the chooser code above as well.
 	 */
 	@Override
@@ -77,54 +78,53 @@ public class Robot extends IterativeRobot {
 		autoSelected = autoChooser.getSelected();
 		System.out.println("Auto selected: " + autoSelected);
 		auto.getGameData();
+		drivetrain.gyro.reset();
+		pneumatics.closeGrabber();
 	}
 
 	/**
 	 * This function is called periodically during autonomous.
 	 */
 	@Override
-	public void autonomousPeriodic() 
-	{
-		while(isAutonomous() && isEnabled())
-		{
+	public void autonomousPeriodic() {
+		while (isAutonomous() && isEnabled()) {
 			switch (autoSelected) {
 			case CROSSLINEAUTO:
-				auto.crossLineAuto(drivetrain);
+				auto.crossLineAuto(drivetrain, pneumatics);
 				updateDashboard();
 				break;
 			case POSITION1SCALE:
-				auto.position1Scale(drivetrain);
+				auto.position1Scale(drivetrain, pneumatics);
 				updateDashboard();
 				break;
 			case POSITION1SWITCH:
-				auto.position1Switch(drivetrain);
+				auto.position1Switch(drivetrain, pneumatics);
 				updateDashboard();
 				break;
 			case POSITION2SWITCH:
-				auto.position2Switch(drivetrain);
+				auto.position2Switch(drivetrain, pneumatics);
 				updateDashboard();
 				break;
 			case POSITION3SCALE:
-				auto.position3Scale(drivetrain);
+				auto.position3Scale(drivetrain, pneumatics);
 				updateDashboard();
 				break;
 			case POSITION3SWITCH:
-				auto.position3Switch(drivetrain);
+				auto.position3Switch(drivetrain, pneumatics);
 				updateDashboard();
 				break;
 			}
 		}
 	}
 
-
 	/**
 	 * This function is called periodically during operator control.
 	 */
 	@Override
-	public void teleopPeriodic() { 
-		while(isOperatorControl() && isEnabled()) {
+	public void teleopPeriodic() {
+		while (isOperatorControl() && isEnabled()) {
 			drivetrain.tankDrive(controllers);
-			pneumatics.shift(1,3,controllers);
+			pneumatics.shift(1, 3, controllers);
 			arm.lift(controllers, pneumatics);
 			updateDashboard();
 		}
@@ -138,15 +138,15 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void testPeriodic() {
-		//not needed yet
+		// not needed yet
 	}
-	
-	public void shutdown()
-	{
+
+	public void shutdown() {
 		drivetrain.shutdown();
 		pneumatics.shutdown();
 		arm.shutdown();
 	}
+
 	public void updateDashboard() {
 		drivetrain.updateDashboard();
 		arm.updateDashboard();

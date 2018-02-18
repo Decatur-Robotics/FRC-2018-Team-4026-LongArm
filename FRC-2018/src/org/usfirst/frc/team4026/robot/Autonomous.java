@@ -5,159 +5,208 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Autonomous {
-	
+
 	static final boolean USE_DRIVE_TIMER = false;
-	static final double DRIVE_TICKSPERREV = 392;	
-	
+	static final double DRIVE_TICKSPERREV = 392;
+	int state = 0;
+	double gyroKi = 0;
 	Timer autoDriveTimer = new Timer();
-	
+
 	String gameData;
 	String teamSwitch;
 	String scale;
 	String opponentSwitch;
 
-	public void crossLineAuto(Drivetrain drivetrain) 
-	{
+	public void crossLineAuto(Drivetrain drivetrain, Pneumatics pneumatics) {
 		decodeGameData();
 		updateDashboard();
-		if(!autoDriveRobot(drivetrain, 0.3, 0.3, 0, 36, USE_DRIVE_TIMER)) {
-			
-		}else {
+		pneumatics.setLowGear();
+		if (!autoDriveRobot(drivetrain, 0.3, 0.3, 0, 70, USE_DRIVE_TIMER)) {
+
+		} else {
 			drivetrain.stopDrive();
 		}
-		
-		
+
 	}
 
-	public void position1Scale(Drivetrain drivetrain) 
-	{
+	public void position1Scale(Drivetrain drivetrain, Pneumatics pneumatics) {
 		decodeGameData();
 		updateDashboard();
-		if (scale.equals("Left"))
-		{
-			
-		}
-		else {
-			
+		pneumatics.setLowGear();
+		if (scale.equals("Left")) {
+
+		} else {
+
 		}
 	}
 
-	public void position1Switch(Drivetrain drivetrain) 
-	{
+	public void position1Switch(Drivetrain drivetrain, Pneumatics pneumatics) {
 		decodeGameData();
 		updateDashboard();
-		if (teamSwitch.equals("Left"))
-		{
-			
-		}
-		else {
-			
+		pneumatics.setLowGear();
+		if (teamSwitch.equals("Left")) {
+
+		} else {
+
 		}
 	}
 
-	public void position2Switch(Drivetrain drivetrain) 
-	{
+	public void position2Switch(Drivetrain drivetrain, Pneumatics pneumatics) {
 		decodeGameData();
 		updateDashboard();
-		if (teamSwitch.equals("Left"))
-		{
-			
-		}
-		else {
-			
+		pneumatics.setLowGear();
+		if (teamSwitch.equals("Left")) {
+
+			switch (state) {
+			case 0:
+				state++;
+				break;
+			case 1:
+
+				if (turnGyro(drivetrain, -35, .5)) {
+					drivetrain.LeftEncoder.reset();
+					drivetrain.gyro.reset();
+					state++;
+				}
+				break;
+			case 2:
+				if (autoDriveRobot(drivetrain, 0.3, 0.3, 0, 130 - 30, USE_DRIVE_TIMER)) {
+					drivetrain.LeftEncoder.reset();
+					drivetrain.gyro.reset();
+					state++;
+				}
+				break;
+			case 3:
+				if (turnGyro(drivetrain, 18, .5)) {
+					state++;
+				}
+				break;
+			case 4:
+				drivetrain.setDriveMotors(.8, .8);
+				if (Math.abs(drivetrain.Accel.getX()) > 1) {
+					state++;
+					drivetrain.stopDrive();
+				}
+				break;
+			case 5:
+				pneumatics.openGrabber();
+				state++;
+
+			}
+		} else {
+			switch (state) {
+			case 0:
+				state++;
+				break;
+			case 1:
+
+				if (turnGyro(drivetrain, 35, .5)) {
+					drivetrain.LeftEncoder.reset();
+					drivetrain.gyro.reset();
+					state++;
+				}
+				break;
+			case 2:
+				if (autoDriveRobot(drivetrain, 0.3, 0.3, 0, 120, USE_DRIVE_TIMER)) {
+					drivetrain.LeftEncoder.reset();
+					drivetrain.gyro.reset();
+					state++;
+				}
+				break;
+			case 3:
+				if (turnGyro(drivetrain, -18, .5)) {
+					state++;
+				}
+				break;
+			case 4:
+				drivetrain.setDriveMotors(.8, .8);
+				if (Math.abs(drivetrain.Accel.getX()) > 1) {
+					state++;
+					drivetrain.stopDrive();
+				}
+				break;
+			case 5:
+				pneumatics.openGrabber();
+				state++;
+
+			}
 		}
 	}
 
-	public void position3Scale(Drivetrain drivetrain) 
-	{
+	public void position3Scale(Drivetrain drivetrain, Pneumatics pneumatics) {
 		decodeGameData();
 		updateDashboard();
-		if (scale.equals("Left"))
-		{
-			
-		}
-		else {
-			
+		pneumatics.setLowGear();
+		if (scale.equals("Left")) {
+
+		} else {
+
 		}
 	}
 
-	public void position3Switch(Drivetrain drivetrain) 
-	{
+	public void position3Switch(Drivetrain drivetrain, Pneumatics pneumatics) {
 		decodeGameData();
 		updateDashboard();
-		if (teamSwitch.equals("Left"))
-		{
-			
-		}
-		else {
-			
+		pneumatics.setLowGear();
+		if (teamSwitch.equals("Left")) {
+
+		} else {
+
 		}
 	}
-	
-	void resetDrive(Drivetrain drivetrain, boolean isTimerBased)
-	{
-		if(isTimerBased)
-		{
+
+	void resetDrive(Drivetrain drivetrain, boolean isTimerBased) {
+		if (isTimerBased) {
 			autoDriveTimer.reset();
 			autoDriveTimer.start();
-			drivetrain.gyro.reset();;
-		}
-		else
-		{
+			drivetrain.gyro.reset();
+			;
+		} else {
 			drivetrain.LeftEncoder.reset();
 			drivetrain.RightEncoder.reset();
 			drivetrain.gyro.reset();
 		}
 	}
-	
-	boolean autoDriveRobot(Drivetrain drivetrain, double velocityLeft, double velocityRight, double timeSec, double targetDistanceInch, boolean isTimerBased)
-	{
+
+	boolean autoDriveRobot(Drivetrain drivetrain, double velocityLeft, double velocityRight, double timeSec,
+			double targetDistanceInch, boolean isTimerBased) {
 		double err = 0.0;
 		double driveDistInch = 0.0;
 		double percentPower = 0.0;
-		if(isTimerBased)
-		{
-			if(autoDriveTimer.get() <= timeSec)
-			{
-				//leftDriveMotor.set(-velocityLeft);
-				//rightDriveMotor.set(velocityRight);
+		if (isTimerBased) {
+			if (autoDriveTimer.get() <= timeSec) {
+				// leftDriveMotor.set(-velocityLeft);
+				// rightDriveMotor.set(velocityRight);
 				drivetrain.keepDriveStraight(velocityLeft, velocityRight, 0);
-			}
-			else
-			{
+			} else {
 				drivetrain.stopDrive();
 				return true;
 			}
-		}
-		else
-		{
+		} else {
 			driveDistInch = Math.abs(convertDriveTicksToInches(drivetrain.LeftEncoder.get()));
-			if(driveDistInch < Math.abs(targetDistanceInch))
-			{
-				//leftDriveMotor.set(-velocityLeft);
-				//rightDriveMotor.set(velocityRight);
+			if (driveDistInch < Math.abs(targetDistanceInch)) {
+				// leftDriveMotor.set(-velocityLeft);
+				// rightDriveMotor.set(velocityRight);
 				err = Math.abs(targetDistanceInch) - driveDistInch;
 				percentPower = (err / Math.abs(targetDistanceInch));
 
-				if(err <= 48.0)	//If within 24" start slowing down
+				if (err <= 48.0) // If within 24" start slowing down
 				{
 					velocityLeft *= percentPower;
 					velocityRight *= percentPower;
 
-					if(velocityLeft < 0.0 && velocityLeft > -0.2)
+					if (velocityLeft < 0.0 && velocityLeft > -0.2)
 						velocityLeft = -0.2;
-					else if(velocityLeft > 0.0 && velocityLeft < 0.2)
+					else if (velocityLeft > 0.0 && velocityLeft < 0.2)
 						velocityLeft = 0.2;
-					if(velocityRight < 0.0 && velocityRight > -0.2)
+					if (velocityRight < 0.0 && velocityRight > -0.2)
 						velocityRight = -0.2;
-					else if(velocityRight > 0.0 && velocityRight < 0.2)
+					else if (velocityRight > 0.0 && velocityRight < 0.2)
 						velocityRight = 0.2;
 				}
-				drivetrain.gyro.reset();
-				drivetrain.keepDriveStraight(velocityLeft, velocityRight, 0);
-			}
-			else
-			{
+
+				drivetrain.keepDriveStraight(velocityLeft, velocityLeft, 0);
+			} else {
 				drivetrain.stopDrive();
 				return true;
 			}
@@ -165,63 +214,109 @@ public class Autonomous {
 		return false;
 	}
 
-	double convertDriveTicksToInches(int encTicks)
-	{
+	double convertDriveTicksToInches(int encTicks) {
 		return (encTicks / DRIVE_TICKSPERREV) * 3.14 * 6.0;
 	}
-	
-	public String getGameData()
-	{
+
+	/*
+	 * Used during autonomous to turn the robot to a specified angle.
+	 */
+	boolean turnGyro(Drivetrain drive, double rAngle, double maxTurnVelocity) {
+
+		double error = 0.0;
+		double VelocityToSet = 0.0;
+		// Positive gyro angle means turning left
+		if (rAngle < drive.gyro.getAngle()) {
+			// Start accumulating error if the rate of turning is < 2 deg/sec
+			if (drive.gyro.getRate() < 2.0) {
+				gyroKi += 0.001;
+				if (gyroKi > 0.2) // Cap the integral term
+					gyroKi = 0.2;
+			}
+
+			error = Math.abs(rAngle) - drive.gyro.getAngle();
+			if (drive.gyro.getAngle() <= Math.abs(rAngle) && Math.abs(error) > 2.0) {
+				// turn left
+				VelocityToSet = (error / 270) + 0.2 + gyroKi; // 140 0.2
+				if (Math.abs(VelocityToSet) > maxTurnVelocity)
+					VelocityToSet = maxTurnVelocity * (VelocityToSet < 0.0 ? -1.0 : 1.0);
+				drive.leftDriveMotor.set(VelocityToSet * drive.batteryCompensationPct()); // 0.8
+				drive.rightDriveMotor.set(VelocityToSet * drive.batteryCompensationPct()); // 0.8
+			} else {
+				gyroKi = 0.0;
+				drive.stopDrive();
+				// if(WaitAsyncUntil(0.5,true))
+				return true;
+			}
+		} else if (rAngle > drive.gyro.getAngle()) {
+			// Start accumulating error if the rate of turning is < 2 deg/sec
+			if (drive.gyro.getRate() < 2.0) {
+				gyroKi += 0.001;
+				if (gyroKi > 0.2) // Cap the integral term
+					gyroKi = 0.2;
+			}
+
+			error = -rAngle - drive.gyro.getAngle();
+			if (drive.gyro.getAngle() >= -rAngle && Math.abs(error) > 2.0) {
+				// turn right
+				VelocityToSet = (error / 270) - 0.2 - gyroKi;
+				if (Math.abs(VelocityToSet) > maxTurnVelocity)
+					VelocityToSet = maxTurnVelocity * (VelocityToSet < 0.0 ? -1.0 : 1.0);
+				drive.leftDriveMotor.set(VelocityToSet * drive.batteryCompensationPct()); // -0.8
+				drive.rightDriveMotor.set(VelocityToSet * drive.batteryCompensationPct()); // -0.8
+			} else {
+				gyroKi = 0.0;
+				drive.stopDrive();
+				// if(WaitAsyncUntil(0.5,true))
+				return true;
+			}
+		} else {
+			gyroKi = 0.0;
+			drive.stopDrive();
+			return true;
+		}
+
+		return false;
+	}
+
+	public String getGameData() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
 		return gameData;
 	}
-	
-	public void decodeGameData()
-	{
-		if(gameData.length() > 0)
-        {
-			//Check team switch
-			if(gameData.charAt(0) == 'L')
-			{
+
+	public void decodeGameData() {
+		if (gameData.length() > 0) {
+			// Check team switch
+			if (gameData.charAt(0) == 'L') {
 				teamSwitch = "Left";
-			} 
-			else 
-			{
+			} else {
 				teamSwitch = "Right";
 			}
-			
-			//Check Scale
-			if(gameData.charAt(1) == 'L')
-			{
+
+			// Check Scale
+			if (gameData.charAt(1) == 'L') {
 				scale = "Left";
-			} 
-			else 
-			{
+			} else {
 				scale = "Right";
 			}
-			
-			//Check opponent switch
-			if(gameData.charAt(2) == 'L')
-			{
+
+			// Check opponent switch
+			if (gameData.charAt(2) == 'L') {
 				opponentSwitch = "Left";
-			} 
-			else 
-			{
+			} else {
 				opponentSwitch = "Right";
 			}
-        }
-		else
-		{
+		} else {
 			teamSwitch = "Not Recieved Data Yet";
 			scale = "Not Recieved Data Yet";
 			opponentSwitch = "Not Recieved Data Yet";
 		}
 	}
-	public void updateDashboard()
-	{
+
+	public void updateDashboard() {
 		SmartDashboard.putString("Team Switch", teamSwitch);
 		SmartDashboard.putString("Scale", scale);
 		SmartDashboard.putString("Opponent Switch", opponentSwitch);
-		
+
 	}
 }
