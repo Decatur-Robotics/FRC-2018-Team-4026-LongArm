@@ -90,27 +90,27 @@ public class Robot extends IterativeRobot {
 		while (isAutonomous() && isEnabled()) {
 			switch (autoSelected) {
 			case CROSSLINEAUTO:
-				auto.crossLineAuto(drivetrain, pneumatics);
+				auto.crossLineAuto(drivetrain, pneumatics, arm);
 				updateDashboard();
 				break;
 			case POSITION1SCALE:
-				auto.position1Scale(drivetrain, pneumatics);
+				auto.position1Scale(drivetrain, pneumatics, arm);
 				updateDashboard();
 				break;
 			case POSITION1SWITCH:
-				auto.position1Switch(drivetrain, pneumatics);
+				auto.position1Switch(drivetrain, pneumatics, arm);
 				updateDashboard();
 				break;
 			case POSITION2SWITCH:
-				auto.position2Switch(drivetrain, pneumatics);
+				auto.position2Switch(drivetrain, pneumatics, arm);
 				updateDashboard();
 				break;
 			case POSITION3SCALE:
-				auto.position3Scale(drivetrain, pneumatics);
+				auto.position3Scale(drivetrain, pneumatics, arm);
 				updateDashboard();
 				break;
 			case POSITION3SWITCH:
-				auto.position3Switch(drivetrain, pneumatics);
+				auto.position3Switch(drivetrain, pneumatics, arm);
 				updateDashboard();
 				break;
 			}
@@ -128,6 +128,7 @@ public class Robot extends IterativeRobot {
 			arm.lift(controllers, pneumatics);
 			updateDashboard();
 		}
+		arm.armGyro.reset();
 		drivetrain.reset();
 		shutdown();
 		updateDashboard();

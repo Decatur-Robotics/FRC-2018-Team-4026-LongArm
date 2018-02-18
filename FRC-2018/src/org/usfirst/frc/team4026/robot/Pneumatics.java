@@ -24,7 +24,6 @@ public class Pneumatics implements Subsystem {
 			compressor = new Compressor();
 			compressor.setClosedLoopControl(true);
 			shifter.set(Value.kReverse);
-			grabberPistons.set(Value.kReverse);
 			intakePistons.set(Value.kReverse);
 			isInitialized = true;
 			return 0;

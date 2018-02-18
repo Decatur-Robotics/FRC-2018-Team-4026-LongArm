@@ -17,7 +17,7 @@ public class Autonomous {
 	String scale;
 	String opponentSwitch;
 
-	public void crossLineAuto(Drivetrain drivetrain, Pneumatics pneumatics) {
+	public void crossLineAuto(Drivetrain drivetrain, Pneumatics pneumatics, Arm arm) {
 		decodeGameData();
 		updateDashboard();
 		pneumatics.setLowGear();
@@ -29,7 +29,7 @@ public class Autonomous {
 
 	}
 
-	public void position1Scale(Drivetrain drivetrain, Pneumatics pneumatics) {
+	public void position1Scale(Drivetrain drivetrain, Pneumatics pneumatics, Arm arm) {
 		decodeGameData();
 		updateDashboard();
 		pneumatics.setLowGear();
@@ -40,7 +40,7 @@ public class Autonomous {
 		}
 	}
 
-	public void position1Switch(Drivetrain drivetrain, Pneumatics pneumatics) {
+	public void position1Switch(Drivetrain drivetrain, Pneumatics pneumatics, Arm arm) {
 		decodeGameData();
 		updateDashboard();
 		pneumatics.setLowGear();
@@ -51,7 +51,7 @@ public class Autonomous {
 		}
 	}
 
-	public void position2Switch(Drivetrain drivetrain, Pneumatics pneumatics) {
+	public void position2Switch(Drivetrain drivetrain, Pneumatics pneumatics, Arm arm) {
 		decodeGameData();
 		updateDashboard();
 		pneumatics.setLowGear();
@@ -96,36 +96,49 @@ public class Autonomous {
 		} else {
 			switch (state) {
 			case 0:
-				state++;
-				break;
-			case 1:
-
-				if (turnGyro(drivetrain, 35, .5)) {
-					drivetrain.LeftEncoder.reset();
+				if (autoDriveRobot(drivetrain, .3, .3, 0, 15, false)) {
 					drivetrain.gyro.reset();
+					drivetrain.LeftEncoder.reset();
 					state++;
 				}
 				break;
+			case 1:
+				if (arm.liftToSwitch() || arm.armGyro.getAngle() > 30)
+				{
+					state++;
+					arm.holdLift();
+					System.out.println("Case 2 started");
+				} 
+				break;
+					
 			case 2:
-				if (autoDriveRobot(drivetrain, 0.3, 0.3, 0, 120, USE_DRIVE_TIMER)) {
+
+				if (turnGyro(drivetrain, 35, 5)) {
 					drivetrain.LeftEncoder.reset();
 					drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 3:
-				if (turnGyro(drivetrain, -18, .5)) {
+				if (autoDriveRobot(drivetrain, 0.3, 0.3, 0, 100, USE_DRIVE_TIMER)) {
+					drivetrain.LeftEncoder.reset();
+					drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 4:
+				if (turnGyro(drivetrain, -18, .5)) {
+					state++;
+				}
+				break;
+			case 5:
 				drivetrain.setDriveMotors(.8, .8);
 				if (Math.abs(drivetrain.Accel.getX()) > 1) {
 					state++;
 					drivetrain.stopDrive();
 				}
 				break;
-			case 5:
+			case 6:
 				pneumatics.openGrabber();
 				state++;
 
@@ -133,7 +146,7 @@ public class Autonomous {
 		}
 	}
 
-	public void position3Scale(Drivetrain drivetrain, Pneumatics pneumatics) {
+	public void position3Scale(Drivetrain drivetrain, Pneumatics pneumatics, Arm arm) {
 		decodeGameData();
 		updateDashboard();
 		pneumatics.setLowGear();
@@ -144,7 +157,7 @@ public class Autonomous {
 		}
 	}
 
-	public void position3Switch(Drivetrain drivetrain, Pneumatics pneumatics) {
+	public void position3Switch(Drivetrain drivetrain, Pneumatics pneumatics, Arm arm) {
 		decodeGameData();
 		updateDashboard();
 		pneumatics.setLowGear();
