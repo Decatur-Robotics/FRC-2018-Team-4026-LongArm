@@ -32,7 +32,7 @@ public class Drivetrain implements Subsystem{
 	
 	public int init(){
 		if(!isInitialized){
-			
+		// todo - best practice - indent this code so it is clearly part of the if block	
 		RightEncoder = new Encoder (PortMap.RIGHT_ENCODER_1,PortMap.RIGHT_ENCODER_2,false);
 		LeftEncoder = new Encoder (PortMap.LEFT_ENCODER_1, PortMap.LEFT_ENCODER_2, true);
 		//RightEncoder.setDistancePerPulse();
@@ -110,11 +110,13 @@ public class Drivetrain implements Subsystem{
 		error = targetAngle + gyro.getAngle();
 		correctionFactor = (error/75.0);
 
+		// todo - best practice -  conditions on a separate line should be wrapped in brackets
 		if(leftDriveVel > 0.9)
 			leftDriveVel = 0.9;
 		else if(leftDriveVel < -0.9)
 			leftDriveVel = -0.9;
 
+		// todo - best practice -  conditions on a separate line should be wrapped in brackets
 		if(rightDriveVel > 0.9)
 			rightDriveVel = 0.9;
 		else if(rightDriveVel < -0.9)

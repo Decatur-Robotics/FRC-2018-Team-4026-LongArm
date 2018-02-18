@@ -3,6 +3,7 @@ package org.usfirst.frc.team4026.robot;
 import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -13,12 +14,13 @@ public class Arm implements Subsystem {
 	boolean intakeForward = false;
 	boolean intakeReverse = false;
 	double liftSpeed;
-	NeutralMode brakeMode;
+	NeutralMode brakeMode = NeutralMode.Coast;
 	WPI_TalonSRX armLiftMotor;
 	WPI_TalonSRX leftGrabberMotor;
 	WPI_TalonSRX rightGrabberMotor;
 	WPI_TalonSRX leftIntakeMotor;
 	WPI_TalonSRX rightIntakeMotor;
+	DigitalInput armLowerLimit;
 
 	@Override
 	public int init() {
@@ -29,6 +31,7 @@ public class Arm implements Subsystem {
 			rightGrabberMotor = new WPI_TalonSRX(PortMap.RIGHTGRABBER);
 			leftIntakeMotor = new WPI_TalonSRX(PortMap.LEFTINTAKE);
 			rightIntakeMotor = new WPI_TalonSRX(PortMap.RIGHTINTAKE);
+			armLowerLimit = new DigitalInput(PortMap.ARM_LOWER_LIMIT);
 			liftSpeed = 0;
 			isInitialized = true;
 
@@ -39,6 +42,7 @@ public class Arm implements Subsystem {
 	}
 
 	public void lift(Controllers gamepad, Pneumatics pneumatics) {
+		intakeLift(gamepad);
 		brakeMode = NeutralMode.Brake;
 		armLiftMotor.setNeutralMode(brakeMode);
 		liftSpeed = -gamepad.getSecondaryLeft();
@@ -101,6 +105,26 @@ public class Arm implements Subsystem {
 		}
 		return v;
 	}
+	
+	private void intakeLift(Controllers gamepad) {
+		if (gamepad.getSecondaryRawButton(1))
+		{
+			leftGrabberMotor.set(1.0);
+			rightGrabberMotor.set(-1.0);
+		}
+		else if (gamepad.getSecondaryRawButton(2))
+		{
+		 	leftGrabberMotor.set(-1);
+			rightGrabberMotor.set(1);
+		}
+		else 
+		{
+			leftGrabberMotor.set(0);
+			rightGrabberMotor.set(0);
+		}
+		
+		
+	}
 
 	private void stopArm() {
 		brakeMode = NeutralMode.Coast;
@@ -123,6 +147,7 @@ public class Arm implements Subsystem {
 		SmartDashboard.putNumber("Lift Speed", liftSpeed);
 		SmartDashboard.putNumber("Arm Motor Output Voltage", armLiftMotor.getMotorOutputVoltage());
 		SmartDashboard.putNumber("Arm Output Current", armLiftMotor.getOutputCurrent());
+		SmartDashboard.putBoolean("Arm Lower Limit Switch", armLowerLimit.get());
 		SmartDashboard.putString("Brake Mode", brakeMode.toString());
 	}
 

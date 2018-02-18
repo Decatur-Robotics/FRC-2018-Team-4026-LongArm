@@ -20,7 +20,12 @@ public class Autonomous {
 	{
 		decodeGameData();
 		updateDashboard();
-		autoDriveRobot(drivetrain, 0.3, 0.3, 0, 36, USE_DRIVE_TIMER);
+		if(!autoDriveRobot(drivetrain, 0.3, 0.3, 0, 36, USE_DRIVE_TIMER)) {
+			
+		}else {
+			drivetrain.stopDrive();
+		}
+		
 		
 	}
 
@@ -126,7 +131,7 @@ public class Autonomous {
 		}
 		else
 		{
-			driveDistInch = Math.abs(convertDriveTicksToInches(drivetrain.RightEncoder.get()));
+			driveDistInch = Math.abs(convertDriveTicksToInches(drivetrain.LeftEncoder.get()));
 			if(driveDistInch < Math.abs(targetDistanceInch))
 			{
 				//leftDriveMotor.set(-velocityLeft);
@@ -162,7 +167,7 @@ public class Autonomous {
 
 	double convertDriveTicksToInches(int encTicks)
 	{
-		return (encTicks / DRIVE_TICKSPERREV) * 3.14 * 5.0;
+		return (encTicks / DRIVE_TICKSPERREV) * 3.14 * 6.0;
 	}
 	
 	public String getGameData()

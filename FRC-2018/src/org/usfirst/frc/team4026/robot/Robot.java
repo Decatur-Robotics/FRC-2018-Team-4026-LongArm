@@ -90,21 +90,27 @@ public class Robot extends IterativeRobot {
 			switch (autoSelected) {
 			case CROSSLINEAUTO:
 				auto.crossLineAuto(drivetrain);
+				updateDashboard();
 				break;
 			case POSITION1SCALE:
 				auto.position1Scale(drivetrain);
+				updateDashboard();
 				break;
 			case POSITION1SWITCH:
 				auto.position1Switch(drivetrain);
+				updateDashboard();
 				break;
 			case POSITION2SWITCH:
 				auto.position2Switch(drivetrain);
+				updateDashboard();
 				break;
 			case POSITION3SCALE:
 				auto.position3Scale(drivetrain);
+				updateDashboard();
 				break;
 			case POSITION3SWITCH:
 				auto.position3Switch(drivetrain);
+				updateDashboard();
 				break;
 			}
 		}
