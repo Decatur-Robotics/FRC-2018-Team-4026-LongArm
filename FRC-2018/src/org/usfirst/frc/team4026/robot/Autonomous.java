@@ -28,54 +28,162 @@ public class Autonomous {
 		}
 
 	}
-
-	public void position1Scale(Robot robot) {
+	
+	public void position1Auto (Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		robot.pneumatics.setLowGear();
 		if (scale.equals("Left")) {
-			switch (state) {
-			case 0:
-				if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 72, USE_DRIVE_TIMER)) {
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.LeftEncoder.reset();
-					state++;
-				}
-				break;
-			case 1:
-				if (robot.arm.liftToScale()) {
-					robot.arm.holdLift();
-					System.out.println("Case 2 started");
-					//state++;
-				}
-				robot.arm.updateLiftMotor();
-				break;
-			case 2:
-				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 45, USE_DRIVE_TIMER)) {
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.gyro.reset();
-					state++;
-				}
-				break;
-			case 3:
-				robot.pneumatics.openGrabber();
-				state++;
-
+			scoreScale(robot);
+		}
+		else {
+			if(teamSwitch.equals("Left")) {
+				scoreSwitch(robot);
 			}
-
-		} else {
-
+			else {
+				crossLineAuto(robot);
+			}
+		}
+	}
+	
+	public void position1Scale (Robot robot) {
+		decodeGameData();
+		updateDashboard();
+		if (scale.equals("Left")) {
+			scoreScale(robot);
+		}
+		else {
+			
+		}
+	}
+	
+	public void position2Auto (Robot robot) {
+		position2Switch(robot);
+	}
+	
+	public void position3Auto (Robot robot){
+		decodeGameData();
+		updateDashboard();
+		if (scale.equals("Right")) {
+			scoreScale(robot);
+		}
+		else {
+			if(teamSwitch.equals("Right")) {
+				scoreSwitch(robot);
+			}
+			else {
+				crossLineAuto(robot);
+			}
+		}
+	}
+	
+	public void position3Scale (Robot robot) {
+		decodeGameData();
+		updateDashboard();
+		if (scale.equals("Right")) {
+			scoreScale(robot);
+		}
+		else {
+			
+		}
+	}
+	
+	public void scoreScale(Robot robot) {
+		robot.pneumatics.setLowGear();
+		switch (state) {
+		case 0:
+			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 72, USE_DRIVE_TIMER)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				state++;
+			}
+			break;
+		case 1:
+			if (robot.arm.liftToScale()) {
+				robot.arm.holdLift();
+				System.out.println("Case 2 started");
+				//state++;
+			}
+			robot.arm.updateLiftMotor();
+			break;
+		case 2:
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 24, USE_DRIVE_TIMER)) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
+				state++;
+			}
+			break;
+		case 3:
+			robot.pneumatics.openGrabber();
+			state++;
+			break;
+		case 4:
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
+				state++;
+			}
+			break;
+		case 5:
+			if (robot.arm.liftToGround()) {
+				robot.arm.holdLift();
+				System.out.println("Case 5 started");
+				state++;
+			}
+			robot.arm.updateLiftMotor();
+			break;
+		case 6:
+			robot.drivetrain.stopDrive();
+			break;
 		}
 	}
 
-	public void position1Switch(Robot robot) {
-		decodeGameData();
-		updateDashboard();
+	public void scoreSwitch(Robot robot) {
 		robot.pneumatics.setLowGear();
-		if (teamSwitch.equals("Left")) {
-
-		} else {
-
+		switch (state) {
+		case 0:
+			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 15, USE_DRIVE_TIMER)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				state++;
+			}
+			break;
+		case 1:
+			if (robot.arm.liftToSwitch()) {
+				robot.arm.holdLift();
+				System.out.println("Case 2 started");
+				//state++;
+			}
+			robot.arm.updateLiftMotor();
+			break;
+		case 2:
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 18, USE_DRIVE_TIMER)) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
+				state++;
+			}
+			break;
+		case 3:
+			robot.pneumatics.openGrabber();
+			state++;
+			break;
+		case 4:
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
+				state++;
+			}
+			break;
+		case 5:
+			if (robot.arm.liftToGround()) {
+				robot.arm.holdLift();
+				System.out.println("Case 5 started");
+				state++;
+			}
+			robot.arm.updateLiftMotor();
+			break;
+		case 6:
+			robot.drivetrain.stopDrive();
+			break;
 		}
 	}
 
@@ -174,28 +282,6 @@ public class Autonomous {
 				state++;
 
 			}
-		}
-	}
-
-	public void position3Scale(Robot robot) {
-		decodeGameData();
-		updateDashboard();
-		robot.pneumatics.setLowGear();
-		if (scale.equals("Left")) {
-
-		} else {
-
-		}
-	}
-
-	public void position3Switch(Robot robot) {
-		decodeGameData();
-		updateDashboard();
-		robot.pneumatics.setLowGear();
-		if (teamSwitch.equals("Left")) {
-
-		} else {
-
 		}
 	}
 

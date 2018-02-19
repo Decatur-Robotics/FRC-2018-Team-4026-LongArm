@@ -10,8 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
-	public static final double ARM_SWITCH_ANGLE = 32;
-	public static final double ARM_SCALE_ANGLE = 32;
+	private static final double ARM_SWITCH_ANGLE = 32;
+	private static final double ARM_SCALE_ANGLE = 32;
+	private static final double ARM_GROUND_ANGLE = 0;
 	boolean isInitialized = false;
 	boolean intake = false;
 	boolean intakeForward = false;
@@ -168,6 +169,10 @@ public class Arm implements Subsystem {
 	
 	public boolean liftToScale() {
 		return liftToAngle(ARM_SCALE_ANGLE);
+	}
+	
+	public boolean liftToGround() {
+		return liftToAngle(ARM_GROUND_ANGLE);
 	}
 	
 	public void holdLift() {

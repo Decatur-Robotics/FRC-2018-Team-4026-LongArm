@@ -23,13 +23,14 @@ public class Robot extends IterativeRobot {
 	SendableChooser<String> autoChooser = new SendableChooser<>();
 	private static final String CROSSLINEAUTO = "Cross Line Auto";
 
-	private static final String POSITION1SCALE = "Left Position Scale";
-	private static final String POSITION1SWITCH = "Left Position Switch";
+	private static final String POSITION1AUTO = "Left Driver Station";
+	private static final String POSITION1SCALE = "Left Driver Station SCALE";
 
-	private static final String POSITION2SWITCH = "Middle Position Switch";
+	private static final String POSITION2AUTO = "Middle Driver Station";
 
-	private static final String POSITION3SCALE = "Right Position Scale";
-	private static final String POSITION3SWITCH = "Right Position Switch";
+	private static final String POSITION3AUTO = "Right Driver Station";
+	private static final String POSITION3SCALE = "Right Driver Station SCALE";
+
 
 	private String autoSelected;
 
@@ -48,11 +49,11 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void robotInit() {
 		autoChooser.addDefault(CROSSLINEAUTO, CROSSLINEAUTO);
-		autoChooser.addObject(POSITION1SCALE, POSITION1SCALE);
-		autoChooser.addObject(POSITION1SWITCH, POSITION1SWITCH);
-		autoChooser.addObject(POSITION2SWITCH, POSITION2SWITCH);
+		autoChooser.addObject(POSITION1AUTO, POSITION1AUTO);
+		autoChooser.addObject(POSITION1SCALE, POSITION3SCALE);
+		autoChooser.addObject(POSITION2AUTO, POSITION2AUTO);
+		autoChooser.addObject(POSITION3AUTO, POSITION3AUTO);
 		autoChooser.addObject(POSITION3SCALE, POSITION3SCALE);
-		autoChooser.addObject(POSITION3SWITCH, POSITION3SWITCH);
 		SmartDashboard.putData("Auto choices", autoChooser);
 		drivetrain.init();
 		arm.init();
@@ -96,24 +97,24 @@ public class Robot extends IterativeRobot {
 				auto.crossLineAuto(this);
 				updateDashboard();
 				break;
+			case POSITION1AUTO:
+				auto.position1Auto(this);
+				updateDashboard();
+				break;
 			case POSITION1SCALE:
 				auto.position1Scale(this);
 				updateDashboard();
 				break;
-			case POSITION1SWITCH:
-				auto.position1Switch(this);
+			case POSITION2AUTO:
+				auto.position2Auto(this);
 				updateDashboard();
 				break;
-			case POSITION2SWITCH:
-				auto.position2Switch(this);
+			case POSITION3AUTO:
+				auto.position3Auto(this);
 				updateDashboard();
 				break;
 			case POSITION3SCALE:
 				auto.position3Scale(this);
-				updateDashboard();
-				break;
-			case POSITION3SWITCH:
-				auto.position3Switch(this);
 				updateDashboard();
 				break;
 			}
