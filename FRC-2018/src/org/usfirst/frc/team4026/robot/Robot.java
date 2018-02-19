@@ -23,13 +23,13 @@ public class Robot extends IterativeRobot {
 	SendableChooser<String> autoChooser = new SendableChooser<>();
 	private static final String CROSSLINEAUTO = "Cross Line Auto";
 
-	private static final String POSITION1SCALE = "DriverStation 1 Scale";
-	private static final String POSITION1SWITCH = "DriverStation 1 Switch";
+	private static final String POSITION1SCALE = "Left Position Scale";
+	private static final String POSITION1SWITCH = "Left Position Switch";
 
-	private static final String POSITION2SWITCH = "DriverStation 2 Switch";
+	private static final String POSITION2SWITCH = "Middle Position Switch";
 
-	private static final String POSITION3SCALE = "DriverStation 3 Scale";
-	private static final String POSITION3SWITCH = "DriverStation 3 Switch";
+	private static final String POSITION3SCALE = "Right Position Scale";
+	private static final String POSITION3SWITCH = "Right Position Switch";
 
 	private String autoSelected;
 
@@ -76,6 +76,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousInit() {
 		autoSelected = autoChooser.getSelected();
+		SmartDashboard.putString("Auto Selected", autoSelected);
 		System.out.println("Auto selected: " + autoSelected);
 		auto.getGameData();
 		drivetrain.gyro.reset();
@@ -90,27 +91,27 @@ public class Robot extends IterativeRobot {
 		while (isAutonomous() && isEnabled()) {
 			switch (autoSelected) {
 			case CROSSLINEAUTO:
-				auto.crossLineAuto(drivetrain, pneumatics, arm);
+				auto.crossLineAuto(this);
 				updateDashboard();
 				break;
 			case POSITION1SCALE:
-				auto.position1Scale(drivetrain, pneumatics, arm);
+				auto.position1Scale(this);
 				updateDashboard();
 				break;
 			case POSITION1SWITCH:
-				auto.position1Switch(drivetrain, pneumatics, arm);
+				auto.position1Switch(this);
 				updateDashboard();
 				break;
 			case POSITION2SWITCH:
-				auto.position2Switch(drivetrain, pneumatics, arm);
+				auto.position2Switch(this);
 				updateDashboard();
 				break;
 			case POSITION3SCALE:
-				auto.position3Scale(drivetrain, pneumatics, arm);
+				auto.position3Scale(this);
 				updateDashboard();
 				break;
 			case POSITION3SWITCH:
-				auto.position3Switch(drivetrain, pneumatics, arm);
+				auto.position3Switch(this);
 				updateDashboard();
 				break;
 			}
@@ -123,9 +124,9 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void teleopPeriodic() {
 		while (isOperatorControl() && isEnabled()) {
-			drivetrain.tankDrive(controllers);
-			pneumatics.shift(1, 3, controllers);
-			arm.lift(controllers, pneumatics);
+			drivetrain.run(this);
+			pneumatics.run(this);
+			arm.run(this);
 			updateDashboard();
 		}
 		arm.armGyro.reset();
@@ -141,7 +142,10 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		// not needed yet
 	}
-
+	
+	public void autoChoices() {
+		
+	}
 	public void shutdown() {
 		drivetrain.shutdown();
 		pneumatics.shutdown();

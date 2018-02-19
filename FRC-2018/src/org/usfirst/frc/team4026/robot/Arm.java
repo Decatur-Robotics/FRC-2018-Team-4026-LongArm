@@ -49,22 +49,11 @@ public class Arm implements Subsystem {
 		return 1;
 	}
 
-	public void lift(Controllers gamepad, Pneumatics pneumatics) {
-		intakeLift(gamepad);
+	public void lift(Controllers gamepad, Robot robot) {
 		brakeMode = NeutralMode.Brake;
 		armLiftMotor.setNeutralMode(brakeMode);
 		liftSpeed = -gamepad.getSecondaryLeft();
 		boolean holdLift;
-
-		if (gamepad.getSecondaryRawButton(8)) {
-			pneumatics.intakePistons.set(Value.kForward);
-		} else {
-			pneumatics.intakePistons.set(Value.kReverse);
-		}
-
-		pneumatics.actuateGrabber(5, 7, gamepad);
-
-		arcadeIntake(gamepad.getSecondaryRightX(), gamepad.getSecondaryRightY(), .05, pneumatics);
 
 		if (gamepad.getSecondaryRawButton(6)) {
 			holdLift = true;
@@ -93,7 +82,7 @@ public class Arm implements Subsystem {
 	// Ask Walden - this will need to be tweaked this afternoon. Controls intake
 	// and grabber in conjunction. Allows left and right to be controlled with
 	// one analog stick
-	void arcadeIntake(double x, double y, double deadzone, Pneumatics pneumatics) {
+	void arcadeIntake(double x, double y, double deadzone, Robot robot) {
 		y = -y;
 		double right = x + y;
 		double left = x - y;
@@ -101,7 +90,7 @@ public class Arm implements Subsystem {
 			left = 0;
 			right = 0;
 		} else {
-			pneumatics.openGrabber();
+			robot.pneumatics.openGrabber();
 		}
 		right = trim(right);
 		left = trim(left);
@@ -175,7 +164,21 @@ public class Arm implements Subsystem {
 	public void holdLift() {
 		armLiftMotor.set(.06);
 	}
+	
+	public void run(Robot robot) {
+		lift(robot.controllers, robot);
 
+		if (robot.controllers.getSecondaryRawButton(8)) {
+			robot.pneumatics.intakeLiftPistons.set(Value.kForward);
+		} else {
+			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+		}
+
+		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
+		intakeLift(robot.controllers);
+		arcadeIntake(robot.controllers.getSecondaryRightX(), robot.controllers.getSecondaryRightY(), .05, robot);
+	}
+	
 	@Override
 	public int shutdown() {
 		stopArm();

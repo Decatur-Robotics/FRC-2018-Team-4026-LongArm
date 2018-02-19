@@ -17,6 +17,5 @@
 			<attribute name="javadoc_location" value="http://www.ctr-electronics.com/downloads/api/java/html/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="navxLibs/lib/navx_frc.jar"/>
-	<classpathentry kind="output" path="bin"/>
+		<classpathentry kind="output" path="bin"/>
 </classpath>
