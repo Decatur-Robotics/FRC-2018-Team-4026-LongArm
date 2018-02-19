@@ -42,7 +42,6 @@ public class Arm implements Subsystem {
 			armGyro = new AnalogGyro(0);
 			armGyro.calibrate();
 			armGyro.reset();
-			
 
 			return 0;
 		}
@@ -62,8 +61,6 @@ public class Arm implements Subsystem {
 		} else {
 			pneumatics.intakePistons.set(Value.kReverse);
 		}
-		
-		
 
 		pneumatics.actuateGrabber(5, 7, gamepad);
 
@@ -88,9 +85,9 @@ public class Arm implements Subsystem {
 		}
 		if (gamepad.getSecondaryRawButton(2)) {
 			liftToSwitch();
-		}else {
-		armLiftMotor.set(liftSpeed);
 		}
+		armLiftMotor.set(liftSpeed);
+
 	}
 
 	// Ask Walden - this will need to be tweaked this afternoon. Controls intake
@@ -147,35 +144,34 @@ public class Arm implements Subsystem {
 		leftIntakeMotor.set(0);
 		rightIntakeMotor.set(0);
 	}
-	
+
 	public boolean liftToSwitch() {
-		if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) < 5)
-		{
+		if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) < 5) {
 			holdLift();
 
 			return true;
-		}else {
-		if (armGyro.getAngle() < (ARM_SWITCH_ANGLE))
-		{
-			if(Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) > 15)
-			{
-				armLiftMotor.set(.5);
-			} else {
-				armLiftMotor.set(.3);
-			}
 		} else {
-			if (Math.abs(ARM_SWITCH_ANGLE - Math.abs(armGyro.getAngle())) > 0 ) {
-				armLiftMotor.set(-.3);
+			if (armGyro.getAngle() < (ARM_SWITCH_ANGLE)) {
+				if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) > 15) {
+					liftSpeed = .5;
+				} else {
+					liftSpeed = .5;
+				}
 			} else {
-				armLiftMotor.set(-.1);
+				if (Math.abs(ARM_SWITCH_ANGLE - Math.abs(armGyro.getAngle())) > 0) {
+					liftSpeed = -.3;
+				} else {
+					liftSpeed = -.15;
+				}
 			}
-		}
-		return false;
+			return false;
 		}
 	}
+
 	public void holdLift() {
 		armLiftMotor.set(.06);
 	}
+
 	@Override
 	public int shutdown() {
 		stopArm();
