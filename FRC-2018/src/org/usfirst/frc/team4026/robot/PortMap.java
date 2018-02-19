@@ -19,10 +19,10 @@ public interface PortMap {
 	// Pneumatics
 	public static final int SHIFTLOWGEAR = 0;
 	public static final int SHIFTHIGHGEAR = 3;
-	public static final int GRABBERRPISTONIN = 1;
-	public static final int GRABBERPISTONOUT = 2;
-	public static final int INTAKEPISTONIN = 6;
-	public static final int INTAKEPISTONOUT = 7;
+	public static final int GRABBERRPISTONIN = 6;
+	public static final int GRABBERPISTONOUT = 7;
+	public static final int INTAKEPISTONIN = 1;
+	public static final int INTAKEPISTONOUT = 2;
 
 	// Analog Sensors
 	public static final int GYRO = 1;
