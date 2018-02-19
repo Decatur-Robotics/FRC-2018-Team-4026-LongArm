@@ -169,9 +169,9 @@ public class Arm implements Subsystem {
 		lift(robot.controllers, robot);
 
 		if (robot.controllers.getSecondaryRawButton(8)) {
-			robot.pneumatics.intakePistons.set(Value.kForward);
+			robot.pneumatics.intakeLiftPistons.set(Value.kForward);
 		} else {
-			robot.pneumatics.intakePistons.set(Value.kReverse);
+			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
 		}
 
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
