@@ -34,6 +34,34 @@ public class Autonomous {
 		updateDashboard();
 		robot.pneumatics.setLowGear();
 		if (scale.equals("Left")) {
+			switch (state) {
+			case 0:
+				if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 72, USE_DRIVE_TIMER)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					state++;
+				}
+				break;
+			case 1:
+				if (robot.arm.liftToScale()) {
+					robot.arm.holdLift();
+					System.out.println("Case 2 started");
+					//state++;
+				}
+				robot.arm.updateLiftMotor();
+				break;
+			case 2:
+				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 45, USE_DRIVE_TIMER)) {
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.gyro.reset();
+					state++;
+				}
+				break;
+			case 3:
+				robot.pneumatics.openGrabber();
+				state++;
+
+			}
 
 		} else {
 
@@ -96,7 +124,7 @@ public class Autonomous {
 		} else {
 			switch (state) {
 			case 0:
-				if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 15, false)) {
+				if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 15, USE_DRIVE_TIMER)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					state++;

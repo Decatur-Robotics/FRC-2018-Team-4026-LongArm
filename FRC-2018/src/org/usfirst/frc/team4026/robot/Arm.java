@@ -10,7 +10,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
-	private static final double ARM_SWITCH_ANGLE = 32;
+	public static final double ARM_SWITCH_ANGLE = 32;
+	public static final double ARM_SCALE_ANGLE = 32;
 	boolean isInitialized = false;
 	boolean intake = false;
 	boolean intakeForward = false;
@@ -138,20 +139,20 @@ public class Arm implements Subsystem {
 		rightIntakeMotor.set(0);
 	}
 
-	public boolean liftToSwitch() {
-		if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) < 2) {
+	public boolean liftToAngle(double angle) {
+		if (Math.abs(angle - armGyro.getAngle()) < 2) {
 			holdLift();
 
 			return true;
 		} else {
-			if (armGyro.getAngle() < (ARM_SWITCH_ANGLE)) {
-				if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) > 15) {
+			if (armGyro.getAngle() < (angle)) {
+				if (Math.abs(angle - armGyro.getAngle()) > 15) {
 					liftSpeed = .5;
 				} else {
 					liftSpeed = .5;
 				}
 			} else {
-				if (Math.abs(ARM_SWITCH_ANGLE - Math.abs(armGyro.getAngle())) > 0) {
+				if (Math.abs(angle - Math.abs(armGyro.getAngle())) > 0) {
 					liftSpeed = -.3;
 				} else {
 					liftSpeed = -.15;
@@ -160,7 +161,15 @@ public class Arm implements Subsystem {
 			return false;
 		}
 	}
-
+	
+	public boolean liftToSwitch() {
+		return liftToAngle(ARM_SWITCH_ANGLE);
+	}
+	
+	public boolean liftToScale() {
+		return liftToAngle(ARM_SCALE_ANGLE);
+	}
+	
 	public void holdLift() {
 		liftSpeed = .06;
 	}
