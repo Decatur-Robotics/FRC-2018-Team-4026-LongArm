@@ -103,14 +103,14 @@ public class Autonomous {
 				}
 				break;
 			case 1:
-				if (arm.liftToSwitch() || arm.armGyro.getAngle() > 30)
-				{
+				if (arm.liftToSwitch() || arm.armGyro.getAngle() > 30) {
 					state++;
 					arm.holdLift();
 					System.out.println("Case 2 started");
-				} 
+				}
+				arm.updateLiftMotor();
 				break;
-					
+
 			case 2:
 
 				if (turnGyro(drivetrain, 35, 5)) {
