@@ -86,7 +86,7 @@ public class Arm implements Subsystem {
 		if (gamepad.getSecondaryRawButton(2)) {
 			liftToSwitch();
 		}
-		armLiftMotor.set(liftSpeed);
+		updateLiftMotor();
 
 	}
 
@@ -109,6 +109,10 @@ public class Arm implements Subsystem {
 		leftIntakeMotor.set(left);
 		rightIntakeMotor.set(right);
 
+	}
+
+	public void updateLiftMotor() {
+		armLiftMotor.set(liftSpeed);
 	}
 
 	private static double trim(double v) {

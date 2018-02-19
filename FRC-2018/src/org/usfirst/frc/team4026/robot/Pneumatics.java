@@ -63,7 +63,7 @@ public class Pneumatics implements Subsystem {
 		grabberPistons.set(DoubleSolenoid.Value.kReverse);
 	}
 
-	public void closeGrabber() {
+	public void closesGrabber() {
 		grabberPistons.set(DoubleSolenoid.Value.kForward);
 	}
 
