@@ -141,20 +141,22 @@ public class Drivetrain implements Subsystem {
 		leftDriveMotor.set(0);
 		rightDriveMotor.set(0);
 	}
-
+	public void run(Robot robot) {
+		tankDrive(robot.controllers);
+	}
 	@Override
 	public int shutdown() {
 		stopDrive();
 		return 1;
 	}
-
+	
 	@Override
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
 		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
 		SmartDashboard.putNumber("Gyro Rotation", gyro.getRate());
-		System.out.println(gyro.getAngle());
+		//System.out.println(gyro.getAngle());
 	}
 
 }
