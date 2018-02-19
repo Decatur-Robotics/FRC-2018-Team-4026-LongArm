@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
-	private static final double ARM_SWITCH_ANGLE = 30;
+	private static final double ARM_SWITCH_ANGLE = 32;
 	boolean isInitialized = false;
 	boolean intake = false;
 	boolean intakeForward = false;
@@ -139,7 +139,7 @@ public class Arm implements Subsystem {
 	}
 
 	public boolean liftToSwitch() {
-		if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) < 5) {
+		if (Math.abs(ARM_SWITCH_ANGLE - armGyro.getAngle()) < 2) {
 			holdLift();
 
 			return true;
@@ -162,9 +162,9 @@ public class Arm implements Subsystem {
 	}
 
 	public void holdLift() {
-		armLiftMotor.set(.06);
+		liftSpeed = .06;
 	}
-	
+
 	public void run(Robot robot) {
 		lift(robot.controllers, robot);
 
@@ -178,7 +178,7 @@ public class Arm implements Subsystem {
 		intakeLift(robot.controllers);
 		arcadeIntake(robot.controllers.getSecondaryRightX(), robot.controllers.getSecondaryRightY(), .05, robot);
 	}
-	
+
 	@Override
 	public int shutdown() {
 		stopArm();

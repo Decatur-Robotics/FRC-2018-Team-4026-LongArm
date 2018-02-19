@@ -81,6 +81,7 @@ public class Robot extends IterativeRobot {
 		auto.getGameData();
 		drivetrain.gyro.reset();
 		pneumatics.closeGrabber();
+		arm.armGyro.reset();
 	}
 
 	/**
@@ -89,6 +90,7 @@ public class Robot extends IterativeRobot {
 	@Override
 	public void autonomousPeriodic() {
 		while (isAutonomous() && isEnabled()) {
+
 			switch (autoSelected) {
 			case CROSSLINEAUTO:
 				auto.crossLineAuto(this);
@@ -142,10 +144,11 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		// not needed yet
 	}
-	
+
 	public void autoChoices() {
-		
+
 	}
+
 	public void shutdown() {
 		drivetrain.shutdown();
 		pneumatics.shutdown();

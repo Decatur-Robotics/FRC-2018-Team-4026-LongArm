@@ -103,37 +103,40 @@ public class Autonomous {
 				}
 				break;
 			case 1:
-				if (robot.arm.liftToSwitch() || robot.arm.armGyro.getAngle() > 30) {
-					state++;
+				if (robot.arm.liftToSwitch()) {
 					robot.arm.holdLift();
 					System.out.println("Case 2 started");
+					state++;
 				}
 				robot.arm.updateLiftMotor();
 				break;
 
 			case 2:
 
-				if (turnGyro(robot.drivetrain, 35, 5)) {
+				if (turnGyro(robot.drivetrain, 60, .3)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 3:
-				if (autoDriveRobot(robot.drivetrain, 0.3, 0.3, 0, 100, USE_DRIVE_TIMER)) {
+				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 45, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 4:
-				if (turnGyro(robot.drivetrain, -18, .5)) {
+				if (turnGyro(robot.drivetrain, -45, .2)) {
+					Timer.delay(.1);
+					robot.drivetrain.stopDrive();
+					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 5:
-				robot.drivetrain.setDriveMotors(.8, .8);
-				if (Math.abs(robot.drivetrain.Accel.getX()) > 1) {
+				robot.drivetrain.keepDriveStraight(.5, .5, 0);
+				if (robot.drivetrain.Accel.getX() > 1) {
 					state++;
 					robot.drivetrain.stopDrive();
 				}
@@ -250,7 +253,7 @@ public class Autonomous {
 			error = Math.abs(rAngle) - drive.gyro.getAngle();
 			if (drive.gyro.getAngle() <= Math.abs(rAngle) && Math.abs(error) > 2.0) {
 				// turn left
-				VelocityToSet = (error / 270) + 0.2 + gyroKi; // 140 0.2
+				VelocityToSet = (error / 300) + 0.2 + gyroKi; // 140 0.2
 				if (Math.abs(VelocityToSet) > maxTurnVelocity)
 					VelocityToSet = maxTurnVelocity * (VelocityToSet < 0.0 ? -1.0 : 1.0);
 				drive.leftDriveMotor.set(VelocityToSet * drive.batteryCompensationPct()); // 0.8
