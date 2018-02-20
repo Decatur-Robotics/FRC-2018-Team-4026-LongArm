@@ -4,6 +4,7 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -13,6 +14,7 @@ public class Arm implements Subsystem {
 	private static final double ARM_SWITCH_ANGLE = 32;
 	private static final double ARM_SCALE_ANGLE = 32;
 	private static final double ARM_GROUND_ANGLE = 0;
+	private static final boolean USEARMGYRO = false;
 	boolean isInitialized = false;
 	boolean intake = false;
 	boolean intakeForward = false;
@@ -27,6 +29,8 @@ public class Arm implements Subsystem {
 	DigitalInput armLowerLimit;
 	DigitalInput armUpperLimit;
 	AnalogGyro armGyro;
+	AnalogInput	stringThingy;
+	
 
 	@Override
 	public int init() {
@@ -38,6 +42,7 @@ public class Arm implements Subsystem {
 			leftIntakeMotor = new WPI_TalonSRX(PortMap.LEFTINTAKE);
 			rightIntakeMotor = new WPI_TalonSRX(PortMap.RIGHTINTAKE);
 			armLowerLimit = new DigitalInput(PortMap.ARM_LOWER_LIMIT);
+			stringThingy = new AnalogInput(PortMap.STRINGTHINGY);
 			// armLowerLimit = new DigitalInput(PortMap.ARM_UPPER_LIMIT);
 			liftSpeed = 0;
 			isInitialized = true;
@@ -192,13 +197,16 @@ public class Arm implements Subsystem {
 		intakeLift(robot.controllers);
 		arcadeIntake(robot.controllers.getSecondaryRightX(), robot.controllers.getSecondaryRightY(), .05, robot);
 	}
-
+	
+	public double getArmPosition() {
+			return (stringThingy.getVoltage() * 11) - 1;
+	}
 	@Override
 	public int shutdown() {
 		stopArm();
 		return 1;
 	}
-
+	
 	@Override
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Lift Speed", liftSpeed);
@@ -207,6 +215,8 @@ public class Arm implements Subsystem {
 		SmartDashboard.putBoolean("Arm Lower Limit Switch", armLowerLimit.get());
 		SmartDashboard.putString("Brake Mode", brakeMode.toString());
 		SmartDashboard.putNumber("Arm Gyro", armGyro.getAngle());
+		SmartDashboard.putNumber("String Thingy Extension:", getArmPosition());
+
 	}
 
 }
