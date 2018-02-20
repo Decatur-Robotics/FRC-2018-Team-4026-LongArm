@@ -31,7 +31,6 @@ public class Robot extends IterativeRobot {
 	private static final String POSITION3AUTO = "Right Driver Station";
 	private static final String POSITION3SCALE = "Right Driver Station SCALE";
 
-
 	private String autoSelected;
 
 	double counter = 0;
@@ -80,9 +79,10 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Auto Selected", autoSelected);
 		System.out.println("Auto selected: " + autoSelected);
 		auto.getGameData();
-		drivetrain.gyro.reset();
+		drivetrain.gyro.calibrate();
 		pneumatics.closeGrabber();
 		arm.armGyro.reset();
+		drivetrain.LeftEncoder.reset();
 	}
 
 	/**
@@ -121,6 +121,12 @@ public class Robot extends IterativeRobot {
 		}
 	}
 
+	@Override
+
+	public void teleopInit() {
+		drivetrain.LeftEncoder.reset();
+	}
+
 	/**
 	 * This function is called periodically during operator control.
 	 */
@@ -136,6 +142,7 @@ public class Robot extends IterativeRobot {
 		drivetrain.reset();
 		shutdown();
 		updateDashboard();
+
 	}
 
 	/**

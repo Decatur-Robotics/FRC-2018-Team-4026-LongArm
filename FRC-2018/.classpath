@@ -17,5 +17,7 @@
 			<attribute name="javadoc_location" value="http://www.ctr-electronics.com/downloads/api/java/html/"/>
 		</attributes>
 	</classpathentry>
-		<classpathentry kind="output" path="bin"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/CTRLib.jar"/>
+	<classpathentry kind="var" path="USERLIBS_DIR/navx_frc.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

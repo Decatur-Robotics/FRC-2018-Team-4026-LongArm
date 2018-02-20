@@ -17,8 +17,8 @@ public interface PortMap {
 	public static final int SECONDARYCONTROLLER = 1;
 
 	// Pneumatics
-	public static final int SHIFTLOWGEAR = 0;
-	public static final int SHIFTHIGHGEAR = 3;
+	public static final int SHIFTLOWGEAR = 3;
+	public static final int SHIFTHIGHGEAR = 0;
 	public static final int GRABBERRPISTONIN = 6;
 	public static final int GRABBERPISTONOUT = 7;
 	public static final int INTAKEPISTONIN = 1;
@@ -28,7 +28,6 @@ public interface PortMap {
 	public static final int GYRO = 1;
 	public static final int PRESSURESENSOR = 3;
 	public static final int STRINGTHINGY = 2;
-
 
 	// Digital Sensors
 

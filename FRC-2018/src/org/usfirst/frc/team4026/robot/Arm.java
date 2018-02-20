@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
-	private static final double ARM_SWITCH_ANGLE = 32;
-	private static final double ARM_SCALE_ANGLE = 32;
-	private static final double ARM_GROUND_ANGLE = 0;
+	private static final double ARM_SWITCH_POSITION = 21;
+	private static final double ARM_SCALE_POSITION = 38;
+	private static final double ARM_GROUND_POSITION = 0;
 	private static final boolean USEARMGYRO = false;
 	boolean isInitialized = false;
 	boolean intake = false;
@@ -29,8 +29,7 @@ public class Arm implements Subsystem {
 	DigitalInput armLowerLimit;
 	DigitalInput armUpperLimit;
 	AnalogGyro armGyro;
-	AnalogInput	stringThingy;
-	
+	AnalogInput stringThingy;
 
 	@Override
 	public int init() {
@@ -145,20 +144,21 @@ public class Arm implements Subsystem {
 		rightIntakeMotor.set(0);
 	}
 
-	public boolean liftToAngle(double angle) {
-		if (Math.abs(angle - armGyro.getAngle()) < 2) {
+	public boolean liftToAngle(double targetPosition) {
+		double armPos = getArmPosition();
+		if (Math.abs(targetPosition - armPos) < 2) {
 			holdLift();
 
 			return true;
 		} else {
-			if (armGyro.getAngle() < (angle)) {
-				if (Math.abs(angle - armGyro.getAngle()) > 15) {
+			if (armGyro.getAngle() < (targetPosition)) {
+				if (Math.abs(targetPosition - armPos) > 15) {
 					liftSpeed = .5;
 				} else {
-					liftSpeed = .5;
+					liftSpeed = .3;
 				}
 			} else {
-				if (Math.abs(angle - Math.abs(armGyro.getAngle())) > 0) {
+				if (Math.abs(targetPosition - Math.abs(armPos)) > 15) {
 					liftSpeed = -.3;
 				} else {
 					liftSpeed = -.15;
@@ -167,19 +167,19 @@ public class Arm implements Subsystem {
 			return false;
 		}
 	}
-	
+
 	public boolean liftToSwitch() {
-		return liftToAngle(ARM_SWITCH_ANGLE);
+		return liftToAngle(ARM_SWITCH_POSITION);
 	}
-	
+
 	public boolean liftToScale() {
-		return liftToAngle(ARM_SCALE_ANGLE);
+		return liftToAngle(ARM_SCALE_POSITION);
 	}
-	
+
 	public boolean liftToGround() {
-		return liftToAngle(ARM_GROUND_ANGLE);
+		return liftToAngle(ARM_GROUND_POSITION);
 	}
-	
+
 	public void holdLift() {
 		liftSpeed = .06;
 	}
@@ -197,16 +197,17 @@ public class Arm implements Subsystem {
 		intakeLift(robot.controllers);
 		arcadeIntake(robot.controllers.getSecondaryRightX(), robot.controllers.getSecondaryRightY(), .05, robot);
 	}
-	
+
 	public double getArmPosition() {
-			return (stringThingy.getVoltage() * 11) - 1;
+		return (stringThingy.getVoltage() * 11) - 1;
 	}
+
 	@Override
 	public int shutdown() {
 		stopArm();
 		return 1;
 	}
-	
+
 	@Override
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Lift Speed", liftSpeed);

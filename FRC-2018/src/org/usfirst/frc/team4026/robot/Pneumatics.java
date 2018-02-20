@@ -75,17 +75,17 @@ public class Pneumatics implements Subsystem {
 			intakeLiftPistons.set(DoubleSolenoid.Value.kReverse);
 		}
 	}
-	
+
 	public void intakeUp() {
-		intakeLiftPistons.set(DoubleSolenoid.Value.kReverse);
-	}
-	
-	public void intakeDown() {
 		intakeLiftPistons.set(DoubleSolenoid.Value.kForward);
 	}
-	
+
+	public void intakeDown() {
+		intakeLiftPistons.set(DoubleSolenoid.Value.kReverse);
+	}
+
 	String gearState() {
-		if (shifter.get() == DoubleSolenoid.Value.kForward) {
+		if (shifter.get() == DoubleSolenoid.Value.kReverse) {
 			return "High Gear";
 		} else {
 			return "Low Gear";
@@ -107,7 +107,7 @@ public class Pneumatics implements Subsystem {
 			return "Out";
 		}
 	}
-	
+
 	public void run(Robot robot) {
 		shift(1, 3, robot.controllers);
 	}
