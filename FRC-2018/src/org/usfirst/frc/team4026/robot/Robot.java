@@ -49,10 +49,10 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		autoChooser.addDefault(CROSSLINEAUTO, CROSSLINEAUTO);
 		autoChooser.addObject(POSITION1AUTO, POSITION1AUTO);
-		autoChooser.addObject(POSITION1SCALE, POSITION3SCALE);
+		//autoChooser.addObject(POSITION1SCALE, POSITION3SCALE);
 		autoChooser.addObject(POSITION2AUTO, POSITION2AUTO);
 		autoChooser.addObject(POSITION3AUTO, POSITION3AUTO);
-		autoChooser.addObject(POSITION3SCALE, POSITION3SCALE);
+		//autoChooser.addObject(POSITION3SCALE, POSITION3SCALE);
 		SmartDashboard.putData("Auto choices", autoChooser);
 		drivetrain.init();
 		arm.init();
