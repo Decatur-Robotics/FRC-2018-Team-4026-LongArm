@@ -79,7 +79,7 @@ public class Robot extends IterativeRobot {
 		SmartDashboard.putString("Auto Selected", autoSelected);
 		System.out.println("Auto selected: " + autoSelected);
 		auto.getGameData();
-		drivetrain.gyro.calibrate();
+		drivetrain.gyro.reset();
 		pneumatics.closeGrabber();
 		arm.armGyro.reset();
 		drivetrain.LeftEncoder.reset();

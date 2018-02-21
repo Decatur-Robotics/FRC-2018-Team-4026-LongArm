@@ -11,9 +11,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
-	private static final double ARM_SWITCH_POSITION = 21;
-	private static final double ARM_SCALE_POSITION = 38;
-	private static final double ARM_GROUND_POSITION = 0;
+	private static final double ARM_SWITCH_POSITION = 14;
+	private static final double ARM_SCALE_POSITION = 28;
+	private static final double ARM_GROUND_POSITION = 5;
 	private static final boolean USEARMGYRO = false;
 	boolean isInitialized = false;
 	boolean intake = false;
@@ -78,8 +78,14 @@ public class Arm implements Subsystem {
 		if (liftSpeed < 0 && !armLowerLimit.get()) {
 			liftSpeed = 0;
 		}
+		if (gamepad.getSecondaryRawButton(1)) {
+			liftToGround();
+		}
 		if (gamepad.getSecondaryRawButton(2)) {
 			liftToSwitch();
+		}
+		if (gamepad.getSecondaryRawButton(3)) {
+			liftToScale();
 		}
 		updateLiftMotor();
 
@@ -107,6 +113,10 @@ public class Arm implements Subsystem {
 	}
 
 	public void updateLiftMotor() {
+		if (getArmPosition() > 45 && liftSpeed > 0) {
+			liftSpeed = 0;
+		}
+
 		armLiftMotor.set(liftSpeed);
 	}
 
@@ -151,14 +161,14 @@ public class Arm implements Subsystem {
 
 			return true;
 		} else {
-			if (armGyro.getAngle() < (targetPosition)) {
-				if (Math.abs(targetPosition - armPos) > 15) {
-					liftSpeed = .5;
+			if (armPos < (targetPosition)) {
+				if (Math.abs(targetPosition - armPos) > 4.5) {
+					liftSpeed = .65;
 				} else {
-					liftSpeed = .3;
+					liftSpeed = .4;
 				}
 			} else {
-				if (Math.abs(targetPosition - Math.abs(armPos)) > 15) {
+				if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
 					liftSpeed = -.3;
 				} else {
 					liftSpeed = -.15;

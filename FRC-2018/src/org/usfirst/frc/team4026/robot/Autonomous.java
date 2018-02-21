@@ -85,7 +85,7 @@ public class Autonomous {
 		robot.pneumatics.setHighGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .75, .75, 0, 260, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .9, .9, 0, 260, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -94,14 +94,14 @@ public class Autonomous {
 			break;
 		case 1:
 			if (leftSide) {
-				if (turnGyro(robot.drivetrain, 80, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .4)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
 					state++;
 				}
 			} else {
-				if (turnGyro(robot.drivetrain, -80, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .4)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -110,42 +110,62 @@ public class Autonomous {
 			}
 			break;
 		case 2:
+			if (autoDriveRobot(robot.drivetrain, -.5, -.5, 0, 6, USE_DRIVE_TIMER)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.stopDrive();
+				state++;
+			}
+			break;
+		case 3:
 			if (robot.arm.liftToScale()) {
 				robot.arm.holdLift();
 				System.out.println("Case 2 started");
-				// state++;
+				state++;
 			}
 			robot.arm.updateLiftMotor();
 			break;
-		case 3:
-			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 24, USE_DRIVE_TIMER)) {
-				robot.drivetrain.LeftEncoder.reset();
-				robot.drivetrain.gyro.reset();
-				robot.drivetrain.stopDrive();
-				state++;
-			}
-			break;
 		case 4:
-			robot.pneumatics.openGrabber();
-			state++;
+			if (leftSide) {
+				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 24, USE_DRIVE_TIMER)) {
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.stopDrive();
+					state++;
+				}
+			} else {
+				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 24, USE_DRIVE_TIMER)) {
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.stopDrive();
+					state++;
+				}
+			}
 			break;
 		case 5:
-			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
+			robot.arm.holdLift();
+			robot.pneumatics.openGrabber();
+			robot.arm.updateLiftMotor();
+			state++;
+			break;
+		case 6:
+			if (autoDriveRobot(robot.drivetrain, -0.4, -0.4, 0, 24, USE_DRIVE_TIMER)) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.stopDrive();
 				state++;
 			}
 			break;
-		case 6:
+		case 7:
 			if (robot.arm.liftToGround()) {
 				robot.arm.holdLift();
 				System.out.println("Case 5 started");
 				state++;
+				robot.arm.updateLiftMotor();
 			}
 			robot.arm.updateLiftMotor();
 			break;
-		case 7:
+		case 8:
 			robot.drivetrain.stopDrive();
 			break;
 		}
@@ -165,7 +185,7 @@ public class Autonomous {
 			break;
 		case 1:
 			if (leftSide) {
-				if (turnGyro(robot.drivetrain, 79, .25)) {
+				if (turnGyro(robot.drivetrain, 77, .25)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -184,12 +204,12 @@ public class Autonomous {
 			if (robot.arm.liftToSwitch()) {
 				robot.arm.holdLift();
 				System.out.println("Case 2 started");
-				// state++;
+				state++;
 			}
 			robot.arm.updateLiftMotor();
 			break;
 		case 3:
-			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 24, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 8, USE_DRIVE_TIMER)) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.stopDrive();
@@ -229,7 +249,7 @@ public class Autonomous {
 		if (teamSwitch.equals("Left")) {
 			switch (state) {
 			case 0:
-				if (autoDriveRobot(robot.drivetrain, .35, .35, 0, 50, USE_DRIVE_TIMER)) {
+				if (autoDriveRobot(robot.drivetrain, .35, .35, 0, 35, USE_DRIVE_TIMER)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					state++;
@@ -246,30 +266,31 @@ public class Autonomous {
 
 			case 2:
 
-				if (turnGyro(robot.drivetrain, 90, .35)) {
+				if (turnGyro(robot.drivetrain, -90, .3)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 3:
-				if (autoDriveRobot(robot.drivetrain, 0.35, 0.35, 0, 40, USE_DRIVE_TIMER)) {
+				if (autoDriveRobot(robot.drivetrain, 0.35, 0.35, 0, 50, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 4:
-				if (turnGyro(robot.drivetrain, -85, .35)) {
+				if (turnGyro(robot.drivetrain, 85, .35)) {
 					Timer.delay(.1);
 					robot.drivetrain.stopDrive();
+					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
 			case 5:
 
-				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .4, .4, 0, 18, false)) {
+				if (autoDriveRobot(robot.drivetrain, .4, .4, 0, 33, false)) {
 					state++;
 					robot.drivetrain.stopDrive();
 
@@ -279,12 +300,13 @@ public class Autonomous {
 				robot.pneumatics.openGrabber();
 				robot.pneumatics.intakeDown();
 				state++;
+
 			}
 
 		} else {
 			switch (state) {
 			case 0:
-				if (autoDriveRobot(robot.drivetrain, .35, .35, 0, 50, USE_DRIVE_TIMER)) {
+				if (autoDriveRobot(robot.drivetrain, .35, .35, 0, 35, USE_DRIVE_TIMER)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					state++;
@@ -315,16 +337,17 @@ public class Autonomous {
 				}
 				break;
 			case 4:
-				if (turnGyro(robot.drivetrain, -85, .35)) {
+				if (turnGyro(robot.drivetrain, -90, .35)) {
 					Timer.delay(.1);
 					robot.drivetrain.stopDrive();
 					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
 					state++;
 				}
 				break;
 			case 5:
 
-				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .4, .4, 0, 18, false)) {
+				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .4, .4, 0, 40, false)) {
 					state++;
 					robot.drivetrain.stopDrive();
 
