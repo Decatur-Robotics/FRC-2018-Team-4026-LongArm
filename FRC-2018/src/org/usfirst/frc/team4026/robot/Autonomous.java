@@ -32,13 +32,25 @@ public class Autonomous {
 	public void position1Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		if (scale.equals("Left")) {
-			scoreScale(robot, true);
-		} else {
+		if (robot.prioritySelected.equals(robot.PRIORITYSCALE)) {
+			if (scale.equals("Left")) {
+				scoreScale(robot, true);
+			} else {
+				if (teamSwitch.equals("Left")) {
+					scoreSwitch(robot, true);
+				} else {
+					crossLineAuto(robot);
+				}
+			}
+		}else {
 			if (teamSwitch.equals("Left")) {
 				scoreSwitch(robot, true);
 			} else {
-				crossLineAuto(robot);
+				if (scale.equals("Left")) {
+					scoreScale(robot, true);
+				} else {
+					crossLineAuto(robot);
+				}
 			}
 		}
 	}
@@ -60,13 +72,25 @@ public class Autonomous {
 	public void position3Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		if (scale.equals("Right")) {
-			scoreScale(robot, false);
-		} else {
+		if(robot.prioritySelected.equals(robot.PRIORITYSCALE)) {
+			if (scale.equals("Right")) {
+				scoreScale(robot, false);
+			} else {
+				if (teamSwitch.equals("Right")) {
+					scoreSwitch(robot, false);
+				} else {
+					crossLineAuto(robot);
+				}
+			}
+		}else {
 			if (teamSwitch.equals("Right")) {
 				scoreSwitch(robot, false);
 			} else {
-				crossLineAuto(robot);
+				if (scale.equals("Right")) {
+					scoreScale(robot, false);
+				} else {
+					crossLineAuto(robot);
+				}
 			}
 		}
 	}
@@ -464,7 +488,6 @@ public class Autonomous {
 			break;
 		}
 	}
-
 	void resetDrive(Drivetrain drivetrain, boolean isTimerBased) {
 		if (isTimerBased) {
 			autoDriveTimer.reset();

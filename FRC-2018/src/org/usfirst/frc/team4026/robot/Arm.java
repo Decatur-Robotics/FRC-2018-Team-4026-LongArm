@@ -14,7 +14,6 @@ public class Arm implements Subsystem {
 	private static final double ARM_SWITCH_POSITION = 14;
 	private static final double ARM_SCALE_POSITION = 28;
 	private static final double ARM_GROUND_POSITION = 5;
-	private static final boolean USEARMGYRO = false;
 	boolean isInitialized = false;
 	boolean intake = false;
 	boolean intakeForward = false;
@@ -42,7 +41,7 @@ public class Arm implements Subsystem {
 			rightIntakeMotor = new WPI_TalonSRX(PortMap.RIGHTINTAKE);
 			armLowerLimit = new DigitalInput(PortMap.ARM_LOWER_LIMIT);
 			stringThingy = new AnalogInput(PortMap.STRINGTHINGY);
-			// armLowerLimit = new DigitalInput(PortMap.ARM_UPPER_LIMIT);
+			// armUpperLimit = new DigitalInput(PortMap.ARM_UPPER_LIMIT);
 			liftSpeed = 0;
 			isInitialized = true;
 			armGyro = new AnalogGyro(0);
@@ -195,14 +194,9 @@ public class Arm implements Subsystem {
 	}
 
 	public void run(Robot robot) {
+		
 		lift(robot.controllers, robot);
-
-		if (robot.controllers.getSecondaryRawButton(8)) {
-			robot.pneumatics.intakeLiftPistons.set(Value.kForward);
-		} else {
-			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
-		}
-
+		pivotIntake(robot);
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
 		intakeLift(robot.controllers);
 		arcadeIntake(robot.controllers.getSecondaryRightX(), robot.controllers.getSecondaryRightY(), .05, robot);
@@ -210,6 +204,19 @@ public class Arm implements Subsystem {
 
 	public double getArmPosition() {
 		return (stringThingy.getVoltage() * 11) - 1;
+	}
+
+	
+	public void pivotIntake(Robot robot) {
+		if (getArmPosition() < ARM_SWITCH_POSITION) {
+			if (robot.controllers.getSecondaryRawButton(8)) {
+				robot.pneumatics.intakeLiftPistons.set(Value.kForward);
+			} else {
+				robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+			}
+		}else {
+			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+		}
 	}
 
 	@Override

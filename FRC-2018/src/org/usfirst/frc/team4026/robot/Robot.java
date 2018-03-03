@@ -7,6 +7,7 @@
 
 package org.usfirst.frc.team4026.robot;
 
+import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -30,9 +31,16 @@ public class Robot extends IterativeRobot {
 
 	private static final String POSITION3AUTO = "Right Driver Station";
 	private static final String POSITION3SCALE = "Right Driver Station SCALE";
-
+	
 	private String autoSelected;
-
+	
+	SendableChooser<String> autoPriority = new SendableChooser<>();
+	
+	public static final String PRIORITYSCALE = "Prioritize SCALE";
+	public static final String PRIORITYSWITCH = "Prioritize SWITCH";
+	
+	public String prioritySelected;
+	
 	double counter = 0;
 
 	Drivetrain drivetrain = new Drivetrain();
@@ -49,16 +57,20 @@ public class Robot extends IterativeRobot {
 	public void robotInit() {
 		autoChooser.addDefault(CROSSLINEAUTO, CROSSLINEAUTO);
 		autoChooser.addObject(POSITION1AUTO, POSITION1AUTO);
-		//autoChooser.addObject(POSITION1SCALE, POSITION3SCALE);
 		autoChooser.addObject(POSITION2AUTO, POSITION2AUTO);
 		autoChooser.addObject(POSITION3AUTO, POSITION3AUTO);
-		//autoChooser.addObject(POSITION3SCALE, POSITION3SCALE);
 		SmartDashboard.putData("Auto choices", autoChooser);
+		
+		autoPriority.addDefault(PRIORITYSWITCH, PRIORITYSWITCH);
+		autoPriority.addObject(PRIORITYSCALE, PRIORITYSCALE);
+		SmartDashboard.putData("Auto Priority", autoPriority);
+		
 		drivetrain.init();
 		arm.init();
 		controllers.init();
 		pneumatics.init();
-
+		
+        CameraServer.getInstance().startAutomaticCapture();
 	}
 
 	/**
@@ -78,6 +90,11 @@ public class Robot extends IterativeRobot {
 		autoSelected = autoChooser.getSelected();
 		SmartDashboard.putString("Auto Selected", autoSelected);
 		System.out.println("Auto selected: " + autoSelected);
+		
+		prioritySelected = autoPriority.getSelected();
+		SmartDashboard.putString("Priority Selected", prioritySelected);
+		System.out.println("Priority selected: " + prioritySelected);
+		
 		auto.getGameData();
 		drivetrain.gyro.reset();
 		pneumatics.closeGrabber();
