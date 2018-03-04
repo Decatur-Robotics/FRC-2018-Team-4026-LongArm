@@ -3,10 +3,6 @@ package org.usfirst.frc.team4026.robot;
 public interface PortMap {
 	// CAN
 	public static final int ARMLIFT = 4;
-	public static final int LEFTINTAKE = 0;
-	public static final int RIGHTINTAKE = 2;
-	public static final int LEFTGRABBER = 1;
-	public static final int RIGHTGRABBER = 3;
 
 	// PWM
 	public static final int LEFTDRIVE = 0;

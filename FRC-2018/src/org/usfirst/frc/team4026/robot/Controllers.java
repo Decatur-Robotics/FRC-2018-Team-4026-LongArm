@@ -2,13 +2,12 @@ package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
 
-public class Controllers implements Subsystem {
+public class Controllers{
 
 	Joystick driveJoystick;
 	Joystick manipulatorJoystick;
 	boolean isInitialized = false;
 
-	@Override
 	public int init() {
 		if (!isInitialized) {
 			driveJoystick = new Joystick(PortMap.PRIMARYCONTROLLER);
@@ -47,15 +46,9 @@ public class Controllers implements Subsystem {
 	public boolean getSecondaryRawButton(int button) {
 		return manipulatorJoystick.getRawButton(button);
 	}
-
-	@Override
+	
 	public int shutdown() {
 
 		return 1;
-	}
-	
-	public void updateDashboard()
-	{
-		
 	}
 }

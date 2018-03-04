@@ -32,7 +32,7 @@ public class Autonomous {
 	public void position1Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		if (robot.prioritySelected.equals(robot.PRIORITYSCALE)) {
+		if (robot.prioritySelected.equals(Robot.PRIORITYSCALE)) {
 			if (scale.equals("Left")) {
 				scoreScale(robot, true);
 			} else {
@@ -72,7 +72,7 @@ public class Autonomous {
 	public void position3Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		if(robot.prioritySelected.equals(robot.PRIORITYSCALE)) {
+		if(robot.prioritySelected.equals(Robot.PRIORITYSCALE)) {
 			if (scale.equals("Right")) {
 				scoreScale(robot, false);
 			} else {
@@ -651,5 +651,31 @@ public class Autonomous {
 		SmartDashboard.putString("Scale", scale);
 		SmartDashboard.putString("Opponent Switch", opponentSwitch);
 
+	}
+	
+	@SuppressWarnings("unused")
+	public void  cheesecakeAuto() {		
+		int cheeseState = 0;
+		Timer cheeseTimer = new Timer();
+		cheeseTimer.reset();
+		double cheeseLeft = .5;
+		double cheeseRight = -.5;
+		switch (cheeseState) {
+		case 0:
+			while (cheeseTimer.get() < 3 /* && isEnabled() */) {
+				//fLeftMotor.set(cheeseLeft);
+				//BLeftMotor.set(cheeseLeft);
+				//fRightMotor.set(cheeseRight);
+				//bRightMotor.set(cheeseRight);
+			}
+			state++;
+			break;
+		case 1:
+			//fLeftMotor.set(cheeseLeft);
+			//BLeftMotor.set(cheeseLeft);
+			//fRightMotor.set(cheeseRight);
+			//bRightMotor.set(cheeseRight);
+			break;
+		}
 	}
 }

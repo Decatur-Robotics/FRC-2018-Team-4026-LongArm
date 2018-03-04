@@ -98,7 +98,6 @@ public class Robot extends IterativeRobot {
 		auto.getGameData();
 		drivetrain.gyro.reset();
 		pneumatics.closeGrabber();
-		arm.armGyro.reset();
 		drivetrain.LeftEncoder.reset();
 	}
 
@@ -143,6 +142,8 @@ public class Robot extends IterativeRobot {
 	public void teleopInit() {
 		drivetrain.LeftEncoder.reset();
 	}
+	
+	
 
 	/**
 	 * This function is called periodically during operator control.
@@ -155,13 +156,12 @@ public class Robot extends IterativeRobot {
 			arm.run(this);
 			updateDashboard();
 		}
-		arm.armGyro.reset();
 		drivetrain.reset();
 		shutdown();
 		updateDashboard();
 
 	}
-
+	
 	/**
 	 * This function is called periodically during test mode.
 	 */
@@ -169,11 +169,12 @@ public class Robot extends IterativeRobot {
 	public void testPeriodic() {
 		// not needed yet
 	}
-
-	public void autoChoices() {
-
+	
+	@Override
+	public void disabledPeriodic() {
+		updateDashboard();
 	}
-
+	
 	public void shutdown() {
 		drivetrain.shutdown();
 		pneumatics.shutdown();
