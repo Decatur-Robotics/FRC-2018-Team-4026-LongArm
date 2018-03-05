@@ -39,18 +39,19 @@ public class Autonomous {
 				if (teamSwitch.equals("Left")) {
 					scoreSwitch(robot, true);
 				} else {
-					crossLineAuto(robot);
+					crossFieldSwitch(robot,true);
 				}
 			}
 		}else {
 			if (teamSwitch.equals("Left")) {
 				scoreSwitch(robot, true);
 			} else {
-				if (scale.equals("Left")) {
+				crossFieldSwitch(robot,true);
+				/*if (scale.equals("Left")) {
 					scoreScale(robot, true);
 				} else {
 					crossLineAuto(robot);
-				}
+				}*/
 			}
 		}
 	}
@@ -79,18 +80,19 @@ public class Autonomous {
 				if (teamSwitch.equals("Right")) {
 					scoreSwitch(robot, false);
 				} else {
-					crossLineAuto(robot);
+					crossFieldSwitch(robot, false);
 				}
 			}
 		}else {
 			if (teamSwitch.equals("Right")) {
 				scoreSwitch(robot, false);
 			} else {
-				if (scale.equals("Right")) {
+				crossFieldSwitch(robot, false);
+				/*if (scale.equals("Right")) {
 					scoreScale(robot, false);
 				} else {
 					crossLineAuto(robot);
-				}
+				}*/
 			}
 		}
 	}
@@ -265,7 +267,109 @@ public class Autonomous {
 			break;
 		}
 	}
-
+	
+	public void crossFieldSwitch(Robot robot, boolean leftSide) {
+		robot.pneumatics.setHighGear();
+		switch (state) {
+		case 0:
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 200, USE_DRIVE_TIMER)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.stopDrive();
+				state++;
+			}
+			break;
+		case 1:
+			if (leftSide) {
+				robot.pneumatics.setLowGear();
+				if (turnGyro(robot.drivetrain, 90, .3)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.stopDrive();
+					state++;
+				}
+			} else {
+				robot.pneumatics.setLowGear();
+				if (turnGyro(robot.drivetrain, -90, .3)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.stopDrive();
+					state++;
+				}
+			}
+			break;
+		case 2:
+			robot.pneumatics.setHighGear();
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 191, USE_DRIVE_TIMER)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.stopDrive();
+				state++;
+			}
+			break;
+		case 3:
+			if (leftSide) {
+				robot.pneumatics.setLowGear();
+				if (turnGyro(robot.drivetrain, 90, .3)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.stopDrive();
+					state++;
+				}
+			} else {
+				robot.pneumatics.setLowGear();
+				if (turnGyro(robot.drivetrain, -90, .3)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.stopDrive();
+					state++;
+				}
+			}
+			break;
+		case 4:
+			robot.pneumatics.setHighGear();
+			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 30, USE_DRIVE_TIMER)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.stopDrive();
+				state++;
+			}
+			break;
+		case 5:
+			if (robot.arm.liftToSwitch()) {
+				robot.arm.holdLift();
+				System.out.println("Case 2 started");
+				//state++;
+			}
+			robot.arm.updateLiftMotor();
+			break;
+		case 6:
+			robot.pneumatics.openGrabber();
+			state++;
+			break;
+		case 7:
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.stopDrive();
+				state++;
+			}
+			break;
+		case 8:
+			if (robot.arm.liftToGround()) {
+				robot.arm.holdLift();
+				System.out.println("Case 5 started");
+				state++;
+			}
+			robot.arm.updateLiftMotor();
+			break;
+		case 9:
+			robot.pneumatics.setLowGear();
+			robot.drivetrain.stopDrive();
+			break;
+		}
+	}
+	
 	public void position2Switch(Robot robot) {
 		decodeGameData();
 		updateDashboard();
