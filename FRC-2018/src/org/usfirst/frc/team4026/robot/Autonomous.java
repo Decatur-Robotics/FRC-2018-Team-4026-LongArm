@@ -333,7 +333,6 @@ public class Autonomous {
 			}
 			break;
 		case 4:
-			robot.pneumatics.setHighGear();
 			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 30, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
@@ -488,11 +487,11 @@ public class Autonomous {
 		}
 	}
 
-	public void scaleCross(Robot robot, boolean leftSide) {
-		robot.pneumatics.setLowGear();
+	public void crossFieldScale(Robot robot, boolean leftSide) {
+		robot.pneumatics.setHighGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 229, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 229, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -500,15 +499,16 @@ public class Autonomous {
 			}
 			break;
 		case 1:
+			robot.pneumatics.setLowGear();
 			if (leftSide) {
-				if (turnGyro(robot.drivetrain, 90, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
 					state++;
 				}
 			} else {
-				if (turnGyro(robot.drivetrain, -90, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -517,7 +517,8 @@ public class Autonomous {
 			}
 			break;
 		case 2:
-			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 191, USE_DRIVE_TIMER)) {
+			robot.pneumatics.setHighGear();
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 191, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -525,39 +526,26 @@ public class Autonomous {
 			}
 			break;
 		case 3:
+			robot.pneumatics.setLowGear();
 			if (leftSide) {
-				if (turnGyro(robot.drivetrain, -90, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
 					state++;
 				}
 			} else {
-				if (turnGyro(robot.drivetrain, 90, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
-					state++;
+					//state++;
 				}
 			}
-			break;
-		case 4:
-			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 30, USE_DRIVE_TIMER)) {
-				robot.drivetrain.gyro.reset();
-				robot.drivetrain.LeftEncoder.reset();
-				robot.drivetrain.stopDrive();
-				state++;
-			}
-			break;
-		case 5:
-			if (robot.arm.liftToScale()) {
-				robot.arm.holdLift();
-				System.out.println("Case 2 started");
-				// state++;
-			}
+			robot.arm.liftToScale();
 			robot.arm.updateLiftMotor();
 			break;
-		case 6:
+		case 4:
 			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 24, USE_DRIVE_TIMER)) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
@@ -565,31 +553,26 @@ public class Autonomous {
 				state++;
 			}
 			break;
-		case 7:
+		case 5:
 			robot.pneumatics.openGrabber();
 			state++;
 			break;
-		case 8:
+		case 6:
 			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.stopDrive();
 				state++;
 			}
-			break;
-		case 9:
-			if (robot.arm.liftToGround()) {
-				robot.arm.holdLift();
-				System.out.println("Case 5 started");
-				state++;
-			}
+			robot.arm.liftToGround();
 			robot.arm.updateLiftMotor();
 			break;
-		case 10:
+		case 7:
 			robot.drivetrain.stopDrive();
 			break;
 		}
 	}
+	
 	void resetDrive(Drivetrain drivetrain, boolean isTimerBased) {
 		if (isTimerBased) {
 			autoDriveTimer.reset();
