@@ -146,7 +146,7 @@ public class Autonomous {
 		case 3:
 			if (robot.arm.liftToScale()) {
 				robot.arm.holdLift();
-				System.out.println("Case 2 started");
+				System.out.println("Case 3 started");
 				state++;
 			}
 			robot.arm.updateLiftMotor();
@@ -278,11 +278,13 @@ public class Autonomous {
 				robot.drivetrain.stopDrive();
 				state++;
 			}
+			robot.arm.liftToSwitch();
+			robot.arm.updateLiftMotor();
 			break;
 		case 1:
 			if (leftSide) {
 				robot.pneumatics.setLowGear();
-				if (turnGyro(robot.drivetrain, 90, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -290,13 +292,15 @@ public class Autonomous {
 				}
 			} else {
 				robot.pneumatics.setLowGear();
-				if (turnGyro(robot.drivetrain, -90, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
 					state++;
 				}
 			}
+			robot.arm.liftToSwitch();
+			robot.arm.updateLiftMotor();
 			break;
 		case 2:
 			robot.pneumatics.setHighGear();
@@ -306,11 +310,13 @@ public class Autonomous {
 				robot.drivetrain.stopDrive();
 				state++;
 			}
+			robot.arm.liftToSwitch();
+			robot.arm.updateLiftMotor();
 			break;
 		case 3:
 			if (leftSide) {
 				robot.pneumatics.setLowGear();
-				if (turnGyro(robot.drivetrain, 90, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -318,7 +324,7 @@ public class Autonomous {
 				}
 			} else {
 				robot.pneumatics.setLowGear();
-				if (turnGyro(robot.drivetrain, -90, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -336,18 +342,10 @@ public class Autonomous {
 			}
 			break;
 		case 5:
-			if (robot.arm.liftToSwitch()) {
-				robot.arm.holdLift();
-				System.out.println("Case 2 started");
-				//state++;
-			}
-			robot.arm.updateLiftMotor();
-			break;
-		case 6:
 			robot.pneumatics.openGrabber();
 			state++;
 			break;
-		case 7:
+		case 6:
 			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
@@ -355,15 +353,15 @@ public class Autonomous {
 				state++;
 			}
 			break;
-		case 8:
+		case 7:
 			if (robot.arm.liftToGround()) {
 				robot.arm.holdLift();
-				System.out.println("Case 5 started");
+				System.out.println("Case 7 started");
 				state++;
 			}
 			robot.arm.updateLiftMotor();
 			break;
-		case 9:
+		case 8:
 			robot.pneumatics.setLowGear();
 			robot.drivetrain.stopDrive();
 			break;
@@ -775,10 +773,10 @@ public class Autonomous {
 			state++;
 			break;
 		case 1:
-			//fLeftMotor.set(cheeseLeft);
-			//BLeftMotor.set(cheeseLeft);
-			//fRightMotor.set(cheeseRight);
-			//bRightMotor.set(cheeseRight);
+			//fLeftMotor.set(0);
+			//BLeftMotor.set(0);
+			//fRightMotor.set(0);
+			//bRightMotor.set(0);
 			break;
 		}
 	}
