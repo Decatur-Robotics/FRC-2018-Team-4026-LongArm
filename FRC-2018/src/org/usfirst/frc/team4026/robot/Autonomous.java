@@ -60,9 +60,9 @@ public class Autonomous {
 		decodeGameData();
 		updateDashboard();
 		if (scale.equals("Left")) {
-			scoreScale(robot, false);
+			scoreScale(robot, true);
 		} else {
-			scaleCross(robot, true);
+			crossFieldScale(robot, true);
 		}
 	}
 
@@ -103,7 +103,7 @@ public class Autonomous {
 		if (scale.equals("Right")) {
 			scoreScale(robot, false);
 		} else {
-			scaleCross(robot, false);
+			crossFieldScale(robot, false);
 		}
 	}
 
@@ -272,7 +272,7 @@ public class Autonomous {
 		robot.pneumatics.setHighGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 200, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 215, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -491,7 +491,7 @@ public class Autonomous {
 		robot.pneumatics.setHighGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 229, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 215, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();

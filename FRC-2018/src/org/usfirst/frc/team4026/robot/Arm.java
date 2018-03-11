@@ -10,9 +10,9 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Arm implements Subsystem {
 
-	private static final double ARM_SWITCH_POSITION = 14;
-	private static final double ARM_SCALE_POSITION = 28;
-	private static final double ARM_GROUND_POSITION = 5;
+	private static final double ARM_SWITCH_POSITION = 13;
+	private static final double ARM_SCALE_POSITION = 27;
+	private static final double ARM_GROUND_POSITION = 5.5;
 	boolean isInitialized = false;
 	double liftSpeed;
 	NeutralMode brakeMode = NeutralMode.Coast;
@@ -89,7 +89,7 @@ public class Arm implements Subsystem {
 
 	public boolean liftToPosition(double targetPosition) {
 		double armPos = getArmPosition();
-		if (Math.abs(targetPosition - armPos) < 2) {
+		if (Math.abs(targetPosition - armPos) < .75) {
 			holdLift();
 
 			return true;
