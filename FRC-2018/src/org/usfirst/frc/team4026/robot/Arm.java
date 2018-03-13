@@ -133,15 +133,15 @@ public class Arm implements Subsystem {
 
 	
 	public void pivotIntake(Robot robot) {
-		if (getArmPosition() < ARM_SWITCH_POSITION) {
+		//if (getArmPosition() < ARM_SWITCH_POSITION) {
 			if (robot.controllers.getSecondaryRawButton(8)) {
 				robot.pneumatics.intakeLiftPistons.set(Value.kForward);
 			} else {
 				robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
 			}
-		}else {
+		/*}else {
 			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
-		}
+		}*/
 	}
 	
 	public void run(Robot robot) {
