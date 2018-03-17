@@ -20,6 +20,7 @@ public class Pneumatics implements Subsystem {
 		if (!isInitialized) {
 			shifter = new DoubleSolenoid(PortMap.SHIFTLOWGEAR, PortMap.SHIFTHIGHGEAR);
 			grabberPistons = new DoubleSolenoid(PortMap.GRABBERRPISTONIN, PortMap.GRABBERPISTONOUT);
+			grabberPistons.set(DoubleSolenoid.Value.kForward);
 			intakeLiftPistons = new DoubleSolenoid(PortMap.INTAKEPISTONIN, PortMap.INTAKEPISTONOUT);
 			airPressureSensor = new RevRoboticsAirPressureSensor(PortMap.PRESSURESENSOR);
 			compressor = new Compressor();
