@@ -33,11 +33,11 @@ public class Autonomous {
 	public void position1Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		if (teamSwitch.equals("Left")) {
-			scoreSwitch(robot, true);
+		if (scale.equals("Left")) {
+			scoreScale(robot, true);
 		} else {
-			if (scale.equals("Left")) {
-				scoreScale(robot, true);
+			if (teamSwitch.equals("Left")) {
+				scoreSwitch(robot, true);
 			} else {
 				crossLineAuto(robot);
 			}
@@ -61,11 +61,11 @@ public class Autonomous {
 	public void position3Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
-		if (teamSwitch.equals("Right")) {
-			scoreSwitch(robot, false);
+		if (scale.equals("Right")) {
+			scoreScale(robot, false);
 		} else {
-			if (scale.equals("Right")) {
-				scoreScale(robot, false);
+			if (teamSwitch.equals("Right")) {
+				scoreSwitch(robot, false);
 			} else {
 				crossLineAuto(robot);
 			}
@@ -114,12 +114,12 @@ public class Autonomous {
 			}
 			break;
 		case 2:
-			robot.arm.liftToSwitch();
-			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 6, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 1) {
+			//robot.arm.liftToSwitch();
+			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 60, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 2) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
-				state++;
+				//state++;
 			}
 			break;
 		case 3:
