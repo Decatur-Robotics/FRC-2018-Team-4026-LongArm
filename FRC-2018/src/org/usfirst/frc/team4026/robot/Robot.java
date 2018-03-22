@@ -55,6 +55,9 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void robotInit() {
+		// we can pass an object here instead of a string, so instead of deciding what we do based on a string value, 
+		// the commands will execute directly from the selected object.
+		// https://wpilib.screenstepslive.com/s/3120/m/7932/l/81109-choosing-an-autonomous-program-from-smartdashboard
 		autoChooser.addDefault(CROSSLINEAUTO, CROSSLINEAUTO);
 		autoChooser.addObject(POSITION1AUTO, POSITION1AUTO);
 		autoChooser.addObject(POSITION2AUTO, POSITION2AUTO);

@@ -47,34 +47,39 @@ public class Arm implements Subsystem {
 		liftSpeed = -gamepad.getSecondaryLeft();
 		boolean holdLift;
 
+		holdLift = handleGamePadHoldLiftButton(gamepad);
+
+		if(!holdLift)
+		{
+			if (liftSpeed > 0) liftSpeed *= .5;
+			else liftSpeed *= .3;
+		}
+				
+		if (liftSpeed < 0 && !armLowerLimit.get())liftSpeed = 0;
+				
+		handleGamePadSecondaryButton(gamepad);
+				
+		updateLiftMotor();
+
+	}
+
+	private boolean handleGamePadHoldLiftButton(Controllers gamepad) {
+		boolean holdLift;
 		if (gamepad.getSecondaryRawButton(6)) {
 			holdLift = true;
 			liftSpeed = .06;
 		} else {
 			holdLift = false;
 		}
+		return holdLift;
+	}
 
-		if (liftSpeed > 0 && !holdLift) {
-			liftSpeed *= .5;
-		}
-
-		if (liftSpeed < 0 && !holdLift) {
-			liftSpeed *= .3;
-		}
-		if (liftSpeed < 0 && !armLowerLimit.get()) {
-			liftSpeed = 0;
-		}
-		if (gamepad.getSecondaryRawButton(1)) {
-			liftToGround();
-		}
-		if (gamepad.getSecondaryRawButton(2)) {
-			liftToSwitch();
-		}
-		if (gamepad.getSecondaryRawButton(3)) {
-			liftToScale();
-		}
-		updateLiftMotor();
-
+	private void handleGamePadSecondaryButton(Controllers gamepad) {
+		if (gamepad.getSecondaryRawButton(1)) liftToGround();
+		
+		if (gamepad.getSecondaryRawButton(2)) liftToSwitch();
+				
+		if (gamepad.getSecondaryRawButton(3)) liftToScale();
 	}
 
 	public void updateLiftMotor() {
@@ -93,11 +98,13 @@ public class Arm implements Subsystem {
 
 	public boolean liftToPosition(double targetPosition) {
 		double armPos = getArmPosition();
-		if (Math.abs(targetPosition - armPos) < .75) {
+		if (Math.abs(targetPosition - armPos) < .75) 
+		{
 			holdLift();
-
 			return true;
-		} else {
+		} 
+		else 
+		{
 			if (armPos < (targetPosition)) {
 				if (Math.abs(targetPosition - armPos) > 4.5) {
 					liftSpeed = .65;
