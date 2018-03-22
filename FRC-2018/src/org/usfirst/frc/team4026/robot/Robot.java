@@ -9,6 +9,8 @@ package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -38,16 +40,17 @@ public class Robot extends IterativeRobot {
 	
 	public static final String PRIORITYSCALE = "Prioritize SCALE";
 	public static final String PRIORITYSWITCH = "Prioritize SWITCH";
-	
+	static final double DRIVE_TICKSPERREV = 392;
+
 	public String prioritySelected;
 	
 	double counter = 0;
 
-	Drivetrain drivetrain = new Drivetrain();
-	Arm arm = new Arm();
+	private Drivetrain drivetrain = new Drivetrain();
+	private Arm arm = new Arm();
 	Controllers controllers = new Controllers();
-	Pneumatics pneumatics = new Pneumatics();
-	Autonomous auto = new Autonomous();
+	private Pneumatics pneumatics = new Pneumatics();
+	private Autonomous auto = new Autonomous();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -99,9 +102,9 @@ public class Robot extends IterativeRobot {
 		System.out.println("Priority selected: " + prioritySelected);
 		
 		auto.getGameData();
-		drivetrain.gyro.reset();
+		drivetrain.resetGyro();
 		pneumatics.closeGrabber();
-		drivetrain.LeftEncoder.reset();
+		drivetrain.resetLeftEncoder();
 	}
 
 	/**
@@ -143,7 +146,7 @@ public class Robot extends IterativeRobot {
 	@Override
 
 	public void teleopInit() {
-		drivetrain.LeftEncoder.reset();
+		drivetrain.resetLeftEncoder();
 	}
 	
 	
@@ -188,5 +191,269 @@ public class Robot extends IterativeRobot {
 		drivetrain.updateDashboard();
 		arm.updateDashboard();
 		pneumatics.updateDashboard();
+	}
+
+	/**
+	 * 
+	 * @param AutoDriveTimer
+	 * @param velocityLeft
+	 * @param velocityRight
+	 * @param timeSec
+	 * @param targetDistanceInch
+	 * @param isTimerBased
+	 * @return
+	 */
+	protected boolean autoDriveRobot(
+			Timer AutoDriveTimer,
+			double velocityLeft, 
+			double velocityRight, 
+			double timeSec,
+			double targetDistanceInch) 
+	{
+		return autoDriveRobot(AutoDriveTimer, velocityLeft, velocityRight, timeSec, targetDistanceInch, false);
+	}
+	/**
+	 * 
+	 * @param AutoDriveTimer
+	 * @param velocityLeft
+	 * @param velocityRight
+	 * @param timeSec
+	 * @param targetDistanceInch
+	 * @param isTimerBased
+	 * @return
+	 */
+	protected boolean autoDriveRobot(
+			Timer AutoDriveTimer,
+			double velocityLeft, 
+			double velocityRight, 
+			double timeSec,
+			double targetDistanceInch, 
+			boolean isTimerBased) 
+	{
+		double err = 0.0;
+		double driveDistInch = 0.0;
+		double percentPower = 0.0;
+		if (isTimerBased) 
+		{
+			if (AutoDriveTimer.get() <= timeSec) 
+			{
+				// leftDriveMotor.set(-velocityLeft);
+				// rightDriveMotor.set(velocityRight);
+				drivetrain.keepDriveStraight(velocityLeft, velocityRight, 0);
+			} 
+			else 
+			{
+				drivetrain.stopDrive();
+				return true;
+			}
+		} 
+		else 
+		{
+			driveDistInch = Math.abs(convertDriveTicksToInches(drivetrain.getLeftEncoderCurrentCount()));
+			if (driveDistInch < Math.abs(targetDistanceInch)) 
+			{
+				// leftDriveMotor.set(-velocityLeft);
+				// rightDriveMotor.set(velocityRight);
+				err = Math.abs(targetDistanceInch) - driveDistInch;
+				percentPower = (err / Math.abs(targetDistanceInch));
+
+				if (err <= 48.0) // If within 24" start slowing down
+				{
+					velocityLeft *= percentPower;
+					velocityRight *= percentPower;
+
+					if (velocityLeft < 0.0 && velocityLeft > -0.2)
+						velocityLeft = -0.2;
+					else if (velocityLeft > 0.0 && velocityLeft < 0.2)
+						velocityLeft = 0.2;
+					if (velocityRight < 0.0 && velocityRight > -0.2)
+						velocityRight = -0.2;
+					else if (velocityRight > 0.0 && velocityRight < 0.2)
+						velocityRight = 0.2;
+				}
+
+				drivetrain.keepDriveStraight(velocityLeft, velocityLeft, 0);
+			} 
+			else 
+			{
+				drivetrain.stopDrive();
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	double convertDriveTicksToInches(int encTicks) 
+	{
+		return (encTicks / DRIVE_TICKSPERREV) * 3.14 * 6.0;
+	}
+
+	protected void resetGyroAndLeftEncoder() {
+		drivetrain.resetGyro();
+		drivetrain.resetLeftEncoder();
+	}
+	
+	protected void resetDrivetrainLeftEncoder() {
+		drivetrain.resetLeftEncoder();
+	}
+
+	protected void resetDrivetrainRightEncoder() {
+		drivetrain.resetRightEncoder();
+	}
+
+	protected void stopDrivetrain()
+	{
+		drivetrain.stopDrive();
+	}
+
+	void resetDriveTrain(Drivetrain drivetrain, boolean isTimerBased) 
+	{
+		drivetrain.resetLeftEncoder();
+		drivetrain.resetRightEncoder();
+		drivetrain.resetGyro();
+	}
+
+	protected double getDrivetrainAccelerometerXaxis()
+	{
+		return drivetrain.accelerometer.getX();
+	}
+
+	protected void openGrabber()
+	{
+		pneumatics.openGrabber();
+	}
+	
+	protected void closeGrabber()
+	{
+		pneumatics.closeGrabber();
+	}
+
+	protected void intakeDown()
+	{
+		pneumatics.intakeDown();
+	}
+	
+	protected void intakeUp()
+	{
+		pneumatics.intakeUp();
+	}
+
+	protected void setLowGear()
+	{
+		pneumatics.setLowGear();
+	}
+	
+	protected void setHighGear()
+	{
+		pneumatics.setHighGear();
+	}
+
+	protected void holdLift()
+	{
+		arm.holdLift();
+	}
+	
+	protected boolean liftToScale()
+	{
+		return arm.liftToScale();
+	}
+	
+	protected boolean liftToSwitch()
+	{
+		return arm.liftToSwitch();
+	}
+
+	protected boolean liftToGround()
+	{
+		return arm.liftToScale();
+	}
+
+	protected void updateLiftMotor()
+	{
+		arm.updateLiftMotor();
+	}
+	
+	protected void setIntakeLiftPistonSolenoidValue(Value value)
+	{
+		pneumatics.intakeLiftPistons.set(value);
+	}
+	
+	protected void actuateGrabber(int inButton, int outButton)
+	{
+		pneumatics.actuateGrabber(inButton, outButton, controllers);
+	}
+	
+	/*
+	 * Used during autonomous to turn the robot to a specified angle.
+	 */
+	boolean turnGyro(double rAngle, double maxTurnVelocity) 
+	{
+
+		double gyroKi = 0;
+		double error = 0.0;
+		double VelocityToSet = 0.0;
+		// Positive gyro angle means turning left
+		if (rAngle < drivetrain.getGyroAngle()) 
+		{
+			// Start accumulating error if the rate of turning is < 2 deg/sec
+			if (drivetrain.getGyroRate() < 2.0) 
+			{
+				gyroKi += 0.001;
+				if (gyroKi > 0.2) // Cap the integral term
+					gyroKi = 0.2;
+			}
+
+			error = Math.abs(rAngle) - drivetrain.getGyroAngle();
+			if (drivetrain.getGyroAngle() <= Math.abs(rAngle) && Math.abs(error) > 2.0) 
+			{
+				// turn left
+				VelocityToSet = (error / 3) + 0.2 + gyroKi; // 140 0.2
+				if (Math.abs(VelocityToSet) > maxTurnVelocity)
+					VelocityToSet = maxTurnVelocity * (VelocityToSet < 0.0 ? -1.0 : 1.0);
+				drivetrain.leftDriveMotor.set(VelocityToSet * drivetrain.batteryCompensationPct()); // 0.8
+				drivetrain.rightDriveMotor.set(VelocityToSet * drivetrain.batteryCompensationPct()); // 0.8
+			} else 
+			{
+				gyroKi = 0.0;
+				drivetrain.stopDrive();
+				// if(WaitAsyncUntil(0.5,true))
+				return true;
+			}
+		} 
+		else if (rAngle > drivetrain.getGyroAngle()) 
+		{
+			// Start accumulating error if the rate of turning is < 2 deg/sec
+			if (drivetrain.getGyroRate() < 2.0) 
+			{
+				gyroKi += 0.001;
+				if (gyroKi > 0.2) // Cap the integral term
+					gyroKi = 0.2;
+			}
+
+			error = -rAngle - drivetrain.getGyroAngle();
+			if (drivetrain.getGyroAngle() >= -rAngle && Math.abs(error) > 2.0) 
+			{
+				// turn right
+				VelocityToSet = (error / 270) - 0.2 - gyroKi;
+				if (Math.abs(VelocityToSet) > maxTurnVelocity)
+					VelocityToSet = maxTurnVelocity * (VelocityToSet < 0.0 ? -1.0 : 1.0);
+				drivetrain.leftDriveMotor.set(VelocityToSet * drivetrain.batteryCompensationPct()); // -0.8
+				drivetrain.rightDriveMotor.set(VelocityToSet * drivetrain.batteryCompensationPct()); // -0.8
+			} 
+			else 
+			{
+				gyroKi = 0.0;
+				drivetrain.stopDrive();
+				// if(WaitAsyncUntil(0.5,true))
+				return true;
+			}
+		} else 
+		{
+			gyroKi = 0.0;
+			drivetrain.stopDrive();
+			return true;
+		}
+
+		return false;
 	}
 }

@@ -146,12 +146,12 @@ public class Arm implements Subsystem {
 	public void manualPivotIntake(Robot robot) {
 		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
 			if (robot.controllers.getSecondaryRawButton(8)) {
-				robot.pneumatics.intakeLiftPistons.set(Value.kForward);
+				robot.setIntakeLiftPistonSolenoidValue(Value.kForward);
 			} else {
-				robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+				robot.setIntakeLiftPistonSolenoidValue(Value.kReverse);
 			}
 		}else {
-			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+			robot.setIntakeLiftPistonSolenoidValue(Value.kReverse);
 		}
 	}
 	
@@ -160,12 +160,12 @@ public class Arm implements Subsystem {
 		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
 			switch (state) {
 			case -1:
-				robot.pneumatics.intakeUp();
+				robot.intakeUp();
 				state++;
 			case 0:
 				if (robot.controllers.getSecondaryRawButton(8))
 				{
-					robot.pneumatics.openGrabber();
+					robot.openGrabber();
 					GrabberLiftTimer.reset();
 					GrabberLiftTimer.start();
 					state++;
@@ -174,7 +174,7 @@ public class Arm implements Subsystem {
 				break;
 			case 2:
 				if (GrabberLiftTimer.get() > .5) {
-					robot.pneumatics.intakeDown();
+					robot.intakeDown();
 					state++;
 					
 				}else if (!robot.controllers.getSecondaryRawButton(8)){
@@ -185,23 +185,23 @@ public class Arm implements Subsystem {
 			case 3:
 				if  (!robot.controllers.getSecondaryRawButton(8))
 				{
-					robot.pneumatics.closeGrabber();
+					robot.closeGrabber();
 					GrabberLiftTimer.reset();
 					GrabberLiftTimer.start();
 					state++;
 				} 
 			case 4:
 				if (GrabberLiftTimer.get() > 1) {
-					robot.pneumatics.intakeUp();
+					robot.intakeUp();
 					state = -1;
 				} else if (robot.controllers.getSecondaryRawButton(8)) {
-					robot.pneumatics.openGrabber();
+					robot.openGrabber();
 					state = 3;
 				}
 			
 			}
 		} else {
-			robot.pneumatics.intakeUp();
+			robot.intakeUp();
 		}
 	}
 	//****
@@ -210,7 +210,7 @@ public class Arm implements Subsystem {
 		lift(robot.controllers, robot);
 		manualPivotIntake(robot);
 		//smartPivot(robot);
-		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
+		robot.actuateGrabber(5, 7);
 	}
 	//******
 

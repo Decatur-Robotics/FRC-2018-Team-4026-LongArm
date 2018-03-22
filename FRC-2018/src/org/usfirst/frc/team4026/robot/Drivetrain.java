@@ -20,10 +20,10 @@ public class Drivetrain implements Subsystem {
 	Talon leftDriveMotor;
 
 	// Sensors
-	AnalogGyro gyro;
-	Encoder RightEncoder;
-	Encoder LeftEncoder;
-	BuiltInAccelerometer Accel;
+	private AnalogGyro gyro;
+	private Encoder RightEncoder;
+	private Encoder LeftEncoder;
+	BuiltInAccelerometer accelerometer;
 	AnalogInput Ultrasonic;
 
 	// Power vars
@@ -46,7 +46,7 @@ public class Drivetrain implements Subsystem {
 
 			leftDriveMotor = new Talon(PortMap.LEFTDRIVE);
 			rightDriveMotor = new Talon(PortMap.RIGHTDRIVE);
-			Accel = new BuiltInAccelerometer(Range.k4G);
+			accelerometer = new BuiltInAccelerometer(Range.k4G);
 			gyro = new AnalogGyro(PortMap.GYRO);
 			gyro.calibrate();
 			
@@ -182,4 +182,43 @@ public class Drivetrain implements Subsystem {
 		// System.out.println(gyro.getAngle());
 	}
 
+	protected void resetGyro()
+	{
+		gyro.reset();
+	}
+	
+	protected void resetLeftEncoder()
+	{
+		LeftEncoder.reset();
+	}
+
+	protected void resetRightEncoder()
+	{
+		RightEncoder.reset();
+	}
+
+	protected double getGyroRate()
+	{
+		return gyro.getRate();
+	}
+	
+	protected double getGyroAngle()
+	{
+		return gyro.getAngle();
+	}
+	
+	protected int getLeftEncoderCurrentCount()
+	{
+		return LeftEncoder.get();
+	}
+	
+	protected int getRightEncoderCurrentCount()
+	{
+		return RightEncoder.get();
+	}
+
+	protected double getAccelerometerXaxis()
+	{
+		return accelerometer.getX();
+	}
 }
