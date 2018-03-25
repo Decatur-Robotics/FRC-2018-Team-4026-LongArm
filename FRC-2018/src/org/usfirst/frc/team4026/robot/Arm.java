@@ -12,7 +12,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 public class Arm implements Subsystem {
 
 	private static final double ARM_SWITCH_POSITION = 14;
-	private static final double ARM_SCALE_POSITION = 27;
+	private static final double ARM_LOWSCALE_POSITION = 27;
+	private static final double ARM_HIGHSCALE_POSITION = 30;
 	private static final double ARM_GROUND_POSITION = 5.5;
 	boolean isInitialized = false;
 	double liftSpeed;
@@ -71,7 +72,10 @@ public class Arm implements Subsystem {
 			liftToSwitch();
 		}
 		if (gamepad.getSecondaryRawButton(3)) {
-			liftToScale();
+			liftToLowScale();
+		}
+		if (gamepad.getSecondaryRawButton(4)) {
+			liftToHighScale();
 		}
 		updateLiftMotor();
 
@@ -99,6 +103,30 @@ public class Arm implements Subsystem {
 			return true;
 		} else {
 			if (armPos < (targetPosition)) {
+				if (Math.abs(targetPosition - armPos) > 5) {
+					liftSpeed = .9;
+				} else {
+					liftSpeed = .4;
+				}
+			} else {
+				if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
+					liftSpeed = -.3;
+				} else {
+					liftSpeed = -.15;
+				}
+			}
+			return false;
+		}
+	}
+	
+	public boolean liftToPositionAuto(double targetPosition) {
+		double armPos = getArmPosition();
+		if (Math.abs(targetPosition - armPos) < .75) {
+			holdLift();
+
+			return true;
+		} else {
+			if (armPos < (targetPosition)) {
 				if (Math.abs(targetPosition - armPos) > 4.5) {
 					liftSpeed = .65;
 				} else {
@@ -119,12 +147,28 @@ public class Arm implements Subsystem {
 		return liftToPosition(ARM_SWITCH_POSITION);
 	}
 
-	public boolean liftToScale() {
-		return liftToPosition(ARM_SCALE_POSITION);
+	public boolean liftToHighScale() {
+		return liftToPosition(ARM_HIGHSCALE_POSITION);
+	}
+	
+	public boolean liftToLowScale() {
+		return liftToPosition(ARM_LOWSCALE_POSITION);
 	}
 
 	public boolean liftToGround() {
 		return liftToPosition(ARM_GROUND_POSITION);
+	}
+	//Slower LiftToPosition for Auto
+	public boolean liftToSwitchAuto() {
+		return liftToPositionAuto(ARM_SWITCH_POSITION);
+	}
+
+	public boolean liftToScaleAuto() {
+		return liftToPositionAuto(ARM_LOWSCALE_POSITION);
+	}
+
+	public boolean liftToGroundAuto() {
+		return liftToPositionAuto(ARM_GROUND_POSITION);
 	}
 
 	public void holdLift() {

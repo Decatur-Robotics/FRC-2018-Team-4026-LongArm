@@ -71,6 +71,7 @@ public class Drivetrain implements Subsystem {
 			right /= 2.0;
 			left /= 2.0;
 		}
+		
 		double avgStick = (right + left) / 2.0;
 
 		if (!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight()) {
