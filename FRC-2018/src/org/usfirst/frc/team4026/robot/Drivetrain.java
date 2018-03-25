@@ -1,6 +1,7 @@
 package org.usfirst.frc.team4026.robot;
 
 import edu.wpi.first.wpilibj.AnalogGyro;
+import edu.wpi.first.wpilibj.AnalogInput;
 import edu.wpi.first.wpilibj.BuiltInAccelerometer;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.RobotController;
@@ -23,6 +24,7 @@ public class Drivetrain implements Subsystem {
 	Encoder RightEncoder;
 	Encoder LeftEncoder;
 	BuiltInAccelerometer Accel;
+	AnalogInput Ultrasonic;
 
 	// Power vars
 	double right = 0;
@@ -47,7 +49,8 @@ public class Drivetrain implements Subsystem {
 			Accel = new BuiltInAccelerometer(Range.k4G);
 			gyro = new AnalogGyro(PortMap.GYRO);
 			gyro.calibrate();
-
+			
+			Ultrasonic = new AnalogInput(PortMap.ULTRASONIC);
 			isInitialized = true;
 			return 0;
 		}
@@ -132,6 +135,23 @@ public class Drivetrain implements Subsystem {
 	double smoothJoyStick(double joyInput) {
 		return Math.pow(joyInput, 2);
 	}
+	
+	public double calculateWallDistance(boolean averaged)
+	{	
+		double rawVoltage;
+		double wallDistance;
+
+		if(averaged)
+			rawVoltage = (double)(Ultrasonic.getAverageVoltage());
+		else
+			rawVoltage = (double)(Ultrasonic.getVoltage());
+
+		//MB1030
+		double VFiveMM = 0.009671875;
+		wallDistance = rawVoltage / VFiveMM;
+
+		return wallDistance;
+	}
 
 	public void reset() {
 		LeftEncoder.reset();
@@ -158,7 +178,7 @@ public class Drivetrain implements Subsystem {
 		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
 		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
-		SmartDashboard.putNumber("Gyro Rotation", gyro.getRate());
+		SmartDashboard.putNumber("Ultrasonic Distance", calculateWallDistance(false));
 		// System.out.println(gyro.getAngle());
 	}
 

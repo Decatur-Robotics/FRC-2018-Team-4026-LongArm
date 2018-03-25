@@ -13,12 +13,14 @@ public class Pneumatics implements Subsystem {
 	RevRoboticsAirPressureSensor airPressureSensor;
 	Compressor compressor;
 	boolean isInitialized = false;
+	public String gearState = " ";
 
 	@Override
 	public int init() {
 		if (!isInitialized) {
 			shifter = new DoubleSolenoid(PortMap.SHIFTLOWGEAR, PortMap.SHIFTHIGHGEAR);
 			grabberPistons = new DoubleSolenoid(PortMap.GRABBERRPISTONIN, PortMap.GRABBERPISTONOUT);
+			grabberPistons.set(DoubleSolenoid.Value.kForward);
 			intakeLiftPistons = new DoubleSolenoid(PortMap.INTAKEPISTONIN, PortMap.INTAKEPISTONOUT);
 			airPressureSensor = new RevRoboticsAirPressureSensor(PortMap.PRESSURESENSOR);
 			compressor = new Compressor();
@@ -43,11 +45,13 @@ public class Pneumatics implements Subsystem {
 
 	public void setHighGear() {
 		shifter.set(DoubleSolenoid.Value.kForward);
+		gearState = "High Gear";
 
 	}
 
 	public void setLowGear() {
 		shifter.set(DoubleSolenoid.Value.kReverse);
+		gearState = "Low Gear";
 	}
 
 	void actuateGrabber(int inButton, int outButton, Controllers gamepad) {
@@ -84,14 +88,6 @@ public class Pneumatics implements Subsystem {
 		intakeLiftPistons.set(DoubleSolenoid.Value.kReverse);
 	}
 
-	String gearState() {
-		if (shifter.get() == DoubleSolenoid.Value.kReverse) {
-			return "High Gear";
-		} else {
-			return "Low Gear";
-		}
-	}
-
 	String intakeLiftState() {
 		if (intakeLiftPistons.get() == DoubleSolenoid.Value.kForward) {
 			return "Up";
@@ -122,7 +118,7 @@ public class Pneumatics implements Subsystem {
 	@Override
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
-		SmartDashboard.putString("Gear State", gearState());
+		SmartDashboard.putString("Gear State", gearState);
 		SmartDashboard.putString("Intake Piston State", intakeLiftState());
 		SmartDashboard.putString("Grabber Piston State", grabberState());
 	}

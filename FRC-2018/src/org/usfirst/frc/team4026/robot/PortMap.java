@@ -21,6 +21,7 @@ public interface PortMap {
 	public static final int INTAKEPISTONOUT = 2;
 
 	// Analog Sensors
+	public static final int ULTRASONIC = 0;
 	public static final int GYRO = 1;
 	public static final int PRESSURESENSOR = 3;
 	public static final int STRINGTHINGY = 2;
