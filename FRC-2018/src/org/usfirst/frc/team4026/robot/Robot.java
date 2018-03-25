@@ -117,20 +117,12 @@ public class Robot extends IterativeRobot {
 				auto.position1Auto(this);
 				updateDashboard();
 				break;
-			case POSITION1SCALE:
-				auto.position1Scale(this);
-				updateDashboard();
-				break;z
 			case POSITION2AUTO:
 				auto.position2Auto(this);
 				updateDashboard();
 				break;
 			case POSITION3AUTO:
 				auto.position3Auto(this);
-				updateDashboard();
-				break;
-			case POSITION3SCALE:
-				auto.position3Scale(this);
 				updateDashboard();
 				break;
 			}

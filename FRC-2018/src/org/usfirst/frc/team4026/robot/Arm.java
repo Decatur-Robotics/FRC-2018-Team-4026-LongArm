@@ -158,7 +158,8 @@ public class Arm implements Subsystem {
 	public boolean liftToGround() {
 		return liftToPosition(ARM_GROUND_POSITION);
 	}
-	//Slower LiftToPosition for Auto
+	
+	//Slower liftToPosition for Auto
 	public boolean liftToSwitchAuto() {
 		return liftToPositionAuto(ARM_SWITCH_POSITION);
 	}

@@ -17,7 +17,8 @@ public class Autonomous {
 	String teamSwitch;
 	String scale;
 	String opponentSwitch;
-
+	
+	//Logic depending on game data and selected starting position
 	public void crossLineAuto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
@@ -44,16 +45,6 @@ public class Autonomous {
 		}
 	}
 
-	public void position1Scale(Robot robot) {
-		decodeGameData();
-		updateDashboard();
-		if (scale.equals("Left")) {
-			scoreScale(robot, false);
-		} else {
-			scaleCross(robot, true);
-		}
-	}
-
 	public void position2Auto(Robot robot) {
 		position2Switch(robot);
 	}
@@ -71,17 +62,8 @@ public class Autonomous {
 			}
 		}
 	}
-
-	public void position3Scale(Robot robot) {
-		decodeGameData();
-		updateDashboard();
-		if (scale.equals("Right")) {
-			scoreScale(robot, false);
-		} else {
-			scaleCross(robot, false);
-		}
-	}
-
+	
+	//Methods that run depending on the logic above
 	public void scoreScale(Robot robot, boolean leftSide) {
 
 		robot.pneumatics.setHighGear();
@@ -250,7 +232,7 @@ public class Autonomous {
 			break;
 		}
 	}
-
+	//Scores switch from middle position
 	public void position2Switch(Robot robot) {
 		decodeGameData();
 		updateDashboard();
@@ -437,7 +419,7 @@ public class Autonomous {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
-				state++;
+				//state++;
 			}
 			break;
 		case 5:
@@ -605,6 +587,7 @@ public class Autonomous {
 
 		return false;
 	}
+	
 
 	public String getGameData() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
