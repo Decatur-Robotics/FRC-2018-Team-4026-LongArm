@@ -15,6 +15,8 @@ public class Arm implements Subsystem {
 	private static final double ARM_LOWSCALE_POSITION = 27;
 	private static final double ARM_HIGHSCALE_POSITION = 30;
 	private static final double ARM_GROUND_POSITION = 5.5;
+
+	private static final double MINIMUM_GRIP_PRESSURE = 40;
 	boolean isInitialized = false;
 	double liftSpeed;
 	NeutralMode brakeMode = NeutralMode.Coast;
@@ -24,18 +26,20 @@ public class Arm implements Subsystem {
 	DigitalInput armUpperLimit;
 	AnalogInput stringThingy;
 	int state = -1;
+
 	@Override
 	public int init() {
 		if (!isInitialized) {
 
-			armLiftMotor = new WPI_TalonSRX(PortMap.ARMLIFT);;
+			armLiftMotor = new WPI_TalonSRX(PortMap.ARMLIFT);
+			;
 			armLowerLimit = new DigitalInput(PortMap.ARM_LOWER_LIMIT);
 			stringThingy = new AnalogInput(PortMap.STRINGTHINGY);
 			GrabberLiftTimer = new Timer();
 			// armUpperLimit = new DigitalInput(PortMap.ARM_UPPER_LIMIT);
 			liftSpeed = 0;
 			isInitialized = true;
-			
+
 			return 0;
 		}
 		// Return 1 if tries to reinit
@@ -97,6 +101,13 @@ public class Arm implements Subsystem {
 
 	public boolean liftToPosition(double targetPosition) {
 		double armPos = getArmPosition();
+
+		if (armPos < ARM_GROUND_POSITION - 2) // Checks if the string sensor is
+												// broken/unplugged
+		{
+			liftSpeed = 0;
+			return false;
+		}
 		if (Math.abs(targetPosition - armPos) < .75) {
 			holdLift();
 
@@ -110,17 +121,24 @@ public class Arm implements Subsystem {
 				}
 			} else {
 				if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
-					liftSpeed = -.3;
+					liftSpeed = -.4;
 				} else {
-					liftSpeed = -.15;
+					liftSpeed = -.2;
 				}
 			}
 			return false;
 		}
 	}
-	
+
 	public boolean liftToPositionAuto(double targetPosition) {
 		double armPos = getArmPosition();
+
+		if (armPos < ARM_GROUND_POSITION - 2) // Checks if string thing is
+												// broken/unplugged
+		{
+			liftSpeed = 0;
+			return false;
+		}
 		if (Math.abs(targetPosition - armPos) < .75) {
 			holdLift();
 
@@ -150,7 +168,7 @@ public class Arm implements Subsystem {
 	public boolean liftToHighScale() {
 		return liftToPosition(ARM_HIGHSCALE_POSITION);
 	}
-	
+
 	public boolean liftToLowScale() {
 		return liftToPosition(ARM_LOWSCALE_POSITION);
 	}
@@ -158,8 +176,8 @@ public class Arm implements Subsystem {
 	public boolean liftToGround() {
 		return liftToPosition(ARM_GROUND_POSITION);
 	}
-	
-	//Slower liftToPosition for Auto
+
+	// Slower liftToPosition for Auto
 	public boolean liftToSwitchAuto() {
 		return liftToPositionAuto(ARM_SWITCH_POSITION);
 	}
@@ -180,7 +198,6 @@ public class Arm implements Subsystem {
 		return (stringThingy.getVoltage() * 11) - 1;
 	}
 
-	
 	public void manualPivotIntake(Robot robot) {
 		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
 			if (robot.controllers.getSecondaryRawButton(8)) {
@@ -188,69 +205,25 @@ public class Arm implements Subsystem {
 			} else {
 				robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
 			}
-		}else {
+		} else {
 			robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
 		}
 	}
-	
-	
+
 	private void smartPivot(Robot robot) {
-		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
-			switch (state) {
-			case -1:
-				robot.pneumatics.intakeUp();
-				state++;
-			case 0:
-				if (robot.controllers.getSecondaryRawButton(8))
-				{
-					robot.pneumatics.openGrabber();
-					GrabberLiftTimer.reset();
-					GrabberLiftTimer.start();
-					state++;
-				
-				}
-				break;
-			case 2:
-				if (GrabberLiftTimer.get() > .5) {
-					robot.pneumatics.intakeDown();
-					state++;
-					
-				}else if (!robot.controllers.getSecondaryRawButton(8)){
-					state = -1;
-					
-				}
-				break;
-			case 3:
-				if  (!robot.controllers.getSecondaryRawButton(8))
-				{
-					robot.pneumatics.closeGrabber();
-					GrabberLiftTimer.reset();
-					GrabberLiftTimer.start();
-					state++;
-				} 
-			case 4:
-				if (GrabberLiftTimer.get() > 1) {
-					robot.pneumatics.intakeUp();
-					state = -1;
-				} else if (robot.controllers.getSecondaryRawButton(8)) {
-					robot.pneumatics.openGrabber();
-					state = 3;
-				}
-			
-			}
-		} else {
-			robot.pneumatics.intakeUp();
-		}
+
 	}
-	//****
+
+	// ****
+	@Override
 	public void run(Robot robot) {
-		
+
 		lift(robot.controllers, robot);
 		manualPivotIntake(robot);
-		//smartPivot(robot);
+		// smartPivot(robot);
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
 	}
-	//******
+	// ******
 
 	@Override
 	public int shutdown() {

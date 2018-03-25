@@ -17,16 +17,16 @@ public class Autonomous {
 	String teamSwitch;
 	String scale;
 	String opponentSwitch;
-	
-	//Logic depending on game data and selected starting position
+
+	// Logic depending on game data and selected starting position
 	public void crossLineAuto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
 		robot.pneumatics.setLowGear();
-		if (!autoDriveRobot(robot.drivetrain, 0.3, 0.3, 0, 70, USE_DRIVE_TIMER)) {
-
-		} else {
+		if (autoDriveRobot(robot.drivetrain, 0.3, 0.3, 0, 70, USE_DRIVE_TIMER)) {
 			robot.drivetrain.stopDrive();
+		} else {
+
 		}
 
 	}
@@ -34,13 +34,22 @@ public class Autonomous {
 	public void position1Auto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
+		if (scale.equals("Left") && teamSwitch.equals("Left")) {
+			if (robot.prioritySelected == robot.PRIORITYSWITCH) {
+				scoreSwitch(robot, true);
+			} else {
+				scoreScale(robot, true);
+			}
+			return;
+		}
+
 		if (scale.equals("Left")) {
 			scoreScale(robot, true);
 		} else {
 			if (teamSwitch.equals("Left")) {
 				scoreSwitch(robot, true);
 			} else {
-				crossLineAuto(robot);
+				scaleCross(robot, true);
 			}
 		}
 	}
@@ -62,8 +71,8 @@ public class Autonomous {
 			}
 		}
 	}
-	
-	//Methods that run depending on the logic above
+
+	// Methods that run depending on the logic above
 	public void scoreScale(Robot robot, boolean leftSide) {
 
 		robot.pneumatics.setHighGear();
@@ -99,7 +108,7 @@ public class Autonomous {
 			break;
 		case 2:
 			robot.arm.liftToSwitchAuto();
-			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 60, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 2) {
+			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 60, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 1.25) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -159,7 +168,8 @@ public class Autonomous {
 			break;
 		}
 	}
-	//Scores switch from the side
+
+	// Scores switch from the side
 	public void scoreSwitch(Robot robot, boolean leftSide) {
 		robot.pneumatics.setLowGear();
 		switch (state) {
@@ -200,7 +210,7 @@ public class Autonomous {
 			robot.arm.updateLiftMotor();
 			break;
 		case 3:
-			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 8, USE_DRIVE_TIMER) || ScoreSwitchTimer.get() > 3 ) {
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 8, USE_DRIVE_TIMER) || ScoreSwitchTimer.get() > 3) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.stopDrive();
@@ -232,7 +242,8 @@ public class Autonomous {
 			break;
 		}
 	}
-	//Scores switch from middle position
+
+	// Scores switch from middle position
 	public void position2Switch(Robot robot) {
 		decodeGameData();
 		updateDashboard();
@@ -267,8 +278,7 @@ public class Autonomous {
 			case 3:
 				robot.arm.liftToSwitchAuto();
 				robot.arm.updateLiftMotor();
-				if (autoDriveRobot(robot.drivetrain, 0.55, 0.55, 0, 65, USE_DRIVE_TIMER) ) 
-				{
+				if (autoDriveRobot(robot.drivetrain, 0.55, 0.55, 0, 65, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
@@ -285,8 +295,7 @@ public class Autonomous {
 				break;
 			case 5:
 
-				if (autoDriveRobot(robot.drivetrain, .6, .6, 0, 55, false)|| robot.drivetrain.Accel.getX() > 1 ) 
-				{
+				if (autoDriveRobot(robot.drivetrain, .6, .6, 0, 55, false) || robot.drivetrain.Accel.getX() > 1) {
 					state++;
 					robot.drivetrain.stopDrive();
 
@@ -299,10 +308,10 @@ public class Autonomous {
 
 			}
 
-		} else if (teamSwitch.equals("Right")){
+		} else if (teamSwitch.equals("Right")) {
 			switch (state) {
 			case 0:
-				if (autoDriveRobot(robot.drivetrain, .5 , .5, 0, 35, USE_DRIVE_TIMER)) {
+				if (autoDriveRobot(robot.drivetrain, .5, .5, 0, 35, USE_DRIVE_TIMER)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					state = 2;
@@ -365,7 +374,7 @@ public class Autonomous {
 		robot.pneumatics.setLowGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 229, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, actualInches(235), USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -374,14 +383,14 @@ public class Autonomous {
 			break;
 		case 1:
 			if (leftSide) {
-				if (turnGyro(robot.drivetrain, 90, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
 					state++;
 				}
 			} else {
-				if (turnGyro(robot.drivetrain, -90, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -399,14 +408,14 @@ public class Autonomous {
 			break;
 		case 3:
 			if (leftSide) {
-				if (turnGyro(robot.drivetrain, -90, .3)) {
+				if (turnGyro(robot.drivetrain, -80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
 					state++;
 				}
 			} else {
-				if (turnGyro(robot.drivetrain, 90, .3)) {
+				if (turnGyro(robot.drivetrain, 80, .3)) {
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
@@ -419,7 +428,7 @@ public class Autonomous {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
-				//state++;
+				// state++;
 			}
 			break;
 		case 5:
@@ -587,7 +596,6 @@ public class Autonomous {
 
 		return false;
 	}
-	
 
 	public String getGameData() {
 		gameData = DriverStation.getInstance().getGameSpecificMessage();
@@ -623,15 +631,19 @@ public class Autonomous {
 		}
 	}
 
+	private double actualInches(double inchesWanted) {
+		return (inchesWanted * .83);
+	}
+
 	public void updateDashboard() {
 		SmartDashboard.putString("Team Switch", teamSwitch);
 		SmartDashboard.putString("Scale", scale);
 		SmartDashboard.putString("Opponent Switch", opponentSwitch);
 
 	}
-	
+
 	@SuppressWarnings("unused")
-	public void  cheesecakeAuto() {		
+	public void cheesecakeAuto() {
 		int cheeseState = 0;
 		Timer cheeseTimer = new Timer();
 		cheeseTimer.reset();
@@ -640,19 +652,19 @@ public class Autonomous {
 		switch (cheeseState) {
 		case 0:
 			while (cheeseTimer.get() < 3 /* && isEnabled() */) {
-				//fLeftMotor.set(cheeseLeft);
-				//BLeftMotor.set(cheeseLeft);
-				//fRightMotor.set(cheeseRight);
-				//bRightMotor.set(cheeseRight);
+				// fLeftMotor.set(cheeseLeft);
+				// BLeftMotor.set(cheeseLeft);
+				// fRightMotor.set(cheeseRight);
+				// bRightMotor.set(cheeseRight);
 			}
 			state++;
 			break;
 		case 1:
-			//fLeftMotor.set(0);
-			//BLeftMotor.set(0);
-			//fRightMotor.set(0);
-			//bRightMotor.set(0);
+			// fLeftMotor.set(0);
+			// BLeftMotor.set(0);
+			// fRightMotor.set(0);
+			// bRightMotor.set(0);
 			break;
 		}
-}
+	}
 }
