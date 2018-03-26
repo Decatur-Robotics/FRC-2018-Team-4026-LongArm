@@ -295,7 +295,7 @@ public class Autonomous {
 				break;
 			case 5:
 
-				if (autoDriveRobot(robot.drivetrain, .6, .6, 0, 55, false) || robot.drivetrain.Accel.getX() > 1) {
+				if (autoDriveRobot(robot.drivetrain, .6, .6, 0, 80, false) || robot.drivetrain.Accel.getX() > 1) {
 					state++;
 					robot.drivetrain.stopDrive();
 
@@ -355,7 +355,7 @@ public class Autonomous {
 				break;
 			case 5:
 
-				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .6, .6, 0, 80, false)) {
+				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .5, .5, 0, 80, false)) {
 					state++;
 					robot.drivetrain.stopDrive();
 
@@ -371,10 +371,10 @@ public class Autonomous {
 	}
 
 	public void scaleCross(Robot robot, boolean leftSide) {
-		robot.pneumatics.setLowGear();
+		robot.pneumatics.setHighGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, actualInches(235), USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .8, 8, 0, actualInches(213), USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -399,7 +399,7 @@ public class Autonomous {
 			}
 			break;
 		case 2:
-			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, 191, USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .8, .8, 0, 163, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -409,17 +409,17 @@ public class Autonomous {
 		case 3:
 			if (leftSide) {
 				if (turnGyro(robot.drivetrain, -80, .3)) {
-					robot.drivetrain.gyro.reset();
+					//robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
-					state++;
+					//state++;
 				}
 			} else {
 				if (turnGyro(robot.drivetrain, 80, .3)) {
-					robot.drivetrain.gyro.reset();
+					//robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
-					state++;
+					//state++;
 				}
 			}
 			break;
