@@ -211,7 +211,19 @@ public class Arm implements Subsystem {
 	}
 
 	private void smartPivot(Robot robot) {
-
+		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
+			if (robot.controllers.getSecondaryRawButton(8)) {
+				robot.pneumatics.intakeLiftPistons.set(Value.kForward);
+			} else {
+				if (robot.pneumatics.grabberIsClosed()) {
+					if (robot.pneumatics.airPressureSensor.getAirPressurePsi() > MINIMUM_GRIP_PRESSURE) {
+						robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+					}
+				} else {
+					robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+				}
+			}
+		}
 	}
 
 	// ****
