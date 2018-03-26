@@ -35,7 +35,7 @@ public class Autonomous {
 		decodeGameData();
 		updateDashboard();
 		if (scale.equals("Left") && teamSwitch.equals("Left")) {
-			if (robot.prioritySelected == robot.PRIORITYSWITCH) {
+			if (robot.prioritySelected == Robot.PRIORITYSWITCH) {
 				scoreSwitch(robot, true);
 			} else {
 				scoreScale(robot, true);
