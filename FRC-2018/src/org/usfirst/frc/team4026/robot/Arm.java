@@ -232,7 +232,7 @@ public class Arm implements Subsystem {
 
 		lift(robot.controllers, robot);
 		manualPivotIntake(robot);
-		// smartPivot(robot);
+		//smartPivot(robot);
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
 	}
 	// ******

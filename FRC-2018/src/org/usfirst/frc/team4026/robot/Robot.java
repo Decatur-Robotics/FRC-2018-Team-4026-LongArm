@@ -106,6 +106,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		autoSelected = autoChooser.getSelected();
 		while (isAutonomous() && isEnabled()) {
 
 			switch (autoSelected) {
@@ -125,6 +126,11 @@ public class Robot extends IterativeRobot {
 				auto.position3Auto(this);
 				updateDashboard();
 				break;
+			default:
+				auto.crossLineAuto(this);
+				updateDashboard();
+				break;
+				
 			}
 		}
 	}
