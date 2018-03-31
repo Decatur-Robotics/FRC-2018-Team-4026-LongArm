@@ -18,6 +18,7 @@ public class Arm implements Subsystem {
 
 	private static final double MINIMUM_GRIP_PRESSURE = 40;
 	boolean isInitialized = false;
+	boolean smartGrabState = true;
 	double liftSpeed;
 	NeutralMode brakeMode = NeutralMode.Coast;
 	Timer GrabberLiftTimer;
@@ -32,7 +33,6 @@ public class Arm implements Subsystem {
 		if (!isInitialized) {
 
 			armLiftMotor = new WPI_TalonSRX(PortMap.ARMLIFT);
-			;
 			armLowerLimit = new DigitalInput(PortMap.ARM_LOWER_LIMIT);
 			stringThingy = new AnalogInput(PortMap.STRINGTHINGY);
 			GrabberLiftTimer = new Timer();
@@ -86,7 +86,7 @@ public class Arm implements Subsystem {
 	}
 
 	public void updateLiftMotor() {
-		if (getArmPosition() > 45 && liftSpeed > 0) {
+		if (getArmPosition() > ARM_HIGHSCALE_POSITION && liftSpeed > 0) {
 			liftSpeed = 0;
 		}
 
@@ -101,7 +101,7 @@ public class Arm implements Subsystem {
 
 	public boolean liftToPosition(double targetPosition) {
 		double armPos = getArmPosition();
-
+		
 		if (armPos < ARM_GROUND_POSITION - 2) // Checks if the string sensor is
 												// broken/unplugged
 		{
@@ -113,19 +113,36 @@ public class Arm implements Subsystem {
 
 			return true;
 		} else {
-			if (armPos < (targetPosition)) {
-				if (Math.abs(targetPosition - armPos) > 5) {
-					liftSpeed = .9;
+			if (targetPosition == ARM_SWITCH_POSITION) {
+				if (armPos < (targetPosition)) {
+					if (Math.abs(targetPosition - armPos) > 5) {
+					liftSpeed = .65;
+					} else {
+						liftSpeed = .4;
+					}
 				} else {
-					liftSpeed = .4;
+					if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
+						liftSpeed = -.4;
+					} else {
+						liftSpeed = -.2;
+					}
 				}
-			} else {
-				if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
-					liftSpeed = -.4;
+			}else {
+				if (armPos < (targetPosition)) {
+					if (Math.abs(targetPosition - armPos) > 5) {
+					liftSpeed = .9;
+					} else {
+						liftSpeed = .4;
+					}
 				} else {
-					liftSpeed = -.2;
+					if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
+						liftSpeed = -.4;
+					} else {
+						liftSpeed = -.2;
+					}
 				}
 			}
+			
 			return false;
 		}
 	}
@@ -225,14 +242,27 @@ public class Arm implements Subsystem {
 			}
 		}
 	}
-
+	private void shouldISmartGrab(Robot robot) {
+		if (robot.controllers.getSecondaryRawButton(10)) {
+			smartGrabState = true;
+		}
+		if (robot.controllers.getSecondaryRawButton(9)) {
+			smartGrabState = false;
+		}
+	}
 	// ****
 	@Override
 	public void run(Robot robot) {
-
+		
 		lift(robot.controllers, robot);
-		manualPivotIntake(robot);
-		//smartPivot(robot);
+		/*shouldISmartGrab(robot);
+		if(smartGrabState) {
+			smartPivot(robot);
+
+		}
+		else {*/
+			manualPivotIntake(robot);
+		//	}
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
 	}
 	// ******
@@ -245,9 +275,9 @@ public class Arm implements Subsystem {
 
 	@Override
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Lift Speed", liftSpeed);
-		SmartDashboard.putBoolean("Arm Lower Limit Switch", armLowerLimit.get());
-		SmartDashboard.putString("Brake Mode", brakeMode.toString());
+		//SmartDashboard.putNumber("Lift Speed", liftSpeed);
+		//SmartDashboard.putBoolean("SmartGrab State", smartGrabState);
+		//SmartDashboard.putString("Brake Mode", brakeMode.toString());
 		SmartDashboard.putNumber("String Thingy Extension:", getArmPosition());
 
 	}

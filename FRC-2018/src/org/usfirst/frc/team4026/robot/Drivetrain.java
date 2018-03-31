@@ -176,10 +176,10 @@ public class Drivetrain implements Subsystem {
 
 	@Override
 	public void updateDashboard() {
-		SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
+	//	SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
 		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
-		SmartDashboard.putNumber("Ultrasonic Distance", calculateWallDistance(false));
+	//	SmartDashboard.putNumber("Ultrasonic Distance", calculateWallDistance(false));
 		// System.out.println(gyro.getAngle());
 	}
 

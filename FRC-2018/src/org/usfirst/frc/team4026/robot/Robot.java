@@ -70,7 +70,8 @@ public class Robot extends IterativeRobot {
 		controllers.init();
 		pneumatics.init();
 		
-        CameraServer.getInstance().startAutomaticCapture();
+       CameraServer.getInstance().startAutomaticCapture().setFPS(15);
+       System.out.println("Camera is inited");
 	}
 
 	/**
