@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team4026.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -70,7 +72,12 @@ public class Robot extends IterativeRobot {
 		controllers.init();
 		pneumatics.init();
 		
-       CameraServer.getInstance().startAutomaticCapture().setFPS(15);
+       UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+       cam.setFPS(10);
+       cam.setResolution(160, 240);
+     //  VideoMode vmode = cam.getVideoMode();
+       //SmartDashboard.putNumber("Camera #", vmode.pixelFormat.getValue());
+       
        System.out.println("Camera is inited");
 	}
 

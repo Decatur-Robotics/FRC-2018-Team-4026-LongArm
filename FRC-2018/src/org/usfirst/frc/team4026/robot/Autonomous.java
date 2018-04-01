@@ -74,10 +74,22 @@ public class Autonomous {
 
 	// Methods that run depending on the logic above
 	public void scoreScale(Robot robot, boolean leftSide) {
-
 		robot.pneumatics.setHighGear();
+		
 		switch (state) {
 		case 0:
+			ScoreScaleTimer.reset();
+			ScoreScaleTimer.start();
+			state++;
+			break;
+		case 1:
+			if(ScoreScaleTimer.get() > .5) {
+				ScoreScaleTimer.stop();
+				ScoreScaleTimer.reset();
+				state++;
+			}
+			break;
+		case 2:
 			if (autoDriveRobot(robot.drivetrain, .9, .9, 0, 250, USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
@@ -85,7 +97,7 @@ public class Autonomous {
 				state++;
 			}
 			break;
-		case 1:
+		case 3:
 			if (leftSide) {
 				if (turnGyro(robot.drivetrain, 80, .4)) {
 					robot.drivetrain.gyro.reset();
@@ -106,7 +118,7 @@ public class Autonomous {
 				}
 			}
 			break;
-		case 2:
+		case 4:
 			robot.arm.liftToSwitchAuto();
 			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 60, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 1.25) {
 				robot.drivetrain.gyro.reset();
@@ -115,7 +127,7 @@ public class Autonomous {
 				state++;
 			}
 			break;
-		case 3:
+		case 5:
 			if (robot.arm.liftToScaleAuto()) {
 				robot.arm.holdLift();
 				System.out.println("Case 2 started");
@@ -123,7 +135,7 @@ public class Autonomous {
 			}
 			robot.arm.updateLiftMotor();
 			break;
-		case 4:
+		case 6:
 			if (leftSide) {
 				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 34, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
@@ -140,13 +152,13 @@ public class Autonomous {
 				}
 			}
 			break;
-		case 5:
+		case 7:
 			robot.arm.holdLift();
 			robot.pneumatics.openGrabber();
 			robot.arm.updateLiftMotor();
 			state++;
 			break;
-		case 6:
+		case 8:
 			if (autoDriveRobot(robot.drivetrain, -0.4, -0.4, 0, 24, USE_DRIVE_TIMER)) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
@@ -154,7 +166,7 @@ public class Autonomous {
 				state++;
 			}
 			break;
-		case 7:
+		case 9:
 			if (robot.arm.liftToGroundAuto()) {
 				robot.arm.holdLift();
 				System.out.println("Case 5 started");
@@ -163,7 +175,7 @@ public class Autonomous {
 			}
 			robot.arm.updateLiftMotor();
 			break;
-		case 8:
+		case 10:
 			robot.drivetrain.stopDrive();
 			break;
 		}
