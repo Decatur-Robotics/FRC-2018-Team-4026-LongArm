@@ -50,6 +50,7 @@ public class Robot extends IterativeRobot {
 	Controllers controllers = new Controllers();
 	Pneumatics pneumatics = new Pneumatics();
 	Autonomous auto = new Autonomous();
+	Intake intake = new Intake();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -71,6 +72,7 @@ public class Robot extends IterativeRobot {
 		arm.init();
 		controllers.init();
 		pneumatics.init();
+		intake.init();
 		
        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
        cam.setFPS(10);
@@ -107,6 +109,7 @@ public class Robot extends IterativeRobot {
 		drivetrain.gyro.reset();
 		pneumatics.closeGrabber();
 		drivetrain.LeftEncoder.reset();
+	
 	}
 
 	/**
@@ -159,6 +162,7 @@ public class Robot extends IterativeRobot {
 		while (isOperatorControl() && isEnabled()) {
 			drivetrain.run(this);
 			pneumatics.run(this);
+			intake.run(this);
 			arm.run(this);
 			updateDashboard();
 		}
@@ -185,6 +189,7 @@ public class Robot extends IterativeRobot {
 		drivetrain.shutdown();
 		pneumatics.shutdown();
 		arm.shutdown();
+		intake.shutdown();
 	}
 
 	public void updateDashboard() {

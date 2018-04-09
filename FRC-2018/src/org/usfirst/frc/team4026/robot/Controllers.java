@@ -46,7 +46,8 @@ public class Controllers{
 	public boolean getSecondaryRawButton(int button) {
 		return manipulatorJoystick.getRawButton(button);
 	}
-	
+	//public boolean getSecondaryPOV(int button) {
+	//}
 	public int shutdown() {
 
 		return 1;

@@ -13,6 +13,7 @@ public class Autonomous {
 	Timer AutoDriveTimer = new Timer();
 	Timer ScoreScaleTimer = new Timer();
 	Timer ScoreSwitchTimer = new Timer();
+	Timer IntakeTimer = new Timer();
 	String gameData;
 	String teamSwitch;
 	String scale;
@@ -141,6 +142,8 @@ public class Autonomous {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.stopDrive();
+					IntakeTimer.reset();
+					IntakeTimer.start();
 					state++;
 				}
 			} else {
@@ -148,15 +151,20 @@ public class Autonomous {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					robot.drivetrain.stopDrive();
+					IntakeTimer.reset();
+					IntakeTimer.start();
 					state++;
 				}
 			}
 			break;
 		case 7:
-			robot.arm.holdLift();
-			robot.pneumatics.openGrabber();
-			robot.arm.updateLiftMotor();
-			state++;
+			robot.intake.outakeSlow();
+			robot.intake.updateIntakeMotors();
+			if(IntakeTimer.get() > 2)
+			{
+				robot.intake.stopIntake();
+				state++;
+			}
 			break;
 		case 8:
 			if (autoDriveRobot(robot.drivetrain, -0.4, -0.4, 0, 24, USE_DRIVE_TIMER)) {
@@ -176,6 +184,27 @@ public class Autonomous {
 			robot.arm.updateLiftMotor();
 			break;
 		case 10:
+			if (leftSide) {
+				if (turnGyro(robot.drivetrain, 80, .4)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.stopDrive();
+					ScoreScaleTimer.reset();
+					ScoreScaleTimer.start();
+					state++;
+				}
+			} else {
+				if (turnGyro(robot.drivetrain, -80, .4)) {
+					robot.drivetrain.gyro.reset();
+					robot.drivetrain.LeftEncoder.reset();
+					robot.drivetrain.stopDrive();
+					ScoreScaleTimer.reset();
+					ScoreScaleTimer.start();
+					state++;
+				}
+			}
+			break;
+		case 11:
 			robot.drivetrain.stopDrive();
 			break;
 		}
@@ -212,17 +241,15 @@ public class Autonomous {
 			}
 			break;
 		case 2:
-			if (robot.arm.liftToSwitchAuto()) {
-				robot.arm.holdLift();
-				System.out.println("Case 2 started");
+				
 				ScoreSwitchTimer.reset();
 				ScoreSwitchTimer.start();
 				state++;
-			}
+			
 			robot.arm.updateLiftMotor();
 			break;
 		case 3:
-			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 8, USE_DRIVE_TIMER) || ScoreSwitchTimer.get() > 3) {
+			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 8, USE_DRIVE_TIMER) || ScoreSwitchTimer.get() > 2) {
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.stopDrive();
@@ -230,8 +257,13 @@ public class Autonomous {
 			}
 			break;
 		case 4:
-			robot.pneumatics.openGrabber();
-			state++;
+			robot.intake.outakeFast();
+			robot.intake.updateIntakeMotors();
+			if(IntakeTimer.get() > 2)
+			{
+				robot.intake.stopIntake();
+				state++;
+			}
 			break;
 		case 5:
 			if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, -24, USE_DRIVE_TIMER)) {
@@ -270,17 +302,13 @@ public class Autonomous {
 				}
 				break;
 			case 1:
-				if (robot.arm.liftToSwitchAuto()) {
-					robot.arm.holdLift();
-					System.out.println("Case 2 started");
-					state++;
-				}
+				state++;
+				robot.arm.liftSpeed = 0;
 				robot.arm.updateLiftMotor();
 				break;
 
 			case 2:
-				robot.arm.liftToSwitchAuto();
-				robot.arm.updateLiftMotor();
+				
 				if (turnGyro(robot.drivetrain, -80, .4)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -288,8 +316,7 @@ public class Autonomous {
 				}
 				break;
 			case 3:
-				robot.arm.liftToSwitchAuto();
-				robot.arm.updateLiftMotor();
+				
 				if (autoDriveRobot(robot.drivetrain, 0.55, 0.55, 0, 65, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -310,13 +337,18 @@ public class Autonomous {
 				if (autoDriveRobot(robot.drivetrain, .6, .6, 0, 80, false) || robot.drivetrain.Accel.getX() > 1) {
 					state++;
 					robot.drivetrain.stopDrive();
-
+					IntakeTimer.reset();
+					IntakeTimer.start();
 				}
 				break;
 			case 6:
-				robot.pneumatics.openGrabber();
-				robot.pneumatics.intakeDown();
-				state++;
+				robot.intake.outakeFast();
+				robot.intake.updateIntakeMotors();
+				if (IntakeTimer.get() > 2) {
+					robot.intake.stopIntake();
+					state++;
+				}
+				break;
 
 			}
 
@@ -330,17 +362,10 @@ public class Autonomous {
 				}
 				break;
 			case 1:
-				if (robot.arm.liftToSwitchAuto()) {
-					robot.arm.holdLift();
-					System.out.println("Case 2 started");
-					state++;
-				}
-				robot.arm.updateLiftMotor();
-				break;
+				state++;
 
 			case 2:
-				robot.arm.liftToSwitchAuto();
-				robot.arm.updateLiftMotor();
+				
 				if (turnGyro(robot.drivetrain, 80, .4)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -348,8 +373,7 @@ public class Autonomous {
 				}
 				break;
 			case 3:
-				robot.arm.liftToSwitchAuto();
-				robot.arm.updateLiftMotor();
+			
 				if (autoDriveRobot(robot.drivetrain, 0.5, 0.5, 0, 45, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -370,13 +394,20 @@ public class Autonomous {
 				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .5, .5, 0, 80, false)) {
 					state++;
 					robot.drivetrain.stopDrive();
+					IntakeTimer.reset();
+					IntakeTimer.start();
 
 				}
 				break;
 			case 6:
-				robot.pneumatics.openGrabber();
-				robot.pneumatics.intakeDown();
-				state++;
+				
+				robot.intake.outakeFast();
+				if (IntakeTimer.get() > 2) {
+					robot.intake.stopIntake();
+					state++;
+				}
+				robot.intake.updateIntakeMotors();
+				break;
 
 			}
 		}
@@ -386,7 +417,7 @@ public class Autonomous {
 		robot.pneumatics.setHighGear();
 		switch (state) {
 		case 0:
-			if (autoDriveRobot(robot.drivetrain, .8, 8, 0, actualInches(213), USE_DRIVE_TIMER)) {
+			if (autoDriveRobot(robot.drivetrain, .8, 8, 0, actualInches(223), USE_DRIVE_TIMER)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -520,7 +551,7 @@ public class Autonomous {
 				err = Math.abs(targetDistanceInch) - driveDistInch;
 				percentPower = (err / Math.abs(targetDistanceInch));
 
-				if (err <= 48.0) // If within 24" start slowing down
+				if (err <= 30.0) // If within 24" start slowing down
 				{
 					velocityLeft *= percentPower;
 					velocityRight *= percentPower;

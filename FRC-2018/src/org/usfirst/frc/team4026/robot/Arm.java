@@ -16,7 +16,7 @@ public class Arm implements Subsystem {
 	private static final double ARM_HIGHSCALE_POSITION = 30;
 	private static final double ARM_GROUND_POSITION = 5.5;
 
-	private static final double MINIMUM_GRIP_PRESSURE = 40;
+	
 	boolean isInitialized = false;
 	boolean smartGrabState = true;
 	double liftSpeed;
@@ -49,7 +49,7 @@ public class Arm implements Subsystem {
 	public void lift(Controllers gamepad, Robot robot) {
 		brakeMode = NeutralMode.Brake;
 		armLiftMotor.setNeutralMode(brakeMode);
-		liftSpeed = -gamepad.getSecondaryLeft();
+		liftSpeed = -gamepad.getSecondaryRightY();
 		boolean holdLift;
 
 		if (gamepad.getSecondaryRawButton(6)) {
@@ -227,7 +227,7 @@ public class Arm implements Subsystem {
 		}
 	}
 
-	private void smartPivot(Robot robot) {
+	/*private void smartPivot(Robot robot) {
 		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
 			if (robot.controllers.getSecondaryRawButton(8)) {
 				robot.pneumatics.intakeLiftPistons.set(Value.kForward);
@@ -249,7 +249,7 @@ public class Arm implements Subsystem {
 		if (robot.controllers.getSecondaryRawButton(9)) {
 			smartGrabState = false;
 		}
-	}
+	}*/
 	// ****
 	@Override
 	public void run(Robot robot) {
