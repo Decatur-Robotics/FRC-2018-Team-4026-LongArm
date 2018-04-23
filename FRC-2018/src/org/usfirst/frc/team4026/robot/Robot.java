@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
+
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -27,12 +31,10 @@ public class Robot extends IterativeRobot {
 	private static final String CROSSLINEAUTO = "Cross Line Auto";
 
 	private static final String POSITION1AUTO = "Left Driver Station";
-	private static final String POSITION1SCALE = "Left Driver Station SCALE";
 
 	private static final String POSITION2AUTO = "Middle Driver Station";
 
 	private static final String POSITION3AUTO = "Right Driver Station";
-	private static final String POSITION3SCALE = "Right Driver Station SCALE";
 	
 	private String autoSelected;
 	
@@ -51,7 +53,11 @@ public class Robot extends IterativeRobot {
 	Pneumatics pneumatics = new Pneumatics();
 	Autonomous auto = new Autonomous();
 	Intake intake = new Intake();
-
+	
+	
+	static NetworkTableInstance inst;
+	NetworkTable operatorTable;
+	NetworkTableEntry gotCube;
 	/**
 	 * This function is run when the robot is first started up and should be
 	 * used for any initialization code.
@@ -68,6 +74,10 @@ public class Robot extends IterativeRobot {
 		autoPriority.addObject(PRIORITYSCALE, PRIORITYSCALE);
 		SmartDashboard.putData("Auto Priority", autoPriority);
 		
+		inst = NetworkTableInstance.getDefault();
+		operatorTable = inst.getTable("operator");
+		gotCube = operatorTable.getEntry("gotCube");
+		
 		drivetrain.init();
 		arm.init();
 		controllers.init();
@@ -77,7 +87,7 @@ public class Robot extends IterativeRobot {
        UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
        cam.setFPS(10);
        cam.setResolution(160, 240);
-     //  VideoMode vmode = cam.getVideoMode();
+       //VideoMode vmode = cam.getVideoMode();
        //SmartDashboard.putNumber("Camera #", vmode.pixelFormat.getValue());
        
        System.out.println("Camera is inited");

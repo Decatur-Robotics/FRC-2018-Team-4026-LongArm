@@ -60,7 +60,7 @@ public class Intake implements Subsystem{
 		intakeSpeed = robot.controllers.getSecondaryLeft() * 0.75;
 		
 		if (robot.controllers.getSecondaryRawButton(7)) {
-			intake();
+			intake(robot);
 		}
 		if (robot.controllers.getSecondaryRawButton(9)) {
 			outakeSlower();
@@ -86,14 +86,16 @@ public class Intake implements Subsystem{
 	public void outakeSlower() {
 		intakeSpeed = -.25;
 	}
-	public boolean intake() {
-		if (true) {
+	public boolean intake(Robot robot) {
+		//if (!IntakeSensor.get()) {
 			intakeSpeed = .75;
+			robot.gotCube.setBoolean(false);
 			return false;
-		} else {
+	/*	} else {
 			intakeSpeed = 0;
+			robot.gotCube.setBoolean(true);
 			return true;
-		}
+		}*/
 	}
 	public void run(Robot robot) {
 		//arcadeIntake(robot.joystick.getSecondaryRightX(), robot.joystick.getSecondaryRightY(), .05);

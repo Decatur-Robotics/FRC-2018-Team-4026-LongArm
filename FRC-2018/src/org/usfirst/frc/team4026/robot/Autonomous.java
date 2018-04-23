@@ -1,5 +1,9 @@
 package org.usfirst.frc.team4026.robot;
 
+import edu.wpi.first.networktables.EntryListenerFlags;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -18,6 +22,24 @@ public class Autonomous {
 	String teamSwitch;
 	String scale;
 	String opponentSwitch;
+	
+	/*NetworkTableInstance inst = Robot.inst;
+	NetworkTable autoTable = inst.getTable("autonomous");
+	
+	NetworkTableEntry distanceOne = autoTable.getEntry("D1");
+	NetworkTableEntry turnOne = autoTable.getEntry("T1");
+	NetworkTableEntry distanceTwo = autoTable.getEntry("D2");
+	NetworkTableEntry turnTwo = autoTable.getEntry("T2");
+	NetworkTableEntry distanceThree = autoTable.getEntry("D3");
+	NetworkTableEntry turnThree = autoTable.getEntry("T3");
+	NetworkTableEntry distanceFour = autoTable.getEntry("D4");
+	NetworkTableEntry turnFour = autoTable.getEntry("T4");	
+    
+	public void netTablerun() {
+		autoTable.addEntryListener("X", (autoTable, key, entry, value, flags) -> {
+			System.out.println("X Value has Changed:" + value.getValue());
+			}, EntryListenerFlags.kNew |EntryListenerFlags.kUpdate);
+	}*/
 
 	// Logic depending on game data and selected starting position
 	public void crossLineAuto(Robot robot) {
