@@ -16,7 +16,6 @@ public class Arm implements Subsystem {
 	private static final double ARM_HIGHSCALE_POSITION = 30;
 	private static final double ARM_GROUND_POSITION = 5.5;
 
-	
 	boolean isInitialized = false;
 	boolean smartGrabState = true;
 	double liftSpeed;
@@ -156,6 +155,7 @@ public class Arm implements Subsystem {
 			liftSpeed = 0;
 			return false;
 		}
+
 		if (Math.abs(targetPosition - armPos) < .75) {
 			holdLift();
 
@@ -266,6 +266,7 @@ public class Arm implements Subsystem {
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
 	}
 	// ******
+
 
 	@Override
 	public int shutdown() {

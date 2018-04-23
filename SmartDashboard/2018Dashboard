@@ -1,0 +1,73 @@
+<xml version="1.0">
+<dashboard>
+	<widget field="Priority Selected" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="212" y="418"/>
+	</widget>
+	<widget field="Auto Priority" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="193" y="330"/>
+	</widget>
+	<widget field="String Thingy Extension:" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="292" y="174"/>
+	</widget>
+	<static-widget class="edu.wpi.first.smartdashboard.gui.elements.CameraServerViewer">
+		<location x="620" y="35"/>
+		<width>1314</width>
+		<height>629</height>
+		<property name="Degrees Rotation" value="90"/>
+		<property name="Camera Choice" value=""/>
+	</static-widget>
+	<widget field="Auto Selected" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="2" y="417"/>
+	</widget>
+	<widget field="Opponent Switch" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="516"/>
+	</widget>
+	<widget field="Scale" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="493"/>
+	</widget>
+	<widget field="Team Switch" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="470"/>
+	</widget>
+	<widget field="Auto choices" type="String Chooser" class="edu.wpi.first.smartdashboard.gui.elements.Chooser">
+		<location x="16" y="300"/>
+	</widget>
+	<widget field="Gyro Rotation" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="1" y="279"/>
+	</widget>
+	<widget field="Lift Speed" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="253"/>
+	</widget>
+	<widget field="Grabber Piston State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="230"/>
+	</widget>
+	<widget field="Brake Mode" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="207"/>
+	</widget>
+	<widget field="Gyro Angle" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="184"/>
+	</widget>
+	<widget field="Gear State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="161"/>
+	</widget>
+	<widget field="Arm Lower Limit Switch" type="Boolean" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="138"/>
+	</widget>
+	<widget field="Left Encoder Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="92"/>
+	</widget>
+	<widget field="Right Encoder Ticks" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="69"/>
+	</widget>
+	<widget field="Intake Piston State" type="String" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="46"/>
+	</widget>
+	<widget field="Air Pressure" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="0" y="23"/>
+	</widget>
+	<widget field="Ultrasonic Distance" type="Number" class="edu.wpi.first.smartdashboard.gui.elements.TextBox">
+		<location x="25" y="10"/>
+	</widget>
+</dashboard>
+<live-window>
+</live-window>
+</xml>

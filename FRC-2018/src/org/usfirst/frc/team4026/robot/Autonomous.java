@@ -14,6 +14,7 @@ public class Autonomous {
 	Timer ScoreScaleTimer = new Timer();
 	Timer ScoreSwitchTimer = new Timer();
 	Timer IntakeTimer = new Timer();
+
 	String gameData;
 	String teamSwitch;
 	String scale;
@@ -40,6 +41,7 @@ public class Autonomous {
 				scoreSwitch(robot, true);
 			} else {
 				scoreScale(robot, true);
+
 			}
 			return;
 		}
@@ -75,6 +77,7 @@ public class Autonomous {
 
 	// Methods that run depending on the logic above
 	public void scoreScale(Robot robot, boolean leftSide) {
+
 		robot.pneumatics.setHighGear();
 		
 		switch (state) {
@@ -122,10 +125,11 @@ public class Autonomous {
 		case 4:
 			robot.arm.liftToSwitchAuto();
 			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 60, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 1.25) {
+
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
-				state++;
+				//state++;
 			}
 			break;
 		case 5:
@@ -211,6 +215,7 @@ public class Autonomous {
 	}
 
 	// Scores switch from the side
+
 	public void scoreSwitch(Robot robot, boolean leftSide) {
 		robot.pneumatics.setLowGear();
 		switch (state) {
@@ -241,7 +246,7 @@ public class Autonomous {
 			}
 			break;
 		case 2:
-				
+       
 				ScoreSwitchTimer.reset();
 				ScoreSwitchTimer.start();
 				state++;
@@ -308,7 +313,6 @@ public class Autonomous {
 				break;
 
 			case 2:
-				
 				if (turnGyro(robot.drivetrain, -80, .4)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -316,7 +320,6 @@ public class Autonomous {
 				}
 				break;
 			case 3:
-				
 				if (autoDriveRobot(robot.drivetrain, 0.55, 0.55, 0, 65, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -324,6 +327,7 @@ public class Autonomous {
 				}
 				break;
 			case 4:
+
 				if (turnGyro(robot.drivetrain, 78, .4)) {
 					Timer.delay(.1);
 					robot.drivetrain.stopDrive();
@@ -333,6 +337,7 @@ public class Autonomous {
 				}
 				break;
 			case 5:
+
 
 				if (autoDriveRobot(robot.drivetrain, .6, .6, 0, 80, false) || robot.drivetrain.Accel.getX() > 1) {
 					state++;
@@ -365,15 +370,13 @@ public class Autonomous {
 				state++;
 
 			case 2:
-				
 				if (turnGyro(robot.drivetrain, 80, .4)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
 					state++;
 				}
 				break;
-			case 3:
-			
+			case 3:	
 				if (autoDriveRobot(robot.drivetrain, 0.5, 0.5, 0, 45, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -390,7 +393,6 @@ public class Autonomous {
 				}
 				break;
 			case 5:
-
 				if (robot.drivetrain.Accel.getX() > 1 || autoDriveRobot(robot.drivetrain, .5, .5, 0, 80, false)) {
 					state++;
 					robot.drivetrain.stopDrive();
