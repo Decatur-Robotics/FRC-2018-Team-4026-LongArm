@@ -43,9 +43,9 @@ public class Pneumatics implements Subsystem {
 		}
 	}
 
+	// Edited
 	public void setHighGear() {
 		shifter.set(DoubleSolenoid.Value.kForward);
-		gearState = "High Gear";
 
 	}
 
@@ -115,9 +115,9 @@ public class Pneumatics implements Subsystem {
 	@Override
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
-	//	SmartDashboard.putString("Gear State", gearState);
-	//	SmartDashboard.putString("Intake Piston State", intakeLiftState());
-		//SmartDashboard.putBoolean("Grabber is closed?", grabberIsClosed());
+		// SmartDashboard.putString("Gear State", gearState);
+		// SmartDashboard.putString("Intake Piston State", intakeLiftState());
+		// SmartDashboard.putBoolean("Grabber is closed?", grabberIsClosed());
 	}
 
 }
