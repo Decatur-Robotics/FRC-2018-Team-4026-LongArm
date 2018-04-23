@@ -2,6 +2,8 @@ package org.usfirst.frc.team4026.robot;
 
 public interface PortMap {
 	// CAN
+	public static final int LEFTINTAKE = 2;
+	public static final int RIGHTINTAKE = 3;
 	public static final int ARMLIFT = 4;
 
 	// PWM

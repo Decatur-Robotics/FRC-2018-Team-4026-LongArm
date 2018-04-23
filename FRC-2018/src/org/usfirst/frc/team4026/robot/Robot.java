@@ -7,6 +7,8 @@
 
 package org.usfirst.frc.team4026.robot;
 
+import edu.wpi.cscore.UsbCamera;
+import edu.wpi.cscore.VideoMode;
 import edu.wpi.first.wpilibj.CameraServer;
 import edu.wpi.first.wpilibj.IterativeRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -48,6 +50,7 @@ public class Robot extends IterativeRobot {
 	Controllers controllers = new Controllers();
 	Pneumatics pneumatics = new Pneumatics();
 	Autonomous auto = new Autonomous();
+	Intake intake = new Intake();
 
 	/**
 	 * This function is run when the robot is first started up and should be
@@ -69,8 +72,15 @@ public class Robot extends IterativeRobot {
 		arm.init();
 		controllers.init();
 		pneumatics.init();
+		intake.init();
 		
-        CameraServer.getInstance().startAutomaticCapture();
+       UsbCamera cam = CameraServer.getInstance().startAutomaticCapture();
+       cam.setFPS(10);
+       cam.setResolution(160, 240);
+     //  VideoMode vmode = cam.getVideoMode();
+       //SmartDashboard.putNumber("Camera #", vmode.pixelFormat.getValue());
+       
+       System.out.println("Camera is inited");
 	}
 
 	/**
@@ -99,6 +109,7 @@ public class Robot extends IterativeRobot {
 		drivetrain.gyro.reset();
 		pneumatics.closeGrabber();
 		drivetrain.LeftEncoder.reset();
+	
 	}
 
 	/**
@@ -106,6 +117,7 @@ public class Robot extends IterativeRobot {
 	 */
 	@Override
 	public void autonomousPeriodic() {
+		autoSelected = autoChooser.getSelected();
 		while (isAutonomous() && isEnabled()) {
 
 			switch (autoSelected) {
@@ -117,10 +129,6 @@ public class Robot extends IterativeRobot {
 				auto.position1Auto(this);
 				updateDashboard();
 				break;
-			case POSITION1SCALE:
-				auto.position1Scale(this);
-				updateDashboard();
-				break;
 			case POSITION2AUTO:
 				auto.position2Auto(this);
 				updateDashboard();
@@ -129,10 +137,11 @@ public class Robot extends IterativeRobot {
 				auto.position3Auto(this);
 				updateDashboard();
 				break;
-			case POSITION3SCALE:
-				auto.position3Scale(this);
+			default:
+				auto.crossLineAuto(this);
 				updateDashboard();
 				break;
+				
 			}
 		}
 	}
@@ -153,6 +162,7 @@ public class Robot extends IterativeRobot {
 		while (isOperatorControl() && isEnabled()) {
 			drivetrain.run(this);
 			pneumatics.run(this);
+			intake.run(this);
 			arm.run(this);
 			updateDashboard();
 		}
@@ -179,6 +189,7 @@ public class Robot extends IterativeRobot {
 		drivetrain.shutdown();
 		pneumatics.shutdown();
 		arm.shutdown();
+		intake.shutdown();
 	}
 
 	public void updateDashboard() {

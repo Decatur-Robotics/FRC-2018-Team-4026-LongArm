@@ -10,7 +10,7 @@ public class Pneumatics implements Subsystem {
 	DoubleSolenoid shifter;
 	public DoubleSolenoid grabberPistons;
 	public DoubleSolenoid intakeLiftPistons;
-	RevRoboticsAirPressureSensor airPressureSensor;
+	public RevRoboticsAirPressureSensor airPressureSensor;
 	Compressor compressor;
 	boolean isInitialized = false;
 	public String gearState = " ";
@@ -96,14 +96,11 @@ public class Pneumatics implements Subsystem {
 		}
 	}
 
-	String grabberState() {
-		if (grabberPistons.get() == DoubleSolenoid.Value.kForward) {
-			return "In";
-		} else {
-			return "Out";
-		}
+	public boolean grabberIsClosed() {
+		return (grabberPistons.get() == DoubleSolenoid.Value.kForward);
 	}
 
+	@Override
 	public void run(Robot robot) {
 		shift(1, 3, robot.controllers);
 	}
@@ -118,9 +115,9 @@ public class Pneumatics implements Subsystem {
 	@Override
 	public void updateDashboard() {
 		SmartDashboard.putNumber("Air Pressure", airPressureSensor.getAirPressurePsi());
-		SmartDashboard.putString("Gear State", gearState);
-		SmartDashboard.putString("Intake Piston State", intakeLiftState());
-		SmartDashboard.putString("Grabber Piston State", grabberState());
+	//	SmartDashboard.putString("Gear State", gearState);
+	//	SmartDashboard.putString("Intake Piston State", intakeLiftState());
+		//SmartDashboard.putBoolean("Grabber is closed?", grabberIsClosed());
 	}
 
 }
