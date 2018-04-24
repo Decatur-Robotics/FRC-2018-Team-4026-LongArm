@@ -143,9 +143,9 @@ public class Drivetrain implements Subsystem {
 		double wallDistance;
 
 		if(averaged)
-			rawVoltage = (double)(Ultrasonic.getAverageVoltage());
+			rawVoltage = (Ultrasonic.getAverageVoltage());
 		else
-			rawVoltage = (double)(Ultrasonic.getVoltage());
+			rawVoltage = (Ultrasonic.getVoltage());
 
 		//MB1030
 		double VFiveMM = 0.009671875;
@@ -164,6 +164,7 @@ public class Drivetrain implements Subsystem {
 		rightDriveMotor.set(0);
 	}
 
+	@Override
 	public void run(Robot robot) {
 		tankDrive(robot.controllers);
 	}

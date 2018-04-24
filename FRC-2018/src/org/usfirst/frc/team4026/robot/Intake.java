@@ -6,31 +6,31 @@ import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class Intake implements Subsystem{
-	private static final boolean USE_INTAKE_SENSOR  = false;
-	
+public class Intake implements Subsystem {
+	private static final boolean USE_INTAKE_SENSOR = false;
+
 	boolean isInitialized = false;
 	double intakeSpeed = 0;
 	WPI_TalonSRX rightIntakeMotor;
 	WPI_TalonSRX leftIntakeMotor;
 	DigitalInput IntakeSensor;
+
 	@Override
-	public int init(){
-		if(!isInitialized){
-		
-		rightIntakeMotor = new WPI_TalonSRX (PortMap.RIGHTINTAKE);
-		leftIntakeMotor = new WPI_TalonSRX (PortMap.LEFTINTAKE);
-		rightIntakeMotor.setNeutralMode(NeutralMode.Brake);
-		leftIntakeMotor.setNeutralMode(NeutralMode.Brake);
-		
-		
-		isInitialized = true;
-		return 0;
+	public int init() {
+		if (!isInitialized) {
+
+			rightIntakeMotor = new WPI_TalonSRX(PortMap.RIGHTINTAKE);
+			leftIntakeMotor = new WPI_TalonSRX(PortMap.LEFTINTAKE);
+			rightIntakeMotor.setNeutralMode(NeutralMode.Brake);
+			leftIntakeMotor.setNeutralMode(NeutralMode.Brake);
+
+			isInitialized = true;
+			return 0;
 		}
-		//Return 1 if tries to reinit
+		// Return 1 if tries to reinit
 		return 1;
 	}
-	
+
 	void arcadeIntake(double x, double y, double deadzone) {
 		double right = x + y;
 		double left = x - y;
@@ -50,57 +50,66 @@ public class Intake implements Subsystem{
 		}
 		return v;
 	}
-	public void stopIntake(){
+
+	public void stopIntake() {
 		intakeSpeed = 0;
 		leftIntakeMotor.set(0);
 		rightIntakeMotor.set(0);
-		
+
 	}
-	private void runIntake(Robot robot){
+
+	private void runIntake(Robot robot) {
 		intakeSpeed = robot.controllers.getSecondaryLeft() * 0.75;
-		
+
 		if (robot.controllers.getSecondaryRawButton(7)) {
-			intake(robot);
+			intake();
 		}
 		if (robot.controllers.getSecondaryRawButton(9)) {
 			outakeSlower();
 		}
-		if(robot.controllers.getSecondaryRawButton(5)) {
+		if (robot.controllers.getSecondaryRawButton(5)) {
 			intakeSpeed = .1;
 		}
 		updateIntakeMotors();
 		SmartDashboard.putNumber("POV", robot.controllers.manipulatorJoystick.getPOV());
-		
+
 	}
-	public void updateIntakeMotors(){
+
+	public void updateIntakeMotors() {
 		leftIntakeMotor.set(intakeSpeed);
 		rightIntakeMotor.set(intakeSpeed);
 	}
+
 	public void outakeFast() {
 		intakeSpeed = -.9;
 	}
-	
+
 	public void outakeSlow() {
 		intakeSpeed = -.3;
 	}
+
 	public void outakeSlower() {
 		intakeSpeed = -.25;
 	}
-	public boolean intake(Robot robot) {
-		//if (!IntakeSensor.get()) {
-			intakeSpeed = .75;
-			robot.gotCube.setBoolean(false);
-			return false;
-	/*	} else {
-			intakeSpeed = 0;
-			robot.gotCube.setBoolean(true);
-			return true;
-		}*/
+
+	public boolean intake() {
+		// if (!IntakeSensor.get()) {
+		intakeSpeed = .75;
+
+		return false;
+		/*
+		 * } else { intakeSpeed = 0; robot.gotCube.setBoolean(true); return
+		 * true; }
+		 */
 	}
+
+	@Override
 	public void run(Robot robot) {
-		//arcadeIntake(robot.joystick.getSecondaryRightX(), robot.joystick.getSecondaryRightY(), .05);
+		// arcadeIntake(robot.joystick.getSecondaryRightX(),
+		// robot.joystick.getSecondaryRightY(), .05);
 		runIntake(robot);
 	}
+
 	@Override
 	public int shutdown() {
 		stopIntake();
@@ -113,5 +122,5 @@ public class Intake implements Subsystem{
 		SmartDashboard.putNumber("Intake Speed", intakeSpeed);
 
 	}
-	
+
 }

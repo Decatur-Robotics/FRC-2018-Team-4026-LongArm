@@ -1,9 +1,5 @@
 package org.usfirst.frc.team4026.robot;
 
-import edu.wpi.first.networktables.EntryListenerFlags;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -22,26 +18,35 @@ public class Autonomous {
 	String teamSwitch;
 	String scale;
 	String opponentSwitch;
-	
-	/*NetworkTableInstance inst = Robot.inst;
-	NetworkTable autoTable = inst.getTable("autonomous");
-	
-	NetworkTableEntry distanceOne = autoTable.getEntry("D1");
-	NetworkTableEntry turnOne = autoTable.getEntry("T1");
-	NetworkTableEntry distanceTwo = autoTable.getEntry("D2");
-	NetworkTableEntry turnTwo = autoTable.getEntry("T2");
-	NetworkTableEntry distanceThree = autoTable.getEntry("D3");
-	NetworkTableEntry turnThree = autoTable.getEntry("T3");
-	NetworkTableEntry distanceFour = autoTable.getEntry("D4");
-	NetworkTableEntry turnFour = autoTable.getEntry("T4");	
-    
-	public void netTablerun() {
-		autoTable.addEntryListener("X", (autoTable, key, entry, value, flags) -> {
-			System.out.println("X Value has Changed:" + value.getValue());
-			}, EntryListenerFlags.kNew |EntryListenerFlags.kUpdate);
-	}*/
+
+	/*
+	 * NetworkTableInstance inst = Robot.inst; NetworkTable autoTable =
+	 * inst.getTable("autonomous");
+	 * 
+	 * NetworkTableEntry distanceOne = autoTable.getEntry("D1");
+	 * NetworkTableEntry turnOne = autoTable.getEntry("T1"); NetworkTableEntry
+	 * distanceTwo = autoTable.getEntry("D2"); NetworkTableEntry turnTwo =
+	 * autoTable.getEntry("T2"); NetworkTableEntry distanceThree =
+	 * autoTable.getEntry("D3"); NetworkTableEntry turnThree =
+	 * autoTable.getEntry("T3"); NetworkTableEntry distanceFour =
+	 * autoTable.getEntry("D4"); NetworkTableEntry turnFour =
+	 * autoTable.getEntry("T4");
+	 * 
+	 * public void netTablerun() { autoTable.addEntryListener("X", (autoTable,
+	 * key, entry, value, flags) -> { System.out.println("X Value has Changed:"
+	 * + value.getValue()); }, EntryListenerFlags.kNew
+	 * |EntryListenerFlags.kUpdate); }
+	 */
 
 	// Logic depending on game data and selected starting position
+	public void TwoCubeAuto(Robot robot) {
+		decodeGameData();
+		updateDashboard();
+		if (scale.equals("Left") && teamSwitch.equals("Left")) {
+
+		}
+	}
+
 	public void crossLineAuto(Robot robot) {
 		decodeGameData();
 		updateDashboard();
@@ -98,7 +103,7 @@ public class Autonomous {
 	// Methods that run depending on the logic above
 	public void scoreScale(Robot robot, boolean leftSide) {
 		robot.pneumatics.setHighGear();
-		
+
 		switch (state) {
 		case 0:
 			ScoreScaleTimer.reset();
@@ -106,85 +111,81 @@ public class Autonomous {
 			state++;
 			break;
 		case 1:
-			if(ScoreScaleTimer.get() > .5) {
+			if (ScoreScaleTimer.get() > .5) {
 				ScoreScaleTimer.stop();
 				ScoreScaleTimer.reset();
 				state++;
 			}
 			break;
 		case 2:
-			if (autoDriveRobot(robot.drivetrain, .9, .9, 0, 250, USE_DRIVE_TIMER)) {
-				robot.drivetrain.gyro.reset();
+			robot.arm.liftToScaleAuto();
+			robot.arm.updateLiftMotor();
+			if (autoDriveRobot(robot.drivetrain, .6, .6, 0, actualInches(200), USE_DRIVE_TIMER, false, 0)) {
+				// robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
-				robot.drivetrain.stopDrive();
+				robot.arm.updateLiftMotor();
+				// robot.drivetrain.stopDrive();
 				state++;
 			}
 			break;
 		case 3:
-			if (leftSide) {
-				if (turnGyro(robot.drivetrain, 80, .4)) {
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.stopDrive();
-					ScoreScaleTimer.reset();
-					ScoreScaleTimer.start();
-					state++;
-				}
-			} else {
-				if (turnGyro(robot.drivetrain, -80, .4)) {
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.stopDrive();
-					ScoreScaleTimer.reset();
-					ScoreScaleTimer.start();
-					state++;
-				}
-			}
-			break;
-		case 4:
-			robot.arm.liftToSwitchAuto();
-			if (autoDriveRobot(robot.drivetrain, -.65, -.65, 0, 60, USE_DRIVE_TIMER) || ScoreScaleTimer.get() > 1.25) {
+			// robot.arm.liftToScaleAuto();
+			robot.arm.updateLiftMotor();
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, actualInches(30), USE_DRIVE_TIMER, false, -20)
+					&& robot.arm.liftToScaleAuto()) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
+				robot.arm.updateLiftMotor();
+				state++;
+			}
+			break;
+		case 4:
+			if (autoDriveRobot(robot.drivetrain, .2, .2, 0, actualInches(30), USE_DRIVE_TIMER, false, 0)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.stopDrive();
+				robot.arm.updateLiftMotor();
+				robot.drivetrain.stopDrive();
+				IntakeTimer.reset();
+				IntakeTimer.start();
 				state++;
 			}
 			break;
 		case 5:
-			if (robot.arm.liftToScaleAuto()) {
-				robot.arm.holdLift();
-				System.out.println("Case 2 started");
+			robot.intake.outakeSlow();
+			robot.intake.updateIntakeMotors();
+			if (IntakeTimer.get() > 1) {
+				robot.intake.stopIntake();
+				robot.intake.updateIntakeMotors();
+				robot.drivetrain.gyro.reset();
 				state++;
 			}
-			robot.arm.updateLiftMotor();
 			break;
 		case 6:
-			if (leftSide) {
-				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 34, USE_DRIVE_TIMER)) {
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.stopDrive();
-					IntakeTimer.reset();
-					IntakeTimer.start();
-					state++;
-				}
-			} else {
-				if (autoDriveRobot(robot.drivetrain, 0.4, 0.4, 0, 34, USE_DRIVE_TIMER)) {
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.stopDrive();
-					IntakeTimer.reset();
-					IntakeTimer.start();
-					state++;
-				}
+			robot.arm.liftToGroundAuto();
+			robot.arm.updateLiftMotor();
+			if (turnGyro(robot.drivetrain, 110, .4) && robot.arm.liftToGroundAuto()) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.stopDrive();
+				ScoreScaleTimer.reset();
+				ScoreScaleTimer.start();
+				state++;
 			}
 			break;
 		case 7:
-			robot.intake.outakeSlow();
+			robot.arm.intakeDown(robot);
+			robot.intake.intake();
 			robot.intake.updateIntakeMotors();
-			if(IntakeTimer.get() > 2)
-			{
-				robot.intake.stopIntake();
+			robot.arm.updateLiftMotor();
+			if (autoDriveRobot(robot.drivetrain, .2, .2, 0, actualInches(40), USE_DRIVE_TIMER, false, 0)) {
+				// robot.drivetrain.LeftEncoder.reset();
+				// robot.drivetrain.gyro.reset();
+
+				robot.arm.updateLiftMotor();
+				robot.drivetrain.stopDrive();
+				IntakeTimer.reset();
+				IntakeTimer.start();
 				state++;
 			}
 			break;
@@ -230,6 +231,7 @@ public class Autonomous {
 			robot.drivetrain.stopDrive();
 			break;
 		}
+
 	}
 
 	// Scores switch from the side
@@ -263,11 +265,11 @@ public class Autonomous {
 			}
 			break;
 		case 2:
-				
-				ScoreSwitchTimer.reset();
-				ScoreSwitchTimer.start();
-				state++;
-			
+
+			ScoreSwitchTimer.reset();
+			ScoreSwitchTimer.start();
+			state++;
+
 			robot.arm.updateLiftMotor();
 			break;
 		case 3:
@@ -281,8 +283,7 @@ public class Autonomous {
 		case 4:
 			robot.intake.outakeFast();
 			robot.intake.updateIntakeMotors();
-			if(IntakeTimer.get() > 2)
-			{
+			if (IntakeTimer.get() > 2) {
 				robot.intake.stopIntake();
 				state++;
 			}
@@ -330,7 +331,7 @@ public class Autonomous {
 				break;
 
 			case 2:
-				
+
 				if (turnGyro(robot.drivetrain, -80, .4)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -338,7 +339,7 @@ public class Autonomous {
 				}
 				break;
 			case 3:
-				
+
 				if (autoDriveRobot(robot.drivetrain, 0.55, 0.55, 0, 65, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -387,7 +388,7 @@ public class Autonomous {
 				state++;
 
 			case 2:
-				
+
 				if (turnGyro(robot.drivetrain, 80, .4)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -395,7 +396,7 @@ public class Autonomous {
 				}
 				break;
 			case 3:
-			
+
 				if (autoDriveRobot(robot.drivetrain, 0.5, 0.5, 0, 45, USE_DRIVE_TIMER)) {
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.gyro.reset();
@@ -422,7 +423,7 @@ public class Autonomous {
 				}
 				break;
 			case 6:
-				
+
 				robot.intake.outakeFast();
 				if (IntakeTimer.get() > 2) {
 					robot.intake.stopIntake();
@@ -474,17 +475,17 @@ public class Autonomous {
 		case 3:
 			if (leftSide) {
 				if (turnGyro(robot.drivetrain, -80, .3)) {
-					//robot.drivetrain.gyro.reset();
+					// robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
-					//state++;
+					// state++;
 				}
 			} else {
 				if (turnGyro(robot.drivetrain, 80, .3)) {
-					//robot.drivetrain.gyro.reset();
+					// robot.drivetrain.gyro.reset();
 					robot.drivetrain.LeftEncoder.reset();
 					robot.drivetrain.stopDrive();
-					//state++;
+					// state++;
 				}
 			}
 			break;
@@ -553,6 +554,12 @@ public class Autonomous {
 
 	boolean autoDriveRobot(Drivetrain drivetrain, double velocityLeft, double velocityRight, double timeSec,
 			double targetDistanceInch, boolean isTimerBased) {
+		return autoDriveRobot(drivetrain, velocityLeft, velocityRight, timeSec, targetDistanceInch, isTimerBased, true,
+				0);
+	}
+
+	boolean autoDriveRobot(Drivetrain drivetrain, double velocityLeft, double velocityRight, double timeSec,
+			double targetDistanceInch, boolean isTimerBased, boolean slowDown, double targetAngle) {
 		double err = 0.0;
 		double driveDistInch = 0.0;
 		double percentPower = 0.0;
@@ -573,7 +580,7 @@ public class Autonomous {
 				err = Math.abs(targetDistanceInch) - driveDistInch;
 				percentPower = (err / Math.abs(targetDistanceInch));
 
-				if (err <= 30.0) // If within 24" start slowing down
+				if (err <= 30.0 && slowDown) // If within 24" start slowing down
 				{
 					velocityLeft *= percentPower;
 					velocityRight *= percentPower;
@@ -588,7 +595,7 @@ public class Autonomous {
 						velocityRight = 0.2;
 				}
 
-				drivetrain.keepDriveStraight(velocityLeft, velocityLeft, 0);
+				drivetrain.keepDriveStraight(velocityLeft, velocityLeft, targetAngle);
 			} else {
 				drivetrain.stopDrive();
 				return true;
@@ -697,7 +704,7 @@ public class Autonomous {
 	}
 
 	private double actualInches(double inchesWanted) {
-		return (inchesWanted * .83);
+		return (inchesWanted * .8333);
 	}
 
 	public void updateDashboard() {

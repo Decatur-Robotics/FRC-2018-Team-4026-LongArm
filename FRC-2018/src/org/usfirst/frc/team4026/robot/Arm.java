@@ -16,7 +16,6 @@ public class Arm implements Subsystem {
 	private static final double ARM_HIGHSCALE_POSITION = 30;
 	private static final double ARM_GROUND_POSITION = 5.5;
 
-	
 	boolean isInitialized = false;
 	boolean smartGrabState = true;
 	double liftSpeed;
@@ -101,7 +100,7 @@ public class Arm implements Subsystem {
 
 	public boolean liftToPosition(double targetPosition) {
 		double armPos = getArmPosition();
-		
+
 		if (armPos < ARM_GROUND_POSITION - 2) // Checks if the string sensor is
 												// broken/unplugged
 		{
@@ -116,7 +115,7 @@ public class Arm implements Subsystem {
 			if (targetPosition == ARM_SWITCH_POSITION) {
 				if (armPos < (targetPosition)) {
 					if (Math.abs(targetPosition - armPos) > 5) {
-					liftSpeed = .65;
+						liftSpeed = .65;
 					} else {
 						liftSpeed = .4;
 					}
@@ -127,10 +126,10 @@ public class Arm implements Subsystem {
 						liftSpeed = -.2;
 					}
 				}
-			}else {
+			} else {
 				if (armPos < (targetPosition)) {
 					if (Math.abs(targetPosition - armPos) > 5) {
-					liftSpeed = .9;
+						liftSpeed = .9;
 					} else {
 						liftSpeed = .4;
 					}
@@ -142,7 +141,7 @@ public class Arm implements Subsystem {
 					}
 				}
 			}
-			
+
 			return false;
 		}
 	}
@@ -227,42 +226,41 @@ public class Arm implements Subsystem {
 		}
 	}
 
-	/*private void smartPivot(Robot robot) {
-		if (getArmPosition() < ARM_SWITCH_POSITION - 3) {
-			if (robot.controllers.getSecondaryRawButton(8)) {
-				robot.pneumatics.intakeLiftPistons.set(Value.kForward);
-			} else {
-				if (robot.pneumatics.grabberIsClosed()) {
-					if (robot.pneumatics.airPressureSensor.getAirPressurePsi() > MINIMUM_GRIP_PRESSURE) {
-						robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
-					}
-				} else {
-					robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
-				}
-			}
-		}
+	public void intakeDown(Robot robot) {
+		robot.pneumatics.intakeLiftPistons.set(Value.kForward);
 	}
-	private void shouldISmartGrab(Robot robot) {
-		if (robot.controllers.getSecondaryRawButton(10)) {
-			smartGrabState = true;
-		}
-		if (robot.controllers.getSecondaryRawButton(9)) {
-			smartGrabState = false;
-		}
-	}*/
+
+	public void intakeUp(Robot robot) {
+		robot.pneumatics.intakeLiftPistons.set(Value.kReverse);
+	}
+
+	/*
+	 * private void smartPivot(Robot robot) { if (getArmPosition() <
+	 * ARM_SWITCH_POSITION - 3) { if
+	 * (robot.controllers.getSecondaryRawButton(8)) {
+	 * robot.pneumatics.intakeLiftPistons.set(Value.kForward); } else { if
+	 * (robot.pneumatics.grabberIsClosed()) { if
+	 * (robot.pneumatics.airPressureSensor.getAirPressurePsi() >
+	 * MINIMUM_GRIP_PRESSURE) {
+	 * robot.pneumatics.intakeLiftPistons.set(Value.kReverse); } } else {
+	 * robot.pneumatics.intakeLiftPistons.set(Value.kReverse); } } } } private
+	 * void shouldISmartGrab(Robot robot) { if
+	 * (robot.controllers.getSecondaryRawButton(10)) { smartGrabState = true; }
+	 * if (robot.controllers.getSecondaryRawButton(9)) { smartGrabState = false;
+	 * } }
+	 */
 	// ****
 	@Override
 	public void run(Robot robot) {
-		
-		lift(robot.controllers, robot);
-		/*shouldISmartGrab(robot);
-		if(smartGrabState) {
-			smartPivot(robot);
 
-		}
-		else {*/
-			manualPivotIntake(robot);
-		//	}
+		lift(robot.controllers, robot);
+		/*
+		 * shouldISmartGrab(robot); if(smartGrabState) { smartPivot(robot);
+		 * 
+		 * } else {
+		 */
+		manualPivotIntake(robot);
+		// }
 		robot.pneumatics.actuateGrabber(5, 7, robot.controllers);
 	}
 	// ******
@@ -275,9 +273,9 @@ public class Arm implements Subsystem {
 
 	@Override
 	public void updateDashboard() {
-		//SmartDashboard.putNumber("Lift Speed", liftSpeed);
-		//SmartDashboard.putBoolean("SmartGrab State", smartGrabState);
-		//SmartDashboard.putString("Brake Mode", brakeMode.toString());
+		// SmartDashboard.putNumber("Lift Speed", liftSpeed);
+		// SmartDashboard.putBoolean("SmartGrab State", smartGrabState);
+		// SmartDashboard.putString("Brake Mode", brakeMode.toString());
 		SmartDashboard.putNumber("String Thingy Extension:", getArmPosition());
 
 	}
