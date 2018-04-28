@@ -120,7 +120,7 @@ public class Autonomous {
 		case 2:
 			robot.arm.liftToScaleAuto();
 			robot.arm.updateLiftMotor();
-			if (autoDriveRobot(robot.drivetrain, .6, .6, 0, actualInches(200), USE_DRIVE_TIMER, false, 0)) {
+			if (autoDriveRobot(robot.drivetrain, .75, .75, 0, actualInches(200), USE_DRIVE_TIMER, false, 0)) {
 				// robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.arm.updateLiftMotor();
@@ -131,7 +131,7 @@ public class Autonomous {
 		case 3:
 			// robot.arm.liftToScaleAuto();
 			robot.arm.updateLiftMotor();
-			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, actualInches(30), USE_DRIVE_TIMER, false, -20)
+			if (autoDriveRobot(robot.drivetrain, .6, .6, 0, actualInches(30), USE_DRIVE_TIMER, false, -20)
 					&& robot.arm.liftToScaleAuto()) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
@@ -141,7 +141,7 @@ public class Autonomous {
 			}
 			break;
 		case 4:
-			if (autoDriveRobot(robot.drivetrain, .2, .2, 0, actualInches(30), USE_DRIVE_TIMER, false, 0)) {
+			if (autoDriveRobot(robot.drivetrain, .3, .3, 0, actualInches(33), USE_DRIVE_TIMER, false, 0)) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.stopDrive();
 				robot.arm.updateLiftMotor();
@@ -154,7 +154,7 @@ public class Autonomous {
 		case 5:
 			robot.intake.outakeSlow();
 			robot.intake.updateIntakeMotors();
-			if (IntakeTimer.get() > 1) {
+			if (IntakeTimer.get() > .5) {
 				robot.intake.stopIntake();
 				robot.intake.updateIntakeMotors();
 				robot.drivetrain.gyro.reset();
@@ -164,7 +164,7 @@ public class Autonomous {
 		case 6:
 			robot.arm.liftToGroundAuto();
 			robot.arm.updateLiftMotor();
-			if (turnGyro(robot.drivetrain, 110, .4) && robot.arm.liftToGroundAuto()) {
+			if (turnGyro(robot.drivetrain, 115, .4) && robot.arm.liftToGroundAuto()) {
 				robot.drivetrain.gyro.reset();
 				robot.drivetrain.LeftEncoder.reset();
 				robot.drivetrain.stopDrive();
@@ -178,10 +178,9 @@ public class Autonomous {
 			robot.intake.intake();
 			robot.intake.updateIntakeMotors();
 			robot.arm.updateLiftMotor();
-			if (autoDriveRobot(robot.drivetrain, .2, .2, 0, actualInches(40), USE_DRIVE_TIMER, false, 0)) {
-				// robot.drivetrain.LeftEncoder.reset();
-				// robot.drivetrain.gyro.reset();
-
+			if (autoDriveRobot(robot.drivetrain, .32, .32, 0, actualInches(60), USE_DRIVE_TIMER, false, 0)) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
 				robot.arm.updateLiftMotor();
 				robot.drivetrain.stopDrive();
 				IntakeTimer.reset();
@@ -190,45 +189,62 @@ public class Autonomous {
 			}
 			break;
 		case 8:
-			if (autoDriveRobot(robot.drivetrain, -0.4, -0.4, 0, 24, USE_DRIVE_TIMER)) {
-				robot.drivetrain.LeftEncoder.reset();
+			robot.intake.intake();
+			robot.intake.updateIntakeMotors();
+			if (IntakeTimer.get() > .5) {
+				robot.intake.stopIntake();
+				robot.intake.updateIntakeMotors();
 				robot.drivetrain.gyro.reset();
-				robot.drivetrain.stopDrive();
+				IntakeTimer.reset();
+				IntakeTimer.start();
 				state++;
 			}
 			break;
 		case 9:
-			if (robot.arm.liftToGroundAuto()) {
-				robot.arm.holdLift();
-				System.out.println("Case 5 started");
-				state++;
+
+			robot.arm.intakeUp(robot);
+			if (IntakeTimer.get() > .3) {
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
 				robot.arm.updateLiftMotor();
+				robot.drivetrain.stopDrive();
+				state++;
+
 			}
-			robot.arm.updateLiftMotor();
 			break;
 		case 10:
-			if (leftSide) {
-				if (turnGyro(robot.drivetrain, 80, .4)) {
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.stopDrive();
-					ScoreScaleTimer.reset();
-					ScoreScaleTimer.start();
-					state++;
-				}
-			} else {
-				if (turnGyro(robot.drivetrain, -80, .4)) {
-					robot.drivetrain.gyro.reset();
-					robot.drivetrain.LeftEncoder.reset();
-					robot.drivetrain.stopDrive();
-					ScoreScaleTimer.reset();
-					ScoreScaleTimer.start();
-					state++;
-				}
+			robot.arm.liftToScaleAuto();
+			if (turnGyro(robot.drivetrain, -135, .3) && robot.arm.liftToScaleAuto()) {
+				robot.arm.holdLift();
+				robot.drivetrain.LeftEncoder.reset();
+				robot.drivetrain.gyro.reset();
+				System.out.println("Case 5 started");
+				state++;
 			}
+			robot.intake.stopIntake();
+			robot.intake.updateIntakeMotors();
+			robot.arm.updateLiftMotor();
 			break;
 		case 11:
-			robot.drivetrain.stopDrive();
+			if (autoDriveRobot(robot.drivetrain, .5, .5, 0, actualInches(35), USE_DRIVE_TIMER, true, 0)) {
+				robot.drivetrain.gyro.reset();
+				robot.drivetrain.stopDrive();
+				robot.arm.updateLiftMotor();
+				robot.drivetrain.stopDrive();
+				IntakeTimer.reset();
+				IntakeTimer.start();
+				state++;
+			}
+			break;
+		case 12:
+			robot.intake.outakeSlow();
+			robot.intake.updateIntakeMotors();
+			if (IntakeTimer.get() > .7) {
+				robot.intake.stopIntake();
+				robot.intake.updateIntakeMotors();
+				robot.drivetrain.gyro.reset();
+				// state++;
+			}
 			break;
 		}
 

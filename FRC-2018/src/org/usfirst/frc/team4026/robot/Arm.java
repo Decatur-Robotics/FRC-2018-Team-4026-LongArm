@@ -168,9 +168,9 @@ public class Arm implements Subsystem {
 				}
 			} else {
 				if (Math.abs(targetPosition - Math.abs(armPos)) > 4.5) {
-					liftSpeed = -.3;
+					liftSpeed = -.4;
 				} else {
-					liftSpeed = -.15;
+					liftSpeed = -.25;
 				}
 			}
 			return false;
