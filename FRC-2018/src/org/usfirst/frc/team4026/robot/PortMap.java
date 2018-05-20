@@ -29,7 +29,8 @@ public interface PortMap {
 	public static final int STRINGTHINGY = 2;
 
 	// Digital Sensors
-
+	public static final int INTAKESENSOR = 2;
+	
 	// Encoders
 	public static final int RIGHT_ENCODER_1 = 0;
 	public static final int RIGHT_ENCODER_2 = 1;

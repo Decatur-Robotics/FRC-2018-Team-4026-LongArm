@@ -7,7 +7,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake implements Subsystem {
-	private static final boolean USE_INTAKE_SENSOR = false;
+	static final boolean USE_INTAKE_SENSOR = false;
 
 	boolean isInitialized = false;
 	double intakeSpeed = 0;
@@ -23,7 +23,7 @@ public class Intake implements Subsystem {
 			leftIntakeMotor = new WPI_TalonSRX(PortMap.LEFTINTAKE);
 			rightIntakeMotor.setNeutralMode(NeutralMode.Brake);
 			leftIntakeMotor.setNeutralMode(NeutralMode.Brake);
-
+			IntakeSensor = new DigitalInput(PortMap.INTAKESENSOR);
 			isInitialized = true;
 			return 0;
 		}
@@ -62,7 +62,7 @@ public class Intake implements Subsystem {
 		intakeSpeed = robot.controllers.getSecondaryLeft() * 0.75;
 
 		if (robot.controllers.getSecondaryRawButton(7)) {
-			intake();
+			intake(robot, true);
 		}
 		if (robot.controllers.getSecondaryRawButton(9)) {
 			outakeSlower();
@@ -92,15 +92,22 @@ public class Intake implements Subsystem {
 		intakeSpeed = -.25;
 	}
 
-	public boolean intake() {
-		// if (!IntakeSensor.get()) {
-		intakeSpeed = .75;
-
-		return false;
-		/*
-		 * } else { intakeSpeed = 0; robot.gotCube.setBoolean(true); return
-		 * true; }
-		 */
+	public boolean intake(Robot robot, boolean useSensor) {
+		if (useSensor) {
+			if (!IntakeSensor.get()) {
+				intakeSpeed = .75;
+				robot.gotCube.setBoolean(false); 
+				return false;
+			}else { 
+				intakeSpeed = 0;
+			  	robot.gotCube.setBoolean(true); 
+			  	return true; 
+			}
+		}else {
+			intakeSpeed = .75;
+			return false;
+		}
+		 
 	}
 
 	@Override

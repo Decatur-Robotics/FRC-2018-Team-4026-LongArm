@@ -175,7 +175,7 @@ public class Autonomous {
 			break;
 		case 7:
 			robot.arm.intakeDown(robot);
-			robot.intake.intake();
+			robot.intake.intake(robot, Intake.USE_INTAKE_SENSOR);
 			robot.intake.updateIntakeMotors();
 			robot.arm.updateLiftMotor();
 			if (autoDriveRobot(robot.drivetrain, .32, .32, 0, actualInches(60), USE_DRIVE_TIMER, false, 0)) {
@@ -189,7 +189,7 @@ public class Autonomous {
 			}
 			break;
 		case 8:
-			robot.intake.intake();
+			robot.intake.intake(robot, Intake.USE_INTAKE_SENSOR);
 			robot.intake.updateIntakeMotors();
 			if (IntakeTimer.get() > .5) {
 				robot.intake.stopIntake();
