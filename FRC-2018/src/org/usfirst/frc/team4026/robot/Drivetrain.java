@@ -21,7 +21,7 @@ public class Drivetrain implements Subsystem {
 
 	// Sensors
 	AnalogGyro gyro;
-	Encoder RightEncoder;
+
 	Encoder LeftEncoder;
 	BuiltInAccelerometer Accel;
 	AnalogInput Ultrasonic;
@@ -39,7 +39,7 @@ public class Drivetrain implements Subsystem {
 		if (!isInitialized) {
 			// todo - best practice - indent this code so it is clearly part of
 			// the if block
-			RightEncoder = new Encoder(PortMap.RIGHT_ENCODER_1, PortMap.RIGHT_ENCODER_2, false);
+
 			LeftEncoder = new Encoder(PortMap.LEFT_ENCODER_1, PortMap.LEFT_ENCODER_2, true);
 			// RightEncoder.setDistancePerPulse();
 			// LeftEncoder.setDistancePerPulse();
@@ -49,7 +49,7 @@ public class Drivetrain implements Subsystem {
 			Accel = new BuiltInAccelerometer(Range.k4G);
 			gyro = new AnalogGyro(PortMap.GYRO);
 			gyro.calibrate();
-			
+
 			Ultrasonic = new AnalogInput(PortMap.ULTRASONIC);
 			isInitialized = true;
 			return 0;
@@ -71,7 +71,7 @@ public class Drivetrain implements Subsystem {
 			right /= 2.0;
 			left /= 2.0;
 		}
-		
+
 		double avgStick = (right + left) / 2.0;
 
 		if (!driveGamepad.getPrimaryRawButton(8) && !shouldIHelpDriverDriveStraight()) {
@@ -136,18 +136,17 @@ public class Drivetrain implements Subsystem {
 	double smoothJoyStick(double joyInput) {
 		return Math.pow(joyInput, 2);
 	}
-	
-	public double calculateWallDistance(boolean averaged)
-	{	
+
+	public double calculateWallDistance(boolean averaged) {
 		double rawVoltage;
 		double wallDistance;
 
-		if(averaged)
+		if (averaged)
 			rawVoltage = (Ultrasonic.getAverageVoltage());
 		else
 			rawVoltage = (Ultrasonic.getVoltage());
 
-		//MB1030
+		// MB1030
 		double VFiveMM = 0.009671875;
 		wallDistance = rawVoltage / VFiveMM;
 
@@ -156,7 +155,6 @@ public class Drivetrain implements Subsystem {
 
 	public void reset() {
 		LeftEncoder.reset();
-		RightEncoder.reset();
 	}
 
 	void stopDrive() {
@@ -177,10 +175,11 @@ public class Drivetrain implements Subsystem {
 
 	@Override
 	public void updateDashboard() {
-	//	SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
+		// SmartDashboard.putNumber("Right Encoder Ticks", RightEncoder.get());
 		SmartDashboard.putNumber("Left Encoder Ticks", LeftEncoder.get());
 		SmartDashboard.putNumber("Gyro Angle", gyro.getAngle());
-	//	SmartDashboard.putNumber("Ultrasonic Distance", calculateWallDistance(false));
+		// SmartDashboard.putNumber("Ultrasonic Distance",
+		// calculateWallDistance(false));
 		// System.out.println(gyro.getAngle());
 	}
 

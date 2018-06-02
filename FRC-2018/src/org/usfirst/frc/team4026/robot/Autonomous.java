@@ -563,7 +563,7 @@ public class Autonomous {
 			;
 		} else {
 			drivetrain.LeftEncoder.reset();
-			drivetrain.RightEncoder.reset();
+
 			drivetrain.gyro.reset();
 		}
 	}

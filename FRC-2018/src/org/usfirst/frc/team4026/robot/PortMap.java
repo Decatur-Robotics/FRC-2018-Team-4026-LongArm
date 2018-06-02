@@ -29,11 +29,10 @@ public interface PortMap {
 	public static final int STRINGTHINGY = 2;
 
 	// Digital Sensors
-	public static final int INTAKESENSOR = 2;
-	
+	public static final int INTAKESENSOR = 1;
+
 	// Encoders
-	public static final int RIGHT_ENCODER_1 = 0;
-	public static final int RIGHT_ENCODER_2 = 1;
+
 	public static final int LEFT_ENCODER_1 = 2;
 	public static final int LEFT_ENCODER_2 = 3;
 

@@ -4,21 +4,24 @@ import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
 
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.Relay;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class Intake implements Subsystem {
-	static final boolean USE_INTAKE_SENSOR = false;
+	static final boolean USE_INTAKE_SENSOR = true;
 
 	boolean isInitialized = false;
 	double intakeSpeed = 0;
 	WPI_TalonSRX rightIntakeMotor;
 	WPI_TalonSRX leftIntakeMotor;
 	DigitalInput IntakeSensor;
+	Relay LED;
 
 	@Override
 	public int init() {
 		if (!isInitialized) {
-
+			LED = new Relay(0);
+			LED.setDirection(Relay.Direction.kForward);
 			rightIntakeMotor = new WPI_TalonSRX(PortMap.RIGHTINTAKE);
 			leftIntakeMotor = new WPI_TalonSRX(PortMap.LEFTINTAKE);
 			rightIntakeMotor.setNeutralMode(NeutralMode.Brake);
@@ -92,22 +95,30 @@ public class Intake implements Subsystem {
 		intakeSpeed = -.25;
 	}
 
+	public void updateLED() {
+		if (!IntakeSensor.get()) {
+			LED.set(Relay.Value.kOn);
+		} else {
+			LED.set(Relay.Value.kOff);
+		}
+	}
+
 	public boolean intake(Robot robot, boolean useSensor) {
 		if (useSensor) {
-			if (!IntakeSensor.get()) {
+			if (IntakeSensor.get()) {
 				intakeSpeed = .75;
-				robot.gotCube.setBoolean(false); 
+				robot.gotCube.forceSetBoolean(false);
 				return false;
-			}else { 
+			} else {
 				intakeSpeed = 0;
-			  	robot.gotCube.setBoolean(true); 
-			  	return true; 
+				robot.gotCube.forceSetBoolean(true);
+				return true;
 			}
-		}else {
+		} else {
 			intakeSpeed = .75;
 			return false;
 		}
-		 
+
 	}
 
 	@Override
@@ -115,6 +126,7 @@ public class Intake implements Subsystem {
 		// arcadeIntake(robot.joystick.getSecondaryRightX(),
 		// robot.joystick.getSecondaryRightY(), .05);
 		runIntake(robot);
+		updateLED();
 	}
 
 	@Override
